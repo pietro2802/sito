@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { claimDailyLogin, getLeaderboard, levelFromXp } from './xp.js';
 
@@ -78,7 +77,6 @@ async function boot() {
 
   await loadProfiles();
 
-  // Attiva gli aggiornamenti in tempo reale prima di caricare i commenti.
   setupRealtime();
 
   await loadComments();
@@ -127,12 +125,10 @@ function setupRealtime() {
 
         if (!row) return;
 
-        // Nella pagina di un articolo aggiorna solo la sua discussione.
         if (articleSlug && row.article_slug !== articleSlug) {
           return;
         }
 
-        // Evita numerosi aggiornamenti ravvicinati.
         clearTimeout(refreshTimer);
 
         refreshTimer = setTimeout(async () => {
@@ -313,21 +309,35 @@ window.postReply = async parentId => {
 
   if (!body) return;
 
-  const { error } = await sb
+  const { data, error } = await sb
     .from('comments')
     .insert({
       article_slug: articleSlug || 'community',
       user_id: session.user.id,
       parent_id: parentId,
       body
-    });
+    })
+    .select('id,status,created_at')
+    .single();
 
   if (error) {
-    showToast('Errore: ' + error.message);
+    console.error('Errore salvataggio risposta:', error);
+    showToast('Risposta non verificata: ' + error.message);
     return;
   }
 
-  showToast('Risposta pubblicata online.');
+  if (!data) {
+    console.error('Supabase non ha restituito la risposta salvata.');
+    showToast('Supabase non ha confermato il salvataggio della risposta.');
+    return;
+  }
+
+  console.log('Risposta salvata su Supabase:', data);
+
+  showToast(data.status === 'published'
+    ? 'Risposta salvata e pubblicata.'
+    : `Risposta salvata con stato "${data.status || 'non specificato'}". Potrebbe essere in attesa di moderazione.`);
+
   await loadProfiles();
   await loadComments();
   await loadLeaderboard();
@@ -347,23 +357,41 @@ async function postComment(e) {
 
   $('#postBtn').disabled = true;
 
-  const { error } = await sb
+  const { data, error } = await sb
     .from('comments')
     .insert({
       article_slug: articleSlug || 'community',
       user_id: session.user.id,
       body
-    });
+    })
+    .select('id,status,created_at')
+    .single();
 
   $('#postBtn').disabled = false;
 
   if (error) {
-    $('#commentMsg').textContent = 'Errore: ' + error.message;
+    console.error('Errore salvataggio commento:', error);
+    $('#commentMsg').textContent =
+      'Supabase non ha confermato il salvataggio: ' + error.message;
     return;
   }
 
+  if (!data) {
+    console.error('Supabase non ha restituito il commento salvato.');
+    $('#commentMsg').textContent =
+      'Supabase non ha confermato il salvataggio del commento.';
+    return;
+  }
+
+  console.log('Commento salvato su Supabase:', data);
   $('#commentBody').value = '';
-  $('#commentMsg').textContent = 'Commento pubblicato online!';
+
+  if (data.status === 'published') {
+    $('#commentMsg').textContent = 'Commento salvato e pubblicato online!';
+  } else {
+    $('#commentMsg').textContent =
+      `Commento salvato con stato "${data.status || 'non specificato'}": potrebbe essere in attesa di moderazione.`;
+  }
 
   await loadProfiles();
   await loadComments();
