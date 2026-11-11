@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://newsgaming2.it/sitemap.xml

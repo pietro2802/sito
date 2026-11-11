@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#070b13"><title>Articolo | NEWSGAMING2</title>
+<link rel="stylesheet" href="/assets/neon-futuristico.css"><link rel="stylesheet" href="/assets/ng-community.css"></head>
+<body><div class="topline"><header class="wrap nav"><a class="brand" href="/">NEWS<span>GAMING2</span></a><nav class="navlinks"><a href="/">Home</a><a href="/scopri.html">Scopri</a><a href="/giochi.html">Giochi</a><a href="/community.html">Community</a><a href="/area-personale.html">Area personale</a></nav></header></div>
+<main class="ng-page"><article id="article" class="ng-panel"><div class="ng-kicker" id="category"></div><h1 id="title">Caricamento…</h1><p id="excerpt" class="muted"></p><div id="meta" class="ng-meta"></div><img id="cover" hidden class="article-cover" alt=""><div id="body" class="article-body"></div></article>
+<section class="ng-grid-2" style="margin-top:22px"><div class="ng-panel"><h2>Commenti</h2><p class="muted">Partecipa alla discussione su questo articolo.</p><a id="discussion" class="ng-btn" href="/community.html">Apri community</a></div><aside class="ng-panel"><h2>Nota editoriale</h2><p class="muted">Le informazioni soggette a cambiamento vanno verificate sulle fonti ufficiali. Le pubblicazioni dinamiche sono separate dagli articoli statici già presenti nel sito.</p></aside></section></main>
+<script src="/assets/supabase-config.js"></script>
+<script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
+const sb=createClient(window.NG_SUPABASE_URL,window.NG_SUPABASE_PUBLISHABLE_KEY);
+const slug=new URLSearchParams(location.search).get('slug');
+const esc=v=>(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+if(!slug){document.querySelector('#title').textContent='Articolo non trovato';}
+else{
+ const {data,error}=await sb.from('articles').select('*').eq('slug',slug).maybeSingle();
+ if(error||!data){document.querySelector('#title').textContent='Articolo non trovato';}
+ else{
+  document.title=data.title+' | NEWSGAMING2'; document.querySelector('#category').textContent=data.category;
+  document.querySelector('#title').textContent=data.title; document.querySelector('#excerpt').textContent=data.excerpt||'';
+  document.querySelector('#meta').innerHTML=`<span>${data.published_at?new Date(data.published_at).toLocaleDateString('it-IT'):'Bozza'}</span><span>${esc((data.platforms||[]).join(' · '))}</span>`;
+  if(data.cover_url){const im=document.querySelector('#cover');im.src=data.cover_url;im.alt=data.title;im.hidden=false}
+  document.querySelector('#body').innerHTML=data.body;
+  document.querySelector('#discussion').href='/community.html?article='+encodeURIComponent(data.slug);
+ }
+}
+</script></body></html>
