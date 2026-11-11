@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { claimDailyLogin, getLeaderboard, levelFromXp } from './xp.js';
 
@@ -33,9 +34,7 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({
 async function boot() {
   const { data, error } = await sb.auth.getSession();
 
-  if (error) {
-    console.error('Errore sessione:', error);
-  }
+  if (error) console.error('Errore sessione:', error);
 
   session = data?.session || null;
 
@@ -76,7 +75,6 @@ async function boot() {
   }
 
   await loadProfiles();
-
   setupRealtime();
 
   await loadComments();
@@ -170,7 +168,7 @@ async function loadComments() {
   let q = sb
     .from('comments')
     .select('id,article_slug,user_id,parent_id,body,status,created_at')
-    .eq('status', 'published')
+    .in('status', ['approved', 'published'])
     .order('created_at', { ascending: true });
 
   if (articleSlug) {
@@ -306,7 +304,6 @@ window.postReply = async parentId => {
   }
 
   const body = $(`#reply-body-${parentId}`)?.value.trim();
-
   if (!body) return;
 
   const { data, error } = await sb
@@ -327,14 +324,13 @@ window.postReply = async parentId => {
   }
 
   if (!data) {
-    console.error('Supabase non ha restituito la risposta salvata.');
     showToast('Supabase non ha confermato il salvataggio della risposta.');
     return;
   }
 
   console.log('Risposta salvata su Supabase:', data);
 
-  showToast(data.status === 'published'
+  showToast(['approved', 'published'].includes(data.status)
     ? 'Risposta salvata e pubblicata.'
     : `Risposta salvata con stato "${data.status || 'non specificato'}". Potrebbe essere in attesa di moderazione.`);
 
@@ -352,7 +348,6 @@ async function postComment(e) {
   }
 
   const body = $('#commentBody')?.value.trim();
-
   if (!body) return;
 
   $('#postBtn').disabled = true;
@@ -377,7 +372,6 @@ async function postComment(e) {
   }
 
   if (!data) {
-    console.error('Supabase non ha restituito il commento salvato.');
     $('#commentMsg').textContent =
       'Supabase non ha confermato il salvataggio del commento.';
     return;
@@ -386,7 +380,7 @@ async function postComment(e) {
   console.log('Commento salvato su Supabase:', data);
   $('#commentBody').value = '';
 
-  if (data.status === 'published') {
+  if (['approved', 'published'].includes(data.status)) {
     $('#commentMsg').textContent = 'Commento salvato e pubblicato online!';
   } else {
     $('#commentMsg').textContent =
