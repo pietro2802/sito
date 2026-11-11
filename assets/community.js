@@ -23,6 +23,11 @@ let comments = [];
 let commentsChannel = null;
 let refreshTimer = null;
 
+// PAGINAZIONE COMMENTI
+let visibleCommentCount = 10;
+const COMMENT_PAGE_SIZE = 10;
+let reactionCountsCache = new Map();
+
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({
   '&': '&amp;',
   '<': '&lt;',
@@ -34,7 +39,9 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({
 async function boot() {
   const { data, error } = await sb.auth.getSession();
 
-  if (error) console.error('Errore sessione:', error);
+  if (error) {
+    console.error('Errore sessione:', error);
+  }
 
   session = data?.session || null;
 
@@ -75,6 +82,7 @@ async function boot() {
   }
 
   await loadProfiles();
+
   setupRealtime();
 
   await loadComments();
@@ -99,6 +107,11 @@ async function boot() {
 
     if (a === 'reply') {
       window.toggleReply(b.dataset.id);
+    }
+
+    if (a === 'load-more') {
+      visibleCommentCount += COMMENT_PAGE_SIZE;
+      renderCommentList();
     }
   });
 }
@@ -164,12 +177,13 @@ async function loadProfiles() {
   }
 }
 
+// CARICAMENTO COMMENTI
 async function loadComments() {
   let q = sb
     .from('comments')
     .select('id,article_slug,user_id,parent_id,body,status,created_at')
     .in('status', ['approved', 'published'])
-    .order('created_at', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (articleSlug) {
     q = q.eq('article_slug', articleSlug);
@@ -188,34 +202,79 @@ async function loadComments() {
   comments = data || [];
 
   if (!comments.length) {
+    reactionCountsCache = new Map();
+
     if ($('#comments')) {
       $('#comments').innerHTML =
         '<div class="ng-empty">Nessun commento ancora. Sii il primo a partecipare.</div>';
     }
+
     return;
   }
 
-  const counts = await reactionCounts(comments.map(x => x.id));
+  reactionCountsCache = await reactionCounts(comments.map(x => x.id));
 
-  if ($('#comments')) {
-    $('#comments').innerHTML = buildTree(
-      comments.filter(c => !c.parent_id),
-      counts
-    );
+  renderCommentList();
+}
+
+// MOSTRA I COMMENTI A GRUPPI DI 10
+function renderCommentList() {
+  const box = $('#comments');
+  if (!box) return;
+
+  const roots = comments
+    .filter(c => !c.parent_id)
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  if (!roots.length) {
+    box.innerHTML =
+      '<div class="ng-empty">Nessun commento ancora. Sii il primo a partecipare.</div>';
+    return;
   }
+
+  const visibleRoots = roots.slice(0, visibleCommentCount);
+
+  let html = buildTree(visibleRoots, reactionCountsCache);
+
+  if (roots.length > visibleCommentCount) {
+    const remaining = roots.length - visibleCommentCount;
+
+    html += `
+      <div class="ng-load-more-container">
+        <button
+          type="button"
+          class="ng-btn secondary ng-load-more"
+          data-action="load-more"
+          aria-label="Mostra altri commenti"
+        >
+          <span aria-hidden="true">⌄</span>
+          Mostra altri commenti (${remaining})
+        </button>
+      </div>
+    `;
+  }
+
+  box.innerHTML = html;
 }
 
 function buildTree(roots, counts) {
-  return roots.map(c => renderComment(c, counts, 0) + children(c.id, counts)).join('');
-}
-
-function children(pid, counts) {
-  return comments
-    .filter(c => c.parent_id === pid)
-    .map(c => `<div class="ng-reply">${renderComment(c, counts, 1)}${children(c.id, counts)}</div>`)
+  return roots
+    .map(c => renderComment(c, counts, 0) + children(c.id, counts))
     .join('');
 }
 
+// RISPOSTE AI COMMENTI
+function children(pid, counts) {
+  return comments
+    .filter(c => c.parent_id === pid)
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .map(c =>
+      `<div class="ng-reply">${renderComment(c, counts, 1)}${children(c.id, counts)}</div>`
+    )
+    .join('');
+}
+
+// CONTEGGIO LIKE E DISLIKE
 async function reactionCounts(ids) {
   if (!ids.length) return new Map();
 
@@ -235,6 +294,7 @@ async function reactionCounts(ids) {
   return m;
 }
 
+// GRAFICA DEL COMMENTO
 function renderComment(c, counts, depth) {
   const p = profiles.get(c.user_id) || {};
   const name = esc(p.display_name || p.username || 'Player');
@@ -251,6 +311,7 @@ function renderComment(c, counts, depth) {
         <div class="ng-avatar">
           ${p.avatar_url ? `<img src="${esc(p.avatar_url)}" alt="">` : initial}
         </div>
+
         <b>${name}</b>
         <span>LV ${levelFromXp(p.xp)}</span>
         <span>· ${date}</span>
@@ -271,6 +332,7 @@ function renderComment(c, counts, depth) {
           <button class="ng-mini" data-action="reply" data-id="${c.id}">
             ↩ Rispondi
           </button>
+
           <button class="ng-mini" data-action="report" data-id="${c.id}">
             ⚑ Segnala
           </button>
@@ -279,11 +341,17 @@ function renderComment(c, counts, depth) {
 
       <div id="reply-${c.id}" class="ng-reply-box" hidden>
         <form class="ng-form" onsubmit="return false">
-          <textarea id="reply-body-${c.id}" maxlength="3000"
-            placeholder="Rispondi a questo commento…"></textarea>
+          <textarea
+            id="reply-body-${c.id}"
+            maxlength="3000"
+            placeholder="Rispondi a questo commento…"
+          ></textarea>
 
-          <button type="button" class="ng-btn"
-            onclick="window.postReply('${c.id}')">
+          <button
+            type="button"
+            class="ng-btn"
+            onclick="window.postReply('${c.id}')"
+          >
             Pubblica risposta
           </button>
         </form>
@@ -292,11 +360,13 @@ function renderComment(c, counts, depth) {
   `;
 }
 
+// APRI E CHIUDI RISPOSTE
 window.toggleReply = id => {
   const el = $(`#reply-${id}`);
   if (el) el.hidden = !el.hidden;
 };
 
+// PUBBLICA RISPOSTA
 window.postReply = async parentId => {
   if (!session) {
     location.href = '/account.html';
@@ -304,6 +374,7 @@ window.postReply = async parentId => {
   }
 
   const body = $(`#reply-body-${parentId}`)?.value.trim();
+
   if (!body) return;
 
   const { data, error } = await sb
@@ -324,6 +395,7 @@ window.postReply = async parentId => {
   }
 
   if (!data) {
+    console.error('Supabase non ha restituito la risposta salvata.');
     showToast('Supabase non ha confermato il salvataggio della risposta.');
     return;
   }
@@ -339,6 +411,7 @@ window.postReply = async parentId => {
   await loadLeaderboard();
 };
 
+// PUBBLICA COMMENTO PRINCIPALE
 async function postComment(e) {
   e.preventDefault();
 
@@ -348,6 +421,7 @@ async function postComment(e) {
   }
 
   const body = $('#commentBody')?.value.trim();
+
   if (!body) return;
 
   $('#postBtn').disabled = true;
@@ -372,12 +446,14 @@ async function postComment(e) {
   }
 
   if (!data) {
+    console.error('Supabase non ha restituito il commento salvato.');
     $('#commentMsg').textContent =
       'Supabase non ha confermato il salvataggio del commento.';
     return;
   }
 
   console.log('Commento salvato su Supabase:', data);
+
   $('#commentBody').value = '';
 
   if (['approved', 'published'].includes(data.status)) {
@@ -392,6 +468,7 @@ async function postComment(e) {
   await loadLeaderboard();
 }
 
+// LIKE E DISLIKE
 async function react(commentId, reaction) {
   if (!session) {
     location.href = '/account.html';
@@ -427,6 +504,7 @@ async function react(commentId, reaction) {
   await loadComments();
 }
 
+// SEGNALAZIONI
 async function report(commentId) {
   if (!session) {
     location.href = '/account.html';
@@ -470,6 +548,7 @@ async function report(commentId) {
   );
 }
 
+// SONDAGGI
 async function loadPolls() {
   const box = $('#polls');
   if (!box) return;
@@ -498,11 +577,13 @@ async function loadPolls() {
 
   box.innerHTML = `
     <h3>${esc(poll.question)}</h3>
+
     <div>
       ${opts.map((o, i) =>
         `<button class="ng-poll-option" data-poll="${poll.id}" data-option="${i}">${esc(o)}</button>`
       ).join('')}
     </div>
+
     <p class="muted">Un voto per account. +10 XP.</p>
   `;
 
@@ -534,6 +615,7 @@ async function loadPolls() {
   });
 }
 
+// CLASSIFICA
 async function loadLeaderboard() {
   const { data, error } = await getLeaderboard(10);
   const box = $('#leaderboard');
