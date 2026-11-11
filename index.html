@@ -50,7 +50,43 @@
 <article><span>🚀</span><h3>Titoli più attesi</h3><p>Anteprime con informazioni verificate e aggiornate.</p></article>
 </div></section></footer><section class="ng-panel" style="margin:28px auto 0;max-width:1180px;padding:22px"><div class="ng-kicker">NEWSLETTER · FACOLTATIVA</div><h2 style="margin:7px 0">Il riepilogo gaming della settimana</h2><p style="color:#a9b7c9">Iscriviti solo se vuoi ricevere il riepilogo. L'iscrizione richiede conferma email e puoi disiscriverti in qualsiasi momento.</p><form id="ngNewsletterForm" style="display:flex;gap:10px;flex-wrap:wrap"><input id="ngNewsletterEmail" type="email" required autocomplete="email" placeholder="La tua email" style="flex:1;min-width:220px;padding:12px;border-radius:10px;border:1px solid #29405a;background:#091421;color:#fff"><input id="ngNewsletterWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" type="text"><label style="display:flex;align-items:center;gap:7px;font-size:.78rem;color:#b9c9d9"><input id="ngNewsletterConsent" type="checkbox" required> Accetto di ricevere la newsletter</label><button class="ng-btn" type="submit">Iscriviti</button></form><p id="ngNewsletterMsg" class="muted" aria-live="polite"></p></section>
 <script>
-document.getElementById('ngNewsletterForm')?.addEventListener('submit',async e=>{e.preventDefault();const msg=document.getElementById('ngNewsletterMsg');msg.textContent='Invio…';const r=await fetch('/.netlify/functions/newsletter-subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('ngNewsletterEmail').value,website:document.getElementById('ngNewsletterWebsite').value})});const j=await r.json().catch(()=>({}));msg.textContent=j.message||j.error||'Operazione completata.'});
-</script><div aria-label="Preferenze privacy" class="cookie" hidden="" id="cookieNotice" role="dialog"><strong>La tua privacy conta</strong><p>Questo sito non attiva pubblicità o analytics. Le immagini sono illustrative; i video YouTube vengono caricati solo quando premi “Carica video”. La memoria locale ricorda che hai chiuso questo messaggio.</p><div class="cookie-actions"><button onclick="cookieChoice('settings')">Dettagli privacy</button><button class="primary" onclick="cookieChoice('close')">Chiudi</button></div></div><script>const n=document.getElementById('cookieNotice');const saved=localStorage.getItem('ng2-privacy-choice');if(!saved)n.hidden=false;function cookieChoice(v){localStorage.setItem('ng2-privacy-choice',v);n.hidden=true;if(v==='settings')window.location.href='/cookie-policy.html';}window.openCookiePreferences=()=>{n.hidden=false};</script><script>const s=document.getElementById('search'),c=document.getElementById('category'),grid=document.getElementById('articleGrid'),items=[...grid.querySelectorAll('.card')],empty=document.getElementById('empty'),sortBtn=document.getElementById('sortDate'),sortLabel=document.getElementById('sortLabel'),pagination=document.getElementById('pagination');let newestFirst=true,page=1,pageSize=10,filtered=[...items];function render(){const start=(page-1)*pageSize,end=start+pageSize;items.forEach(el=>el.hidden=true);filtered.slice(start,end).forEach(el=>el.hidden=false);empty.style.display=filtered.length?'none':'block';pagination.innerHTML='';const pages=Math.ceil(filtered.length/pageSize);if(pages<=1)return;const prev=document.createElement('button');prev.textContent='‹';prev.setAttribute('aria-label','Pagina precedente');prev.disabled=page===1;prev.onclick=()=>{page--;render()};pagination.append(prev);for(let i=1;i<=pages;i++){const b=document.createElement('button');b.textContent=i;if(i===page)b.setAttribute('aria-current','page');b.onclick=()=>{page=i;render();grid.scrollIntoView({behavior:'smooth',block:'start'})};pagination.append(b)}const next=document.createElement('button');next.textContent='›';next.setAttribute('aria-label','Pagina successiva');next.disabled=page===pages;next.onclick=()=>{page++;render()};pagination.append(next)}function sortCards(){items.sort((a,b)=>{const d=(a.dataset.date||'').localeCompare(b.dataset.date||'');return newestFirst?-d:d}).forEach(el=>grid.append(el));sortLabel.textContent=newestFirst?'Più recenti':'Meno recenti';sortBtn.querySelector('[aria-hidden="true"]:last-child').textContent=newestFirst?'↓':'↑';filter()}function filter(){const q=s.value.toLowerCase().trim(),cat=c.value;filtered=items.filter(el=>(!q||el.dataset.title.includes(q)||el.innerText.toLowerCase().includes(q))&&(!cat||el.dataset.cat===cat));page=1;render()}sortBtn.addEventListener('click',()=>{newestFirst=!newestFirst;sortCards()});s.addEventListener('input',filter);c.addEventListener('change',filter);sortCards();</script><script>
-(()=>{const rail=document.getElementById('featuredCarousel');if(!rail)return;const step=()=>{const card=rail.querySelector('.featured-card');return card?card.getBoundingClientRect().width+16:320};document.getElementById('featuredPrev')?.addEventListener('click',()=>rail.scrollBy({left:-step(),behavior:'smooth'}));document.getElementById('featuredNext')?.addEventListener('click',()=>rail.scrollBy({left:step(),behavior:'smooth'}));})();
-</script><script src="/assets/neon-home.js" defer></script></body></html>
+
+<script>
+document.getElementById('ngNewsletterForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const msg = document.getElementById('ngNewsletterMsg');
+  const button = form.querySelector('button[type="submit"]');
+
+  msg.textContent = 'Invio in corso...';
+  button.disabled = true;
+
+  try {
+    const response = await fetch('/api/newsletter-subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: document.getElementById('ngNewsletterEmail').value,
+        website: document.getElementById('ngNewsletterWebsite').value,
+        consent: document.getElementById('ngNewsletterConsent').checked
+      })
+    });
+
+    const data = await response.json();
+
+    msg.textContent = data.message || data.error ||
+      'Si è verificato un errore.';
+
+    if (response.ok) {
+      form.reset();
+    }
+  } catch (error) {
+    msg.textContent = 'Connessione non riuscita. Riprova.';
+  } finally {
+    button.disabled = false;
+  }
+});
+</script>
