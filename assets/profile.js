@@ -1,139 +1,213 @@
-// profile.js - Gestione Area Personale e XP/Streak per NEWSGAMING2
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const sb = createClient(
   window.NG_SUPABASE_URL,
   window.NG_SUPABASE_PUBLISHABLE_KEY,
-  { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
 );
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const { data: { session }, error: sessionError } = await sb.auth.getSession();
-  if (sessionError || !session) {
-    window.location.href = '/account.html';
-    return;
+const $ = id => document.getElementById(id);
+
+function showMessage(message) {
+  alert(message);
+}
+
+function updateLevel(xp) {
+  const level = Math.floor((xp || 0) / 100) + 1;
+  if ($('xp')) $('xp').textContent = xp || 0;
+  if ($('level')) $('level').textContent = level;
+}
+
+async function loadProfile(user) {
+  const { data: profile, error } = await sb
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (error) throw error;
+
+  if ($('who')) {
+    $('who').textContent =
+      profile.display_name || profile.username || user.email;
   }
 
-  const user = session.user;
-  loadUserProfile(user);
-  setupEventListeners(user);
-});
+  if ($('displayName')) {
+    $('displayName').value = profile.display_name || '';
+  }
 
-async function loadUserProfile(user) {
+  if ($('username')) {
+    $('username').value = profile.username || '';
+  }
+
+  if ($('bio')) {
+    $('bio').value = profile.bio || '';
+  }
+
+  if ($('avatarUrl')) {
+    $('avatarUrl').value = profile.avatar_url || '';
+  }
+
+  updateLevel(profile.xp);
+
+  if ($('dailyStatus')) {
+    const today = new Date().toISOString().slice(0, 10);
+    const claimed = profile.last_login_date === today;
+
+    $('dailyStatus').textContent = claimed
+      ? 'Hai già riscosso gli XP di oggi!'
+      : 'Puoi riscuotere i tuoi XP giornalieri.';
+  }
+
+  if ($('dailyClaim')) {
+    const today = new Date().toISOString().slice(0, 10);
+    const claimed = profile.last_login_date === today;
+
+    $('dailyClaim').disabled = claimed;
+    $('dailyClaim').textContent = claimed
+      ? 'Già riscosso oggi'
+      : 'Riscatta XP giornalieri';
+  }
+
+  if ($('dailyStreak')) {
+    $('dailyStreak').textContent = profile.daily_streak || 0;
+  }
+}
+
+async function saveProfile(user) {
+  const button = $('profileForm')?.querySelector('[type="submit"]');
+
+  const display_name = $('displayName')?.value.trim() || '';
+  const username = $('username')?.value.trim() || '';
+  const bio = $('bio')?.value.trim() || '';
+  const avatar_url = $('avatarUrl')?.value.trim() || '';
+
+  if (button) button.disabled = true;
+
   try {
-    const { data: profile, error } = await sb
+    const { error } = await sb
       .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+      .update({
+        display_name,
+        username,
+        bio,
+        avatar_url,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', user.id);
 
     if (error) throw error;
 
-    if (document.getElementById('usernameDisplay')) document.getElementById('usernameDisplay').textContent = profile.username || user.email;
-    if (document.getElementById('displayNameInput')) document.getElementById('displayNameInput').value = profile.display_name || '';
-    if (document.getElementById('bioInput')) document.getElementById('bioInput').value = profile.bio || '';
-    if (document.getElementById('xpDisplay')) document.getElementById('xpDisplay').textContent = profile.xp || 0;
-    if (document.getElementById('streakDisplay')) document.getElementById('streakDisplay').textContent = profile.daily_streak || 0;
-    
-    // Calcolo livello
-    const currentXp = profile.xp || 0;
-    const level = Math.floor(currentXp / 100) + 1;
-    if (document.getElementById('levelDisplay')) document.getElementById('levelDisplay').textContent = level;
-
-    // Controllo riscatto giornaliero
-    checkDailyClaimStatus(profile.last_login_date);
-  } catch (err) {
-    console.error('Errore caricamento profilo:', err);
+    await loadProfile(user);
+    showMessage('Profilo aggiornato correttamente!');
+  } catch (error) {
+    showMessage('Errore nel salvataggio: ' + error.message);
+  } finally {
+    if (button) button.disabled = false;
   }
 }
 
-function checkDailyClaimStatus(lastLoginDate) {
-  const claimBtn = document.getElementById('claimDailyBtn');
-  if (!claimBtn) return;
+async function claimDailyXP(user) {
+  const button = $('dailyClaim');
+  if (!button || button.disabled) return;
 
-  const today = new Date().toISOString().split('T')[0];
-  if (lastLoginDate === today) {
-    claimBtn.textContent = 'Già riscosso oggi';
-    claimBtn.disabled = true;
-    claimBtn.classList.add('opacity-50', 'cursor-not-allowed');
-  } else {
-    claimBtn.textContent = 'Riscatta XP Giornalieri';
-    claimBtn.disabled = false;
-    claimBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+  button.disabled = true;
+
+  try {
+    const { data, error } = await sb.rpc('claim_daily_login');
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+
+    await loadProfile(user);
+
+    if (result?.xp_awarded > 0) {
+      showMessage(`Hai ricevuto ${result.xp_awarded} XP!`);
+    } else {
+      showMessage('Hai già riscosso gli XP di oggi.');
+    }
+  } catch (error) {
+    showMessage('Errore nel riscatto degli XP: ' + error.message);
+    button.disabled = false;
   }
 }
 
-function setupEventListeners(user) {
-  // Salvataggio profilo
-  const profileForm = document.getElementById('profileForm');
-  if (profileForm) {
-    profileForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const display_name = document.getElementById('displayNameInput').value;
-      const bio = document.getElementById('bioInput').value;
+async function deleteAccount() {
+  const confirmation = prompt(
+    'ATTENZIONE: la cancellazione dell’account è definitiva. Scrivi ELIMINA per confermare.'
+  );
 
-      const { error } = await sb
-        .from('profiles')
-        .update({ display_name, bio, updated_at: new Date() })
-        .eq('id', user.id);
+  if (confirmation !== 'ELIMINA') return;
 
-      if (error) {
-        alert('Errore durante il salvataggio: ' + error.message);
-      } else {
-        alert('Profilo aggiornato con successo!');
-      }
-    });
+  const { data: { session }, error } = await sb.auth.getSession();
+
+  if (error || !session) {
+    showMessage('Sessione non disponibile. Accedi nuovamente.');
+    return;
   }
 
-  // Riscatto XP Giornalieri
-  const claimBtn = document.getElementById('claimDailyBtn');
-  if (claimBtn) {
-    claimBtn.addEventListener('click', async () => {
-      claimBtn.disabled = true;
-      try {
-        const { data, error } = await sb.rpc('claim_daily_login');
-        if (error) throw error;
-        
-        alert('XP giornalieri riscossi con successo!');
-        loadUserProfile(user);
-      } catch (err) {
-        alert('Errore riscatto XP: ' + (err.message || 'Impossibile completare l\'operazione'));
-        claimBtn.disabled = false;
+  try {
+    const response = await fetch('/api/delete-account', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json'
       }
     });
-  }
 
-  // Cancellazione account
-  const deleteBtn = document.getElementById('deleteAccountBtn');
-  if (deleteBtn) {
-    deleteBtn.addEventListener('click', async () => {
-      const confirmText = prompt('ATTENZIONE: Questa azione è irreversibile.\nDigita "ELIMINA" per confermare la cancellazione definitiva del tuo account:');
-      if (confirmText !== 'ELIMINA') {
-        alert('Cancellazione annullata.');
-        return;
-      }
+    const result = await response.json();
 
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        if (!session) throw new Error('Sessione non trovata.');
+    if (!response.ok) {
+      throw new Error(result.error || 'Cancellazione non riuscita.');
+    }
 
-        const res = await fetch('/api/delete-account', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
-          }
-        });
-
-        const result = await res.json();
-        if (!res.ok) throw new Error(result.error || 'Errore durante la cancellazione.');
-
-        alert('Account eliminato con successo.');
-        await sb.auth.signOut();
-        window.location.href = '/index.html';
-      } catch (err) {
-        alert('Errore: ' + err.message);
-      }
-    });
+    await sb.auth.signOut();
+    window.location.href = '/index.html';
+  } catch (error) {
+    showMessage('Errore: ' + error.message);
   }
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { data: { session }, error } = await sb.auth.getSession();
+
+    if (error || !session) {
+      window.location.href = '/account.html';
+      return;
+    }
+
+    const user = session.user;
+
+    await loadProfile(user);
+
+    $('profileForm')?.addEventListener('submit', event => {
+      event.preventDefault();
+      saveProfile(user);
+    });
+
+    $('dailyClaim')?.addEventListener('click', () => {
+      claimDailyXP(user);
+    });
+
+    $('logout')?.addEventListener('click', async () => {
+      await sb.auth.signOut();
+      window.location.href = '/account.html';
+    });
+
+    $('delete')?.addEventListener('click', deleteAccount);
+
+  } catch (error) {
+    console.error('Errore Area personale:', error);
+
+    if ($('who')) $('who').textContent = 'Errore nel caricamento del profilo';
+    if ($('dailyStatus')) $('dailyStatus').textContent = error.message;
+  }
+});
