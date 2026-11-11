@@ -24,8 +24,8 @@ let commentsChannel = null;
 let refreshTimer = null;
 
 // PAGINAZIONE COMMENTI
-let visibleCommentCount = 10;
-const COMMENT_PAGE_SIZE = 10;
+let visibleCommentCount = 5;
+const COMMENT_PAGE_SIZE = 5;
 let reactionCountsCache = new Map();
 
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({
@@ -217,7 +217,7 @@ async function loadComments() {
   renderCommentList();
 }
 
-// MOSTRA I COMMENTI A GRUPPI DI 10
+// MOSTRA I COMMENTI A GRUPPI DI 5
 function renderCommentList() {
   const box = $('#comments');
   if (!box) return;
