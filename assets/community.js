@@ -1,31 +1,538 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { claimDailyLogin, getLeaderboard, levelFromXp } from './xp.js';
-const sb=createClient(window.NG_SUPABASE_URL,window.NG_SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const $=s=>document.querySelector(s); const articleSlug=new URLSearchParams(location.search).get('article')||'';
-let session=null, profiles=new Map(), comments=[];
-const esc=v=>(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-async function boot(){
- const {data}=await sb.auth.getSession(); session=data.session;
- if(session){const {data:p}=await sb.from('profiles').select('xp,daily_streak').eq('id',session.user.id).maybeSingle(); const stat=document.querySelector('#myProgress'); if(stat) stat.innerHTML=`<b>LV ${levelFromXp(p?.xp||0)}</b> · ${(p?.xp||0)} XP · 🔥 ${(p?.daily_streak||0)} giorni`;}
- $('#userState').innerHTML=session?`<span class="ng-user-chip">Connesso come <b>${esc(session.user.email||'player')}</b></span>`:`<a class="ng-btn secondary" href="/account.html">Accedi per partecipare</a>`;
- $('#articleLabel').textContent=articleSlug?`Discussione: ${articleSlug}`:'Discussioni della community';
- if(session){const r=await claimDailyLogin(); if(r.error){showToast('XP giornalieri non disponibili: esegui la migrazione Supabase.');} else if(r.data?.[0]?.xp_awarded) showToast(`+${r.data[0].xp_awarded} XP · accesso giornaliero`);}
- await loadProfiles(); await loadComments(); await loadLeaderboard(); await loadPolls();
- $('#commentForm')?.addEventListener('submit',postComment);
- document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action;if(a==='like'||a==='dislike')react(b.dataset.id,a);if(a==='report')report(b.dataset.id);if(a==='reply')toggleReply(b.dataset.id);});
+
+const sb = createClient(
+  window.NG_SUPABASE_URL,
+  window.NG_SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
+);
+
+const $ = s => document.querySelector(s);
+const articleSlug = new URLSearchParams(location.search).get('article') || '';
+
+let session = null;
+let profiles = new Map();
+let comments = [];
+let commentsChannel = null;
+let refreshTimer = null;
+
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#039;'
+}[c]));
+
+async function boot() {
+  const { data, error } = await sb.auth.getSession();
+
+  if (error) {
+    console.error('Errore sessione:', error);
+  }
+
+  session = data?.session || null;
+
+  if (session) {
+    const { data: p } = await sb
+      .from('profiles')
+      .select('xp,daily_streak')
+      .eq('id', session.user.id)
+      .maybeSingle();
+
+    const stat = $('#myProgress');
+
+    if (stat) {
+      stat.innerHTML = `<b>LV ${levelFromXp(p?.xp || 0)}</b> · ${(p?.xp || 0)} XP · 🔥 ${(p?.daily_streak || 0)} giorni`;
+    }
+  }
+
+  if ($('#userState')) {
+    $('#userState').innerHTML = session
+      ? `<span class="ng-user-chip">Connesso come <b>${esc(session.user.email || 'player')}</b></span>`
+      : `<a class="ng-btn secondary" href="/account.html">Accedi per partecipare</a>`;
+  }
+
+  if ($('#articleLabel')) {
+    $('#articleLabel').textContent = articleSlug
+      ? `Discussione: ${articleSlug}`
+      : 'Discussioni della community';
+  }
+
+  if (session) {
+    const r = await claimDailyLogin();
+
+    if (r.error) {
+      showToast('XP giornalieri non disponibili.');
+    } else if (r.data?.[0]?.xp_awarded) {
+      showToast(`+${r.data[0].xp_awarded} XP · accesso giornaliero`);
+    }
+  }
+
+  await loadProfiles();
+
+  // Attiva gli aggiornamenti in tempo reale prima di caricare i commenti.
+  setupRealtime();
+
+  await loadComments();
+  await loadLeaderboard();
+  await loadPolls();
+
+  $('#commentForm')?.addEventListener('submit', postComment);
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-action]');
+    if (!b) return;
+
+    const a = b.dataset.action;
+
+    if (a === 'like' || a === 'dislike') {
+      react(b.dataset.id, a);
+    }
+
+    if (a === 'report') {
+      report(b.dataset.id);
+    }
+
+    if (a === 'reply') {
+      window.toggleReply(b.dataset.id);
+    }
+  });
 }
-function showToast(msg){const t=document.createElement('div');t.className='ng-toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
-async function loadProfiles(){const {data,error}=await sb.from('profiles').select('id,display_name,username,avatar_url,xp,daily_streak');if(!error)(data||[]).forEach(x=>profiles.set(x.id,x));}
-async function loadComments(){let q=sb.from('comments').select('id,article_slug,user_id,parent_id,body,status,created_at').eq('status','published').order('created_at',{ascending:true});if(articleSlug)q=q.eq('article_slug',articleSlug);const {data,error}=await q;if(error){$('#comments').innerHTML=`<div class="ng-alert error">Impossibile caricare i commenti: ${esc(error.message)}</div>`;return;}comments=data||[];if(!comments.length){$('#comments').innerHTML='<div class="ng-empty">Nessun commento ancora. Sii il primo a partecipare.</div>';return;}const counts=await reactionCounts(comments.map(x=>x.id));$('#comments').innerHTML=buildTree(comments.filter(c=>!c.parent_id),counts);}
-function buildTree(roots,counts){return roots.map(c=>renderComment(c,counts,0)+children(c.id,counts)).join('')}
-function children(pid,counts){return comments.filter(c=>c.parent_id===pid).map(c=>`<div class="ng-reply">${renderComment(c,counts,1)}${children(c.id,counts)}</div>`).join('')}
-async function reactionCounts(ids){if(!ids.length)return new Map();const {data}=await sb.from('comment_reactions').select('comment_id,reaction').in('comment_id',ids);const m=new Map();(data||[]).forEach(r=>{const x=m.get(r.comment_id)||{like:0,dislike:0};x[r.reaction]++;m.set(r.comment_id,x)});return m}
-function renderComment(c,counts,depth){const p=profiles.get(c.user_id)||{},name=esc(p.display_name||p.username||'Player'),initial=esc((p.display_name||p.username||'P').slice(0,1).toUpperCase()),date=new Date(c.created_at).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'});return `<article class="ng-comment" id="comment-${c.id}"><div class="ng-comment-meta"><div class="ng-avatar">${p.avatar_url?`<img src="${esc(p.avatar_url)}" alt="">`:initial}</div><b>${name}</b><span>LV ${levelFromXp(p.xp)}</span><span>· ${date}</span></div><div class="ng-comment-body">${esc(c.body)}</div><div class="ng-comment-actions"><button class="ng-mini" data-action="like" data-id="${c.id}">👍 ${counts.get(c.id)?.like||0}</button><button class="ng-mini" data-action="dislike" data-id="${c.id}">👎 ${counts.get(c.id)?.dislike||0}</button>${session?`<button class="ng-mini" data-action="reply" data-id="${c.id}">↩ Rispondi</button><button class="ng-mini" data-action="report" data-id="${c.id}">⚑ Segnala</button>`:''}</div><div id="reply-${c.id}" class="ng-reply-box" hidden><form class="ng-form" onsubmit="return false"><textarea id="reply-body-${c.id}" maxlength="3000" placeholder="Rispondi a questo commento…"></textarea><button type="button" class="ng-btn" onclick="window.postReply('${c.id}')">Pubblica risposta</button></form></div></article>`}
-window.toggleReply=id=>{const el=$('#reply-'+id);if(el)el.hidden=!el.hidden};
-window.postReply=async parentId=>{if(!session){location.href='/account.html';return;}const body=$('#reply-body-'+parentId)?.value.trim();if(!body)return;const {error}=await sb.from('comments').insert({article_slug:articleSlug||'community',user_id:session.user.id,parent_id:parentId,body});if(error){showToast('Errore: '+error.message);return;}showToast('+15 XP · risposta pubblicata online');await loadProfiles();await loadComments();await loadLeaderboard();};
-async function postComment(e){e.preventDefault();if(!session){location.href='/account.html';return;}const body=$('#commentBody').value.trim();if(!body)return;$('#postBtn').disabled=true;const {error}=await sb.from('comments').insert({article_slug:articleSlug||'community',user_id:session.user.id,body});$('#postBtn').disabled=false;if(error){$('#commentMsg').textContent='Errore: '+error.message;return;}$('#commentBody').value='';$('#commentMsg').textContent='Commento pubblicato online · +15 XP.';await loadProfiles();await loadComments();await loadLeaderboard();}
-async function react(commentId,reaction){if(!session){location.href='/account.html';return;}const {data:old}=await sb.from('comment_reactions').select('reaction').eq('comment_id',commentId).eq('user_id',session.user.id).maybeSingle();if(old?.reaction===reaction)await sb.from('comment_reactions').delete().eq('comment_id',commentId).eq('user_id',session.user.id);else await sb.from('comment_reactions').upsert({comment_id:commentId,user_id:session.user.id,reaction},{onConflict:'comment_id,user_id'});await loadComments();}
-async function report(commentId){if(!session){location.href='/account.html';return;}const reason=prompt('Motivo: spam, offensive, misinformation, copyright oppure other');if(!reason)return;const allowed=['spam','offensive','misinformation','copyright','other'];if(!allowed.includes(reason.trim())){showToast('Motivo non valido');return;}const details=prompt('Dettagli (facoltativi):')||'';const {error}=await sb.from('reports').insert({reporter_id:session.user.id,comment_id:commentId,reason:reason.trim(),details});showToast(error?'Segnalazione non inviata.':'Segnalazione inviata alla moderazione.');}
-async function loadPolls(){const box=$('#polls');if(!box)return;const {data,error}=await sb.from('polls').select('id,question,options,closes_at').eq('active',true).order('created_at',{ascending:false}).limit(1);if(error){box.innerHTML=`<div class="ng-alert error">Sondaggio non disponibile: ${esc(error.message)}</div>`;return;}const poll=data?.[0];if(!poll){box.innerHTML='<div class="ng-empty">Nessun sondaggio attivo.</div>';return;}const opts=Array.isArray(poll.options)?poll.options:[];box.innerHTML=`<h3>${esc(poll.question)}</h3><div>${opts.map((o,i)=>`<button class="ng-poll-option" data-poll="${poll.id}" data-option="${i}">${esc(o)}</button>`).join('')}</div><p class="muted">Un voto per account. +10 XP.</p>`;box.querySelectorAll('[data-poll]').forEach(b=>b.onclick=async()=>{if(!session){location.href='/account.html';return;}const {error}=await sb.from('poll_votes').insert({poll_id:b.dataset.poll,user_id:session.user.id,option_index:Number(b.dataset.option)});if(error){showToast(error.code==='23505'?'Hai già votato.':error.message);return;}showToast('+10 XP · voto registrato');loadPolls();loadProfiles();loadLeaderboard();});}
-async function loadLeaderboard(){const {data,error}=await getLeaderboard(10);if(error){const box=$('#leaderboard'); if(box) box.innerHTML=`<div class="ng-alert error">Classifica non disponibile: ${esc(error.message)}</div>`; return;} const box=$('#leaderboard');if(!box)return;box.innerHTML=(data||[]).map((p,i)=>`<div class="ng-rank"><span>#${i+1}</span><b>${esc(p.display_name||p.username||'Player')}</b><span>LV ${levelFromXp(p.xp)} · ${p.xp} XP</span></div>`).join('')||'<div class="ng-empty">Nessun giocatore.</div>';}
+
+// AGGIORNAMENTI IN TEMPO REALE
+function setupRealtime() {
+  if (commentsChannel) {
+    sb.removeChannel(commentsChannel);
+  }
+
+  commentsChannel = sb
+    .channel('community-comments-realtime')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'comments'
+      },
+      payload => {
+        const row = payload.new?.id ? payload.new : payload.old;
+
+        if (!row) return;
+
+        // Nella pagina di un articolo aggiorna solo la sua discussione.
+        if (articleSlug && row.article_slug !== articleSlug) {
+          return;
+        }
+
+        // Evita numerosi aggiornamenti ravvicinati.
+        clearTimeout(refreshTimer);
+
+        refreshTimer = setTimeout(async () => {
+          await loadProfiles();
+          await loadComments();
+        }, 200);
+      }
+    )
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') {
+        console.log('NEWSGAMING2: commenti in tempo reale attivi.');
+      }
+
+      if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        console.error('Realtime commenti non disponibile:', status);
+      }
+    });
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'ng-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+async function loadProfiles() {
+  const { data, error } = await sb
+    .from('profiles')
+    .select('id,display_name,username,avatar_url,xp,daily_streak');
+
+  if (!error) {
+    (data || []).forEach(x => profiles.set(x.id, x));
+  }
+}
+
+async function loadComments() {
+  let q = sb
+    .from('comments')
+    .select('id,article_slug,user_id,parent_id,body,status,created_at')
+    .eq('status', 'published')
+    .order('created_at', { ascending: true });
+
+  if (articleSlug) {
+    q = q.eq('article_slug', articleSlug);
+  }
+
+  const { data, error } = await q;
+
+  if (error) {
+    if ($('#comments')) {
+      $('#comments').innerHTML =
+        `<div class="ng-alert error">Impossibile caricare i commenti: ${esc(error.message)}</div>`;
+    }
+    return;
+  }
+
+  comments = data || [];
+
+  if (!comments.length) {
+    if ($('#comments')) {
+      $('#comments').innerHTML =
+        '<div class="ng-empty">Nessun commento ancora. Sii il primo a partecipare.</div>';
+    }
+    return;
+  }
+
+  const counts = await reactionCounts(comments.map(x => x.id));
+
+  if ($('#comments')) {
+    $('#comments').innerHTML = buildTree(
+      comments.filter(c => !c.parent_id),
+      counts
+    );
+  }
+}
+
+function buildTree(roots, counts) {
+  return roots.map(c => renderComment(c, counts, 0) + children(c.id, counts)).join('');
+}
+
+function children(pid, counts) {
+  return comments
+    .filter(c => c.parent_id === pid)
+    .map(c => `<div class="ng-reply">${renderComment(c, counts, 1)}${children(c.id, counts)}</div>`)
+    .join('');
+}
+
+async function reactionCounts(ids) {
+  if (!ids.length) return new Map();
+
+  const { data } = await sb
+    .from('comment_reactions')
+    .select('comment_id,reaction')
+    .in('comment_id', ids);
+
+  const m = new Map();
+
+  (data || []).forEach(r => {
+    const x = m.get(r.comment_id) || { like: 0, dislike: 0 };
+    x[r.reaction]++;
+    m.set(r.comment_id, x);
+  });
+
+  return m;
+}
+
+function renderComment(c, counts, depth) {
+  const p = profiles.get(c.user_id) || {};
+  const name = esc(p.display_name || p.username || 'Player');
+  const initial = esc((p.display_name || p.username || 'P').slice(0, 1).toUpperCase());
+
+  const date = new Date(c.created_at).toLocaleString('it-IT', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  });
+
+  return `
+    <article class="ng-comment" id="comment-${c.id}">
+      <div class="ng-comment-meta">
+        <div class="ng-avatar">
+          ${p.avatar_url ? `<img src="${esc(p.avatar_url)}" alt="">` : initial}
+        </div>
+        <b>${name}</b>
+        <span>LV ${levelFromXp(p.xp)}</span>
+        <span>· ${date}</span>
+      </div>
+
+      <div class="ng-comment-body">${esc(c.body)}</div>
+
+      <div class="ng-comment-actions">
+        <button class="ng-mini" data-action="like" data-id="${c.id}">
+          👍 ${counts.get(c.id)?.like || 0}
+        </button>
+
+        <button class="ng-mini" data-action="dislike" data-id="${c.id}">
+          👎 ${counts.get(c.id)?.dislike || 0}
+        </button>
+
+        ${session ? `
+          <button class="ng-mini" data-action="reply" data-id="${c.id}">
+            ↩ Rispondi
+          </button>
+          <button class="ng-mini" data-action="report" data-id="${c.id}">
+            ⚑ Segnala
+          </button>
+        ` : ''}
+      </div>
+
+      <div id="reply-${c.id}" class="ng-reply-box" hidden>
+        <form class="ng-form" onsubmit="return false">
+          <textarea id="reply-body-${c.id}" maxlength="3000"
+            placeholder="Rispondi a questo commento…"></textarea>
+
+          <button type="button" class="ng-btn"
+            onclick="window.postReply('${c.id}')">
+            Pubblica risposta
+          </button>
+        </form>
+      </div>
+    </article>
+  `;
+}
+
+window.toggleReply = id => {
+  const el = $(`#reply-${id}`);
+  if (el) el.hidden = !el.hidden;
+};
+
+window.postReply = async parentId => {
+  if (!session) {
+    location.href = '/account.html';
+    return;
+  }
+
+  const body = $(`#reply-body-${parentId}`)?.value.trim();
+
+  if (!body) return;
+
+  const { error } = await sb
+    .from('comments')
+    .insert({
+      article_slug: articleSlug || 'community',
+      user_id: session.user.id,
+      parent_id: parentId,
+      body
+    });
+
+  if (error) {
+    showToast('Errore: ' + error.message);
+    return;
+  }
+
+  showToast('Risposta pubblicata online.');
+  await loadProfiles();
+  await loadComments();
+  await loadLeaderboard();
+};
+
+async function postComment(e) {
+  e.preventDefault();
+
+  if (!session) {
+    location.href = '/account.html';
+    return;
+  }
+
+  const body = $('#commentBody')?.value.trim();
+
+  if (!body) return;
+
+  $('#postBtn').disabled = true;
+
+  const { error } = await sb
+    .from('comments')
+    .insert({
+      article_slug: articleSlug || 'community',
+      user_id: session.user.id,
+      body
+    });
+
+  $('#postBtn').disabled = false;
+
+  if (error) {
+    $('#commentMsg').textContent = 'Errore: ' + error.message;
+    return;
+  }
+
+  $('#commentBody').value = '';
+  $('#commentMsg').textContent = 'Commento pubblicato online!';
+
+  await loadProfiles();
+  await loadComments();
+  await loadLeaderboard();
+}
+
+async function react(commentId, reaction) {
+  if (!session) {
+    location.href = '/account.html';
+    return;
+  }
+
+  const { data: old } = await sb
+    .from('comment_reactions')
+    .select('reaction')
+    .eq('comment_id', commentId)
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  if (old?.reaction === reaction) {
+    await sb
+      .from('comment_reactions')
+      .delete()
+      .eq('comment_id', commentId)
+      .eq('user_id', session.user.id);
+  } else {
+    await sb
+      .from('comment_reactions')
+      .upsert(
+        {
+          comment_id: commentId,
+          user_id: session.user.id,
+          reaction
+        },
+        { onConflict: 'comment_id,user_id' }
+      );
+  }
+
+  await loadComments();
+}
+
+async function report(commentId) {
+  if (!session) {
+    location.href = '/account.html';
+    return;
+  }
+
+  const reason = prompt(
+    'Motivo: spam, offensive, misinformation, copyright oppure other'
+  );
+
+  if (!reason) return;
+
+  const allowed = [
+    'spam',
+    'offensive',
+    'misinformation',
+    'copyright',
+    'other'
+  ];
+
+  if (!allowed.includes(reason.trim())) {
+    showToast('Motivo non valido');
+    return;
+  }
+
+  const details = prompt('Dettagli (facoltativi):') || '';
+
+  const { error } = await sb
+    .from('reports')
+    .insert({
+      reporter_id: session.user.id,
+      comment_id: commentId,
+      reason: reason.trim(),
+      details
+    });
+
+  showToast(
+    error
+      ? 'Segnalazione non inviata.'
+      : 'Segnalazione inviata alla moderazione.'
+  );
+}
+
+async function loadPolls() {
+  const box = $('#polls');
+  if (!box) return;
+
+  const { data, error } = await sb
+    .from('polls')
+    .select('id,question,options,closes_at')
+    .eq('active', true)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (error) {
+    box.innerHTML =
+      `<div class="ng-alert error">Sondaggio non disponibile: ${esc(error.message)}</div>`;
+    return;
+  }
+
+  const poll = data?.[0];
+
+  if (!poll) {
+    box.innerHTML = '<div class="ng-empty">Nessun sondaggio attivo.</div>';
+    return;
+  }
+
+  const opts = Array.isArray(poll.options) ? poll.options : [];
+
+  box.innerHTML = `
+    <h3>${esc(poll.question)}</h3>
+    <div>
+      ${opts.map((o, i) =>
+        `<button class="ng-poll-option" data-poll="${poll.id}" data-option="${i}">${esc(o)}</button>`
+      ).join('')}
+    </div>
+    <p class="muted">Un voto per account. +10 XP.</p>
+  `;
+
+  box.querySelectorAll('[data-poll]').forEach(b => {
+    b.onclick = async () => {
+      if (!session) {
+        location.href = '/account.html';
+        return;
+      }
+
+      const { error } = await sb
+        .from('poll_votes')
+        .insert({
+          poll_id: b.dataset.poll,
+          user_id: session.user.id,
+          option_index: Number(b.dataset.option)
+        });
+
+      if (error) {
+        showToast(error.code === '23505' ? 'Hai già votato.' : error.message);
+        return;
+      }
+
+      showToast('+10 XP · voto registrato');
+      loadPolls();
+      loadProfiles();
+      loadLeaderboard();
+    };
+  });
+}
+
+async function loadLeaderboard() {
+  const { data, error } = await getLeaderboard(10);
+  const box = $('#leaderboard');
+
+  if (!box) return;
+
+  if (error) {
+    box.innerHTML =
+      `<div class="ng-alert error">Classifica non disponibile: ${esc(error.message)}</div>`;
+    return;
+  }
+
+  box.innerHTML = (data || [])
+    .map((p, i) => `
+      <div class="ng-rank">
+        <span>#${i + 1}</span>
+        <b>${esc(p.display_name || p.username || 'Player')}</b>
+        <span>LV ${levelFromXp(p.xp)} · ${p.xp} XP</span>
+      </div>
+    `)
+    .join('') || '<div class="ng-empty">Nessun giocatore.</div>';
+}
+
 boot();
