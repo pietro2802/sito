@@ -1,1 +1,42 @@
 
+name: Newsletter - nuovo articolo
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'articoli/*.html'
+      - 'articoli/**/*.html'
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Invia notifiche per i nuovi articoli
+        shell: bash
+        env:
+          NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          if [[ "$BEFORE" == "0000000000000000000000000000000000000000" ]]; then
+            git ls-tree -r --name-only "$AFTER" -- articoli/ | grep -E '^articoli/.*\.html$' > /tmp/new-articles.txt || true
+          else
+            git diff --diff-filter=A --name-only "$BEFORE" "$AFTER" -- 'articoli/*.html' 'articoli/**/*.html' > /tmp/new-articles.txt
+          fi
+
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            echo "Notifica per: $file"
+            node scripts/notify-new-article.js "$file"
+          done < /tmp/new-articles.txt
