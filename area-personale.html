@@ -1,4 +1,4 @@
-
+```html
 <!doctype html>
 <html lang="it">
 <head>
@@ -29,9 +29,9 @@
 
     <header class="ng-page-head">
       <div>
-        <div class="ng-kicker">PLAYER HUB · ACCOUNT</div>
+        <div class="ng-kicker">ACCOUNT · NEWSGAMING2</div>
         <h1>Area personale</h1>
-        <p id="who" class="muted">Caricamento…</p>
+        <p class="muted">Gestisci le tue ricompense e il tuo account.</p>
       </div>
 
       <button id="logout" class="ng-btn secondary" type="button">
@@ -39,11 +39,15 @@
       </button>
     </header>
 
-    <div class="ng-daily-panel">
+    <!-- RICOMPENSA GIORNALIERA -->
+    <section class="ng-daily-panel">
       <div>
         <div class="ng-kicker">RICOMPENSA GIORNALIERA</div>
         <h2>Accesso quotidiano</h2>
-        <p id="dailyStatus" class="muted">Caricamento…</p>
+
+        <p id="dailyStatus" class="muted">
+          Caricamento…
+        </p>
 
         <div class="ng-reward-track">
           <span>10 XP base</span>
@@ -55,9 +59,11 @@
       <button id="dailyClaim" class="ng-btn" type="button">
         Riscatta XP
       </button>
-    </div>
+    </section>
 
-    <div class="ng-stat-grid">
+    <!-- STATISTICHE -->
+    <section class="ng-stat-grid">
+
       <div class="ng-stat">
         <strong id="level">1</strong>
         <span>LIVELLO</span>
@@ -65,12 +71,7 @@
 
       <div class="ng-stat">
         <strong id="xp">0</strong>
-        <span>XP</span>
-      </div>
-
-      <div class="ng-stat">
-        <strong id="dailyStreak">0</strong>
-        <span>GIORNI CONSECUTIVI</span>
+        <span>XP TOTALI</span>
       </div>
 
       <div class="ng-stat">
@@ -78,59 +79,9 @@
         <span>ACCESSO</span>
       </div>
 
-      <div class="ng-stat">
-        <strong>NG2</strong>
-        <span>PLAYER HUB</span>
-      </div>
-    </div>
+    </section>
 
-    <div class="ng-grid-2">
-
-      <section class="ng-panel">
-        <h2>Profilo</h2>
-
-        <form id="profileForm" class="ng-form">
-
-          <label>
-            Nome visualizzato
-            <input id="displayName" maxlength="60">
-          </label>
-
-          <label>
-            Username
-            <input
-              id="username"
-              maxlength="30"
-              pattern="[A-Za-z0-9_-]+"
-            >
-          </label>
-
-          <label>
-            Bio
-            <textarea id="bio" maxlength="500"></textarea>
-          </label>
-
-          <label>
-            Avatar URL
-            <input
-              id="avatarUrl"
-              type="url"
-              maxlength="500"
-              placeholder="https://…"
-            >
-          </label>
-
-          <button class="ng-btn" type="submit">
-            Salva profilo
-          </button>
-
-        </form>
-
-        <p id="message" class="muted" aria-live="polite"></p>
-      </section>
-
-    </div>
-
+    <!-- CANCELLAZIONE ACCOUNT -->
     <section class="ng-panel" style="margin-top:22px">
       <h2>Cancellazione account</h2>
 
@@ -151,3 +102,4 @@
 
 </body>
 </html>
+```
