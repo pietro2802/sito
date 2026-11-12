@@ -1,0 +1,16 @@
+#ng2-home-enhancements{--ng2-accent:#79f2c0;--ng2-panel:#151b2a;max-width:1180px;margin:48px auto;padding:0 22px;color:inherit;font-family:inherit}
+#ng2-home-enhancements .ng2-section-head{display:flex;align-items:end;margin:38px 0 16px}
+#ng2-home-enhancements .ng2-eyebrow{font-size:.72rem;letter-spacing:.16em;font-weight:800;color:var(--ng2-accent)}
+#ng2-home-enhancements h2{font-size:clamp(1.55rem,3vw,2.15rem);margin:.35rem 0}
+#ng2-home-enhancements p{opacity:.8;line-height:1.6;margin:.35rem 0}
+#ng2-home-enhancements .ng2-grid,#ng2-home-enhancements .ng2-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+#ng2-home-enhancements .ng2-card,#ng2-home-enhancements .ng2-stats article{display:flex;flex-direction:column;gap:10px;padding:20px;border:1px solid rgba(127,150,180,.22);border-radius:16px;background:var(--ng2-panel);color:#f5f7fb;text-decoration:none;min-height:132px}
+#ng2-home-enhancements .ng2-card:hover{transform:translateY(-3px);border-color:var(--ng2-accent)}
+#ng2-home-enhancements .ng2-card-kicker{font-size:.68rem;letter-spacing:.12em;color:var(--ng2-accent)}
+#ng2-home-enhancements .ng2-card strong{font-size:1.08rem}
+#ng2-home-enhancements .ng2-card-more{margin-top:auto;font-size:.88rem;color:var(--ng2-accent)}
+#ng2-home-enhancements .ng2-stats{margin-top:24px}
+#ng2-home-enhancements .ng2-stats article span{font-size:1.5rem}
+#ng2-home-enhancements .ng2-stats h3{margin:0}
+#ng2-home-enhancements .ng2-empty{padding:18px;border:1px dashed rgba(127,150,180,.4);border-radius:12px}
+@media(max-width:600px){#ng2-home-enhancements{padding:0 15px;margin:30px auto}}
