@@ -1,4 +1,4 @@
-
+```javascript
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const sb = createClient(
@@ -21,39 +21,24 @@ function showMessage(message) {
 
 function updateLevel(xp) {
   const level = Math.floor((xp || 0) / 100) + 1;
-  if ($('xp')) $('xp').textContent = xp || 0;
-  if ($('level')) $('level').textContent = level;
+
+  if ($('xp')) {
+    $('xp').textContent = xp || 0;
+  }
+
+  if ($('level')) {
+    $('level').textContent = level;
+  }
 }
 
 async function loadProfile(user) {
   const { data: profile, error } = await sb
     .from('profiles')
-    .select('*')
+    .select('xp, last_login_date')
     .eq('id', user.id)
     .single();
 
   if (error) throw error;
-
-  if ($('who')) {
-    $('who').textContent =
-      profile.display_name || profile.username || user.email;
-  }
-
-  if ($('displayName')) {
-    $('displayName').value = profile.display_name || '';
-  }
-
-  if ($('username')) {
-    $('username').value = profile.username || '';
-  }
-
-  if ($('bio')) {
-    $('bio').value = profile.bio || '';
-  }
-
-  if ($('avatarUrl')) {
-    $('avatarUrl').value = profile.avatar_url || '';
-  }
 
   updateLevel(profile.xp);
 
@@ -71,57 +56,23 @@ async function loadProfile(user) {
     const claimed = profile.last_login_date === today;
 
     $('dailyClaim').disabled = claimed;
+
     $('dailyClaim').textContent = claimed
       ? 'Già riscosso oggi'
       : 'Riscatta XP giornalieri';
-  }
-
-  if ($('dailyStreak')) {
-    $('dailyStreak').textContent = profile.daily_streak || 0;
-  }
-}
-
-async function saveProfile(user) {
-  const button = $('profileForm')?.querySelector('[type="submit"]');
-
-  const display_name = $('displayName')?.value.trim() || '';
-  const username = $('username')?.value.trim() || '';
-  const bio = $('bio')?.value.trim() || '';
-  const avatar_url = $('avatarUrl')?.value.trim() || '';
-
-  if (button) button.disabled = true;
-
-  try {
-    const { error } = await sb
-      .from('profiles')
-      .update({
-        display_name,
-        username,
-        bio,
-        avatar_url,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', user.id);
-
-    if (error) throw error;
-
-    await loadProfile(user);
-    showMessage('Profilo aggiornato correttamente!');
-  } catch (error) {
-    showMessage('Errore nel salvataggio: ' + error.message);
-  } finally {
-    if (button) button.disabled = false;
   }
 }
 
 async function claimDailyXP(user) {
   const button = $('dailyClaim');
+
   if (!button || button.disabled) return;
 
   button.disabled = true;
 
   try {
     const { data, error } = await sb.rpc('claim_daily_login');
+
     if (error) throw error;
 
     const result = Array.isArray(data) ? data[0] : data;
@@ -133,6 +84,7 @@ async function claimDailyXP(user) {
     } else {
       showMessage('Hai già riscosso gli XP di oggi.');
     }
+
   } catch (error) {
     showMessage('Errore nel riscatto degli XP: ' + error.message);
     button.disabled = false;
@@ -169,7 +121,9 @@ async function deleteAccount() {
     }
 
     await sb.auth.signOut();
+
     window.location.href = '/index.html';
+
   } catch (error) {
     showMessage('Errore: ' + error.message);
   }
@@ -177,7 +131,10 @@ async function deleteAccount() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const { data: { session }, error } = await sb.auth.getSession();
+    const {
+      data: { session },
+      error
+    } = await sb.auth.getSession();
 
     if (error || !session) {
       window.location.href = '/account.html';
@@ -187,11 +144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = session.user;
 
     await loadProfile(user);
-
-    $('profileForm')?.addEventListener('submit', event => {
-      event.preventDefault();
-      saveProfile(user);
-    });
 
     $('dailyClaim')?.addEventListener('click', () => {
       claimDailyXP(user);
@@ -207,7 +159,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Errore Area personale:', error);
 
-    if ($('who')) $('who').textContent = 'Errore nel caricamento del profilo';
-    if ($('dailyStatus')) $('dailyStatus').textContent = error.message;
+    if ($('dailyStatus')) {
+      $('dailyStatus').textContent =
+        'Errore nel caricamento: ' + error.message;
+    }
   }
 });
+```
