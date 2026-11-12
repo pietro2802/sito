@@ -1,0 +1,426 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-12",
+  "articles": [
+    {
+      "id": "elden ring: come creare un personaggio equilibrato",
+      "title": "Elden Ring: come creare un personaggio equilibrato",
+      "category": "Guide",
+      "date": "2025-12-31",
+      "url": "articoli/elden-ring-guida.html",
+      "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Elden Ring: come creare un personaggio equilibrato",
+      "description": "Una guida ragionata a statistiche, progressione e preparazione per affrontare l’Interregno con meno frustrazione."
+    },
+    {
+      "id": "ps5 pro: pssr, ray tracing e cosa cambia davvero",
+      "title": "PS5 Pro: PSSR, ray tracing e cosa cambia davvero",
+      "category": "PlayStation",
+      "date": "2025-12-31",
+      "url": "articoli/ps5-pro-analisi.html",
+      "image": "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "PS5 Pro: PSSR, ray tracing e cosa cambia davvero",
+      "description": "Una lettura chiara delle tecnologie della console e dei compromessi tra qualità grafica e fluidità."
+    },
+    {
+      "id": "nintendo switch 2: hardware, modalità d’uso e compatibilità",
+      "title": "Nintendo Switch 2: hardware, modalità d’uso e compatibilità",
+      "category": "Nintendo",
+      "date": "2025-12-31",
+      "url": "articoli/switch-2-hardware.html",
+      "image": "https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/ccb3e8ca3c296e21a8c933e8369031511589d0ef6b079cf5bb3667b09893482c/index/index_soloProduct",
+      "imageAlt": "Nintendo Switch 2: confezione ufficiale della console",
+      "description": "Cosa osservare nella nuova console ibrida: schermo, controlli, giochi compatibili e uso in casa o in mobilità."
+    },
+    {
+      "id": "windows 11 e gaming: impostazioni utili senza trucchi rischiosi",
+      "title": "Windows 11 e gaming: impostazioni utili senza trucchi rischiosi",
+      "category": "PC",
+      "date": "2025-12-31",
+      "url": "articoli/windows-11-fps.html",
+      "image": "https://msftstories.thesourcemediaassets.com/sites/620/2021/09/Hero-Bloom-Logo-1000x563.jpg",
+      "imageAlt": "Windows 11: interfaccia ufficiale del sistema operativo",
+      "description": "Una checklist pratica per mantenere il PC ordinato, aggiornato e stabile durante le sessioni di gioco."
+    },
+    {
+      "id": "monster hunter wilds: esplorazione, ecosistemi e progressione",
+      "title": "Monster Hunter Wilds: esplorazione, ecosistemi e progressione",
+      "category": "Recensioni e analisi",
+      "date": "2025-12-31",
+      "url": "articoli/monster-hunter-wilds.html",
+      "image": "https://cdn.capcom-unity.com/2025/04/MHWilds-naramereshkigal-Final-1024x576.jpg",
+      "imageAlt": "Monster Hunter Wilds: cacciatrice in viaggio sulle Terre Proibite",
+      "description": "Un’analisi del ritmo di gioco, della struttura delle aree e di ciò che rende riconoscibile la serie."
+    },
+    {
+      "id": "warzone: audio, interfaccia e impostazioni per giocare meglio",
+      "title": "Warzone: audio, interfaccia e impostazioni per giocare meglio",
+      "category": "Guide",
+      "date": "2025-12-31",
+      "url": "articoli/warzone-impostazioni.html",
+      "image": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Warzone: audio, interfaccia e impostazioni per giocare meglio",
+      "description": "Un approfondimento sulle opzioni di accessibilità, leggibilità e comunicazione, senza inseguire configurazioni miracolose."
+    },
+    {
+      "id": "steam deck oled o rog ally x: come scegliere una portatile pc",
+      "title": "Steam Deck OLED o ROG Ally X: come scegliere una portatile PC",
+      "category": "Hardware",
+      "date": "2025-12-31",
+      "url": "articoli/steam-deck-vs-ally.html",
+      "image": "https://cdn.fastly.steamstatic.com/steamdeck/images/press/renderings/press_oled_orb_thumb.jpg",
+      "imageAlt": "Steam Deck OLED: console portatile ufficiale Valve",
+      "description": "Due approcci diversi al PC portatile: sistema operativo, schermo, autonomia, ergonomia e libreria dei giochi."
+    },
+    {
+      "id": "ea sports fc ultimate team: divertirsi senza spendere troppo",
+      "title": "EA Sports FC Ultimate Team: divertirsi senza spendere troppo",
+      "category": "Guide e gioco responsabile",
+      "date": "2025-12-31",
+      "url": "articoli/fc-ultimate-team-budget.html",
+      "image": "https://drop-assets.ea.com/images/2KVQq4lSBcPUJct6DEjdic/c06c2dc0e4ffc9a213fd1e8d8a7c2e72/FC26_Rev_Stadium_Clubs_16x9.jpg?im=AspectCrop%3D%2816%2C9%29%2CxPosition%3D0.5%2CyPosition%3D0.5",
+      "imageAlt": "EA Sports FC 26: stadio illuminato durante una partita",
+      "description": "Una guida alla gestione del tempo, delle risorse di gioco e delle impostazioni di acquisto, con attenzione al budget."
+    },
+    {
+      "id": "minecraft: esplorare biomi, grotte e costruire un mondo personale",
+      "title": "Minecraft: esplorare biomi, grotte e costruire un mondo personale",
+      "category": "Guide",
+      "date": "2025-12-31",
+      "url": "articoli/minecraft-esplorazione.html",
+      "image": "https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Minecraft-Key-Art-2024.jpg",
+      "imageAlt": "Minecraft: Steve e Alex esplorano un paesaggio a blocchi",
+      "description": "Una guida per organizzare l’esplorazione, raccogliere risorse e trasformare le scoperte in progetti creativi."
+    },
+    {
+      "id": "silent hill 2 remake: atmosfera, suono e rispetto dell’originale",
+      "title": "Silent Hill 2 Remake: atmosfera, suono e rispetto dell’originale",
+      "category": "Recensioni e analisi",
+      "date": "2025-12-31",
+      "url": "articoli/silent-hill-2-remake.html",
+      "image": "https://gmedia.playstation.com/is/image/SIEPDC/silent-hill-2-screenshot-fog-en-29may24",
+      "imageAlt": "Silent Hill 2: strada deserta avvolta dalla nebbia",
+      "description": "Un’analisi non spoiler della direzione artistica, del ritmo e del modo in cui il remake aggiorna un classico."
+    },
+    {
+      "id": "xbox game pass e cloud gaming: come valutare un abbonamento",
+      "title": "Xbox Game Pass e cloud gaming: come valutare un abbonamento",
+      "category": "Xbox",
+      "date": "2025-12-31",
+      "url": "articoli/game-pass-cloud.html",
+      "image": "https://xboxwire.thesourcemediaassets.com/sites/2/2025/12/cloud-65398ce554ecb88763a0.jpg",
+      "imageAlt": "Xbox Cloud Gaming: giochi in streaming su diversi dispositivi",
+      "description": "Catalogo, disponibilità, streaming e costi ricorrenti: le domande da farsi prima di scegliere un servizio."
+    },
+    {
+      "id": "cyberpunk 2077 su pc: ray tracing, prestazioni e mod",
+      "title": "Cyberpunk 2077 su PC: ray tracing, prestazioni e mod",
+      "category": "PC",
+      "date": "2025-12-31",
+      "url": "articoli/cyberpunk-2077-grafica.html",
+      "image": "https://images.unsplash.com/photo-1523966211575-eb4a01e7dd51?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Cyberpunk 2077 su PC: ray tracing, prestazioni e mod",
+      "description": "Come scegliere le impostazioni grafiche in modo consapevole e valutare le modifiche create dalla community."
+    },
+    {
+      "id": "come scegliere un videogioco: 10 controlli prima dell’acquisto",
+      "title": "Come scegliere un videogioco: 10 controlli prima dell’acquisto",
+      "category": "Speciale",
+      "date": "2025-12-31",
+      "url": "articoli/scegliere-videogiochi.html",
+      "image": "https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Come scegliere un videogioco: 10 controlli prima dell’acquisto",
+      "description": "Una checklist per valutare genere, durata, compatibilità, accessibilità e costo senza farsi guidare soltanto dall’hype."
+    },
+    {
+      "id": "fortnite: controlli, accessibilità e gioco equilibrato",
+      "title": "Fortnite: controlli, accessibilità e gioco equilibrato",
+      "category": "Guide",
+      "date": "2025-12-31",
+      "url": "articoli/fortnite-impostazioni.html",
+      "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Fortnite: controlli, accessibilità e gioco equilibrato",
+      "description": "Personalizzare l’esperienza, imparare le modalità e gestire tempo e acquisti in modo consapevole."
+    },
+    {
+      "id": "dai cabinati alle console moderne: come è cambiato il gaming",
+      "title": "Dai cabinati alle console moderne: come è cambiato il gaming",
+      "category": "Speciale",
+      "date": "2025-12-31",
+      "url": "articoli/storia-console.html",
+      "image": "https://images.unsplash.com/photo-1486572788966-cfd3df1f5b42?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Dai cabinati alle console moderne: come è cambiato il gaming",
+      "description": "Un viaggio nella storia delle piattaforme domestiche, tra cartucce, dischi, rete e servizi digitali."
+    },
+    {
+      "id": "league of legends: ruoli, mappa e primi passi nella landa",
+      "title": "League of Legends: ruoli, mappa e primi passi nella Landa",
+      "category": "Guide",
+      "date": "2025-12-31",
+      "url": "articoli/league-of-legends-base.html",
+      "image": "https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "League of Legends: ruoli, mappa e primi passi nella Landa",
+      "description": "Una panoramica per capire struttura della partita, collaborazione e apprendimento senza sovraccaricarsi di informazioni."
+    },
+    {
+      "id": "videogiochi horror: come scegliere in base a atmosfera e sensibilità",
+      "title": "Videogiochi horror: come scegliere in base a atmosfera e sensibilità",
+      "category": "Speciale",
+      "date": "2025-12-31",
+      "url": "articoli/horror-videogiochi.html",
+      "image": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Videogiochi horror: come scegliere in base a atmosfera e sensibilità",
+      "description": "Una guida non spoiler ai diversi stili dell’horror e alle classificazioni da controllare prima di giocare."
+    },
+    {
+      "id": "assetto corsa competizione: capire le impostazioni del simulatore",
+      "title": "Assetto Corsa Competizione: capire le impostazioni del simulatore",
+      "category": "Guide",
+      "date": "2025-12-31",
+      "url": "articoli/assetto-corsa-competizione.html",
+      "image": "https://assettocorsa.gg/wp-content/uploads/805550_20240122195948_1-1920x804.jpg",
+      "imageAlt": "Assetto Corsa Competizione: auto GT in pit lane su pista bagnata",
+      "description": "Come affrontare le opzioni del simulatore, leggere i feedback e costruire un’esperienza di guida virtuale coerente."
+    },
+    {
+      "id": "the witcher 4: cosa sappiamo e come riconoscere le indiscrezioni",
+      "title": "The Witcher 4: cosa sappiamo e come riconoscere le indiscrezioni",
+      "category": "News e approfondimenti",
+      "date": "2025-12-31",
+      "url": "articoli/the-witcher-4-ufficiale.html",
+      "image": "https://images.unsplash.com/photo-1592478411213-6153e4f07d4f?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "The Witcher 4: cosa sappiamo e come riconoscere le indiscrezioni",
+      "description": "Un metodo per seguire lo sviluppo del prossimo capitolo senza confondere materiale ufficiale e rumor."
+    },
+    {
+      "id": "monitor gaming oled o ips: differenze, vantaggi e compromessi",
+      "title": "Monitor gaming OLED o IPS: differenze, vantaggi e compromessi",
+      "category": "Hardware",
+      "date": "2025-12-31",
+      "url": "articoli/monitor-oled-ips.html",
+      "image": "https://www.lgnewsroom.it/wp-content/uploads/2025/03/IT_27GX790A_1920X1080px-810x456.jpg",
+      "imageAlt": "Monitor gaming LG UltraGear OLED",
+      "description": "Una guida all’acquisto che considera contrasto, luminosità, refresh rate, uso quotidiano e budget."
+    },
+    {
+      "id": "i 10 migliori giochi per smartphone del 2026: cosa scaricare su android e iphone",
+      "title": "I 10 migliori giochi per smartphone del 2026: cosa scaricare su Android e iPhone",
+      "category": "Classifiche",
+      "date": "2026-11-09",
+      "url": "articoli/top-10-giochi-mobile-2026.html",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Videogiochi mobile: giochi su smartphone",
+      "description": "Dieci giochi mobile da provare nel 2026: strategia, avventura, carte, azione e multiplayer, tra esperienze gratuite e premium."
+    },
+    {
+      "id": "nuovi giochi mobile del 2026: 7 uscite e novità da tenere d’occhio",
+      "title": "Nuovi giochi mobile del 2026: 7 uscite e novità da tenere d’occhio",
+      "category": "Mobile",
+      "date": "2026-11-09",
+      "url": "articoli/giochi-mobile-novita-2026.html",
+      "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Novità e giochi mobile del 2026",
+      "description": "Una panoramica di giochi e conversioni mobile da scoprire nel 2026, tra avventure indie, strategia e grandi nomi."
+    },
+    {
+      "id": "gta 6 su ps5: pre-download dal 10 novembre, cosa sapere prima del lancio",
+      "title": "GTA 6 su PS5: pre-download dal 10 novembre, cosa sapere prima del lancio",
+      "category": "PlayStation",
+      "date": "2026-11-09",
+      "url": "articoli/gta-6-preload-ps5-novembre-2026.html",
+      "image": "https://global-img.gamergen.com/grand-theft-auto-vi-gta-6-46-06-05-2025_0001047718.jpg",
+      "imageAlt": "Grand Theft Auto VI: scena urbana di Vice City con veicoli in strada",
+      "description": "Il Playstation Blog ha annunciato il pre-download di Grand Theft Auto VI: ecco cosa significa e come preparare la console."
+    },
+    {
+      "id": "ps5 verso quota 100 milioni: cosa raccontano i numeri di vendita nel 2026",
+      "title": "PS5 verso quota 100 milioni: cosa raccontano i numeri di vendita nel 2026",
+      "category": "PlayStation",
+      "date": "2026-11-09",
+      "url": "articoli/ps5-vendite-2026-100-milioni.html",
+      "image": "https://gmedia.playstation.com/is/image/SIEPDC/ps5-console-product-thumbnail-01-en-14sep21",
+      "imageAlt": "Console PlayStation 5: design e hardware",
+      "description": "La base installata di PlayStation 5 si avvicina a un traguardo simbolico: analizziamo cosa significa per giocatori e industria."
+    },
+    {
+      "id": "xbox game pass a novembre 2026: come valutare il catalogo e gli abbonamenti",
+      "title": "Xbox Game Pass a novembre 2026: come valutare il catalogo e gli abbonamenti",
+      "category": "Xbox",
+      "date": "2026-11-09",
+      "url": "articoli/xbox-game-pass-novembre-2026.html",
+      "image": "https://news.xbox.com/en-us/wp-content/uploads/sites/2/2024/06/Xbox-Game-Pass-Logo.jpg",
+      "imageAlt": "Xbox Game Pass: catalogo di giochi su console",
+      "description": "Nuovi giochi, livelli di abbonamento e valore del Game Pass: una guida per capire se il servizio conviene davvero."
+    },
+    {
+      "id": "sonic racing: crossworlds entra nel secondo anno: duello e nuovi contenuti",
+      "title": "Sonic Racing: CrossWorlds entra nel secondo anno: Duello e nuovi contenuti",
+      "category": "News e approfondimenti",
+      "date": "2026-11-09",
+      "url": "articoli/sonic-racing-crossworlds-anno-2.html",
+      "image": "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Auto da corsa su circuito",
+      "description": "SEGA ha annunciato l’avvio dell’Anno 2 con la modalità Duello, nuovi personaggi e gadget: ecco cosa cambia."
+    },
+    {
+      "id": "007 first light: missione introduttiva gratuita su ps5 dal 10 novembre",
+      "title": "007 First Light: missione introduttiva gratuita su PS5 dal 10 novembre",
+      "category": "PlayStation",
+      "date": "2026-11-09",
+      "url": "articoli/007-first-light-starter-pack-ps5.html",
+      "image": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Atmosfera da videogioco d'azione e spionaggio",
+      "description": "IO Interactive ha annunciato uno Starter Pack che permette ai giocatori PS5 di provare gratuitamente la missione introduttiva."
+    },
+    {
+      "id": "i giochi più interessanti del 2026: 10 titoli da tenere sul radar",
+      "title": "I giochi più interessanti del 2026: 10 titoli da tenere sul radar",
+      "category": "Classifiche",
+      "date": "2026-11-09",
+      "url": "articoli/migliori-giochi-2026-console-pc.html",
+      "image": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Panoramica sul mondo dei videogiochi nel 2026",
+      "description": "Una selezione trasversale dei giochi che stanno caratterizzando il 2026 tra avventura, horror, corse, azione e strategia."
+    },
+    {
+      "id": "cloud gaming sulle smart tv: il telefono può diventare un controller?",
+      "title": "Cloud gaming sulle Smart TV: il telefono può diventare un controller?",
+      "category": "Xbox",
+      "date": "2026-11-09",
+      "url": "articoli/cloud-gaming-smart-tv-controller-2026.html",
+      "image": "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Cloud gaming su televisore e dispositivi connessi",
+      "description": "Microsoft sta sperimentando nuove modalità di controllo per il cloud gaming: vantaggi, limiti e cosa cambia per i giocatori."
+    },
+    {
+      "id": "nintendo switch 2 nel 2026: come scegliere i giochi e sfruttare la console",
+      "title": "Nintendo Switch 2 nel 2026: come scegliere i giochi e sfruttare la console",
+      "category": "Nintendo",
+      "date": "2026-11-09",
+      "url": "articoli/nintendo-switch-2-giochi-2026.html",
+      "image": "https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/ccb3e8ca3c296e21a8c933e8369031511589d0ef6b079cf5bb3667b09893482c/features/mode-tv",
+      "imageAlt": "Nintendo Switch 2 collegata al televisore con la dock",
+      "description": "Una guida pratica per orientarsi tra giochi compatibili, modalità portatile, multiplayer e spazio di archiviazione."
+    },
+    {
+      "id": "il futuro delle console: 6 tendenze che stanno cambiando il gaming",
+      "title": "Il futuro delle console: 6 tendenze che stanno cambiando il gaming",
+      "category": "Speciale",
+      "date": "2026-11-09",
+      "url": "articoli/console-next-gen-2026-cosa-aspettarsi.html",
+      "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Evoluzione delle console e del mondo gaming",
+      "description": "Cloud gaming, portatili, intelligenza artificiale, retrocompatibilità e servizi: le direzioni dell’industria videoludica."
+    },
+    {
+      "id": "smartphone da gaming nel 2026: 7 caratteristiche da controllare prima di comprare",
+      "title": "Smartphone da gaming nel 2026: 7 caratteristiche da controllare prima di comprare",
+      "category": "Hardware",
+      "date": "2026-11-09",
+      "url": "articoli/come-scegliere-smartphone-gaming-2026.html",
+      "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Smartphone moderno per il gaming mobile",
+      "description": "Processore, schermo, batteria, raffreddamento e memoria: guida pratica per scegliere un telefono adatto ai videogiochi."
+    },
+    {
+      "id": "worlds 2026: blg supera t1 e raggiunge gen.g in finale",
+      "title": "Worlds 2026: BLG supera T1 e raggiunge Gen.G in finale",
+      "category": "Esports",
+      "date": "2026-11-09",
+      "url": "articoli/worlds-2026-blg-gen-g-finale.html",
+      "image": "https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Arena esports con giocatori e schermi durante un torneo",
+      "description": "La semifinale si chiude 3-1: ecco cosa racconta il risultato e cosa aspettarsi dall’ultimo atto del mondiale di League of Legends."
+    },
+    {
+      "id": "world of warcraft: forever aumenta del 50% l’esperienza nei dungeon",
+      "title": "World of Warcraft: Forever aumenta del 50% l’esperienza nei dungeon",
+      "category": "PC",
+      "date": "2026-11-09",
+      "url": "articoli/wow-forever-hotfix-esperienza-dungeon-novembre-2026.html",
+      "image": "https://bnetcmsus-a.akamaihd.net/cms/blog_header/9u/9UXC0XRFWRX31756509452053.png",
+      "imageAlt": "World of Warcraft: ambientazione fantasy del gioco",
+      "description": "Il hotfix dell’8 novembre interviene sull’esperienza ottenuta dai nemici nei dungeon dopo le critiche dei giocatori: cosa cambia nel livellamento."
+    },
+    {
+      "id": "bit reactor: nuovi tagli al team di star wars zero company",
+      "title": "Bit Reactor: nuovi tagli al team di Star Wars Zero Company",
+      "category": "Industria",
+      "date": "2026-11-09",
+      "url": "articoli/bit-reactor-licenziamenti-star-wars-zero-company.html",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Team di sviluppo al lavoro in uno studio videoludico",
+      "description": "Il report del 9 novembre segnala licenziamenti nello studio dopo il rientro di alcuni dipendenti precedentemente in furlough: il contesto e le ricadute."
+    },
+    {
+      "id": "ocarina of time su switch 2: lancio fisico da record nel regno unito",
+      "title": "Ocarina of Time su Switch 2: lancio fisico da record nel Regno Unito",
+      "category": "Nintendo",
+      "date": "2026-11-09",
+      "url": "articoli/switch-2-ocarina-of-time-lancio-fisico-regno-unito.html",
+      "image": "https://images.nintendolife.com/e2a0e0ba51b37/zelda.large.jpg",
+      "imageAlt": "The Legend of Zelda: Ocarina of Time: immagine del gioco",
+      "description": "Secondo i dati riportati l’8 novembre, il remake ha ottenuto il secondo miglior debutto fisico della serie Zelda nel mercato britannico."
+    },
+    {
+      "id": "nintendo switch 2: vendite trimestrali in calo, ma la console supera i predecessori",
+      "title": "Nintendo Switch 2: vendite trimestrali in calo, ma la console supera i predecessori",
+      "category": "Nintendo",
+      "date": "2026-11-09",
+      "url": "articoli/nintendo-switch-2-vendite-trimestre-novembre-2026.html",
+      "image": "https://dlcdnwebimgs.asus.com/gain/3CB36A2A-BE35-4916-A288-05AB160CD371/w1000/h732",
+      "imageAlt": "ROG Ally X: PC gaming portatile ASUS visto frontalmente",
+      "description": "I dati trimestrali riportati il 9 novembre mostrano un rallentamento anno su anno: perché il confronto con il lancio va interpretato nel contesto."
+    },
+    {
+      "id": "path of exile 2 lascia l’accesso anticipato l’11 dicembre: cosa aspettarsi",
+      "title": "Path of Exile 2 lascia l’accesso anticipato l’11 dicembre: cosa aspettarsi",
+      "category": "PC",
+      "date": "2026-11-09",
+      "url": "articoli/path-of-exile-2-uscita-early-access-dicembre-2026.html",
+      "image": "https://www.buffed.de/screenshots/1280x1024/2024/06/Path-of-Exile-2-Witch-Gameplay-Walkthrough_03-buffed.jpeg",
+      "imageAlt": "Path of Exile 2: schermata di gioco in un'ambientazione fantasy",
+      "description": "Grinding Gear Games prepara il passaggio fuori dall’early access con nuove classi, atti e una nuova lega: ecco come leggere l’annuncio."
+    },
+    {
+      "id": "honkai: nexus anima punta alla primavera 2027 e apre le iscrizioni alla beta",
+      "title": "Honkai: Nexus Anima punta alla primavera 2027 e apre le iscrizioni alla beta",
+      "category": "Mobile",
+      "date": "2026-11-09",
+      "url": "articoli/honkai-nexus-anima-beta-primavera-2027.html",
+      "image": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Schermata colorata di un videogioco fantasy e fantascientifico",
+      "description": "HoYoverse ha indicato una finestra di lancio per la primavera 2027 e ha aperto le registrazioni per l’ultima closed beta."
+    },
+    {
+      "id": "xbox testa un’app pc più veloce: cosa cambia per avvio, web e cloud gaming",
+      "title": "Xbox testa un’app PC più veloce: cosa cambia per avvio, web e cloud gaming",
+      "category": "Xbox",
+      "date": "2026-11-09",
+      "url": "articoli/xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.html",
+      "image": "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Postazione gaming PC con monitor e periferiche",
+      "description": "L’aggiornamento per gli Insider promette un avvio dell’app fino al 60% più rapido e un’esperienza rivista tra PC, web e cloud."
+    },
+    {
+      "id": "le uscite gaming della settimana: football manager 27, warhammer survivors e shrek 2",
+      "title": "Le uscite gaming della settimana: Football Manager 27, Warhammer Survivors e Shrek 2",
+      "category": "News e approfondimenti",
+      "date": "2026-11-09",
+      "url": "articoli/uscite-videogiochi-9-15-novembre-2026.html",
+      "image": "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=900&q=78",
+      "imageAlt": "Collezione di videogiochi e controller su una scrivania",
+      "description": "Una guida alle uscite annunciate tra il 9 e il 16 novembre 2026, con piattaforme e date da controllare prima dell’acquisto."
+    },
+    {
+      "id": "gta 6: annunciato un festival a miami per celebrare il lancio",
+      "title": "GTA 6: annunciato un festival a Miami per celebrare il lancio",
+      "category": "PlayStation",
+      "date": "2026-11-09",
+      "url": "articoli/gta-6-festival-miami-novembre-2026.html",
+      "image": "https://global-img.gamergen.com/grand-theft-auto-vi-gta-6-46-06-05-2025_0001047718.jpg",
+      "imageAlt": "Grand Theft Auto VI: scena urbana di Vice City con veicoli in strada",
+      "description": "Il 21 novembre è previsto un evento a Mana Wynwood con artisti legati alla colonna sonora e una lotteria per i biglietti: i dettagli riportati."
+    }
+  ]
+}
