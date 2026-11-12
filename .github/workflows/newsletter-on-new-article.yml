@@ -8,6 +8,7 @@ name: Newsletter - nuovo articolo
     paths:
       - 'articoli/*.html'
       - 'articoli/**/*.html'
+      - '.github/workflows/newsletter-on-new-article.yml'
 
 permissions:
   contents: read
