@@ -1,7 +1,7 @@
 
 name: Newsletter - nuovo articolo
 
-on:
+'on':
   push:
     branches:
       - main
