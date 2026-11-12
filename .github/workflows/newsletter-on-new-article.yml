@@ -26,7 +26,7 @@ jobs:
       - name: Invia notifiche per i nuovi articoli
         shell: bash
         env:
-          NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
+          PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.sha }}
         run: |
