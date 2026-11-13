@@ -8,7 +8,7 @@
                          "category":  "Guide",
                          "date":  "2025-12-31",
                          "url":  "articoli/elden-ring-guida.html",
-                         "image":  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/elden-ring-guida.jpg",
                          "imageAlt":  "Elden Ring: come creare un personaggio equilibrato",
                          "description":  "Una guida ragionata a statistiche, progressione e preparazione per affrontare l’Interregno con meno frustrazione."
                      },
@@ -28,7 +28,7 @@
                          "category":  "Nintendo",
                          "date":  "2025-12-31",
                          "url":  "articoli/switch-2-hardware.html",
-                         "image":  "https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/ccb3e8ca3c296e21a8c933e8369031511589d0ef6b079cf5bb3667b09893482c/index/index_soloProduct",
+                         "image":  "/immagini/articoli/switch-2-hardware.webp",
                          "imageAlt":  "Nintendo Switch 2: confezione ufficiale della console",
                          "description":  "Cosa osservare nella nuova console ibrida: schermo, controlli, giochi compatibili e uso in casa o in mobilità."
                      },
@@ -38,7 +38,7 @@
                          "category":  "PC",
                          "date":  "2025-12-31",
                          "url":  "articoli/windows-11-fps.html",
-                         "image":  "https://msftstories.thesourcemediaassets.com/sites/620/2021/09/Hero-Bloom-Logo-1000x563.jpg",
+                         "image":  "/immagini/articoli/windows-11-fps.jpg",
                          "imageAlt":  "Windows 11: interfaccia ufficiale del sistema operativo",
                          "description":  "Una checklist pratica per mantenere il PC ordinato, aggiornato e stabile durante le sessioni di gioco."
                      },
@@ -48,7 +48,7 @@
                          "category":  "Recensioni e analisi",
                          "date":  "2025-12-31",
                          "url":  "articoli/monster-hunter-wilds.html",
-                         "image":  "https://cdn.capcom-unity.com/2025/04/MHWilds-naramereshkigal-Final-1024x576.jpg",
+                         "image":  "/immagini/articoli/monster-hunter-wilds.jpg",
                          "imageAlt":  "Monster Hunter Wilds: cacciatrice in viaggio sulle Terre Proibite",
                          "description":  "Un’analisi del ritmo di gioco, della struttura delle aree e di ciò che rende riconoscibile la serie."
                      },
@@ -58,7 +58,7 @@
                          "category":  "Guide",
                          "date":  "2025-12-31",
                          "url":  "articoli/warzone-impostazioni.html",
-                         "image":  "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/warzone-impostazioni.png",
                          "imageAlt":  "Warzone: audio, interfaccia e impostazioni per giocare meglio",
                          "description":  "Un approfondimento sulle opzioni di accessibilità, leggibilità e comunicazione, senza inseguire configurazioni miracolose."
                      },
@@ -68,7 +68,7 @@
                          "category":  "Hardware",
                          "date":  "2025-12-31",
                          "url":  "articoli/steam-deck-vs-ally.html",
-                         "image":  "https://cdn.fastly.steamstatic.com/steamdeck/images/press/renderings/press_oled_orb_thumb.jpg",
+                         "image":  "/immagini/articoli/steam-deck-vs-ally.jpg",
                          "imageAlt":  "Steam Deck OLED: console portatile ufficiale Valve",
                          "description":  "Due approcci diversi al PC portatile: sistema operativo, schermo, autonomia, ergonomia e libreria dei giochi."
                      },
@@ -78,7 +78,7 @@
                          "category":  "Guide e gioco responsabile",
                          "date":  "2025-12-31",
                          "url":  "articoli/fc-ultimate-team-budget.html",
-                         "image":  "https://drop-assets.ea.com/images/2KVQq4lSBcPUJct6DEjdic/c06c2dc0e4ffc9a213fd1e8d8a7c2e72/FC26_Rev_Stadium_Clubs_16x9.jpg?im=AspectCrop%3D%2816%2C9%29%2CxPosition%3D0.5%2CyPosition%3D0.5",
+                         "image":  "/immagini/articoli/fc-ultimate-team-budget.webp",
                          "imageAlt":  "EA Sports FC 26: stadio illuminato durante una partita",
                          "description":  "Una guida alla gestione del tempo, delle risorse di gioco e delle impostazioni di acquisto, con attenzione al budget."
                      },
@@ -88,7 +88,7 @@
                          "category":  "Guide",
                          "date":  "2025-12-31",
                          "url":  "articoli/minecraft-esplorazione.html",
-                         "image":  "https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Minecraft-Key-Art-2024.jpg",
+                         "image":  "https://images.unsplash.com/photo-1550746738-4d4f4a972f8e?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
                          "imageAlt":  "Minecraft: Steve e Alex esplorano un paesaggio a blocchi",
                          "description":  "Una guida per organizzare l’esplorazione, raccogliere risorse e trasformare le scoperte in progetti creativi."
                      },
@@ -98,7 +98,7 @@
                          "category":  "Recensioni e analisi",
                          "date":  "2025-12-31",
                          "url":  "articoli/silent-hill-2-remake.html",
-                         "image":  "https://gmedia.playstation.com/is/image/SIEPDC/silent-hill-2-screenshot-fog-en-29may24",
+                         "image":  "/immagini/articoli/silent-hill-2-remake.webp",
                          "imageAlt":  "Silent Hill 2: strada deserta avvolta dalla nebbia",
                          "description":  "Un’analisi non spoiler della direzione artistica, del ritmo e del modo in cui il remake aggiorna un classico."
                      },
@@ -128,7 +128,7 @@
                          "category":  "Speciale",
                          "date":  "2025-12-31",
                          "url":  "articoli/scegliere-videogiochi.html",
-                         "image":  "https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/scegliere-videogiochi.jpg",
                          "imageAlt":  "Come scegliere un videogioco: 10 controlli prima dell’acquisto",
                          "description":  "Una checklist per valutare genere, durata, compatibilità, accessibilità e costo senza farsi guidare soltanto dall’hype."
                      },
@@ -138,7 +138,7 @@
                          "category":  "Guide",
                          "date":  "2025-12-31",
                          "url":  "articoli/fortnite-impostazioni.html",
-                         "image":  "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/fortnite-impostazioni.png",
                          "imageAlt":  "Fortnite: controlli, accessibilità e gioco equilibrato",
                          "description":  "Personalizzare l’esperienza, imparare le modalità e gestire tempo e acquisti in modo consapevole."
                      },
@@ -148,7 +148,7 @@
                          "category":  "Speciale",
                          "date":  "2025-12-31",
                          "url":  "articoli/storia-console.html",
-                         "image":  "https://images.unsplash.com/photo-1486572788966-cfd3df1f5b42?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/storia-console.jpg",
                          "imageAlt":  "Dai cabinati alle console moderne: come è cambiato il gaming",
                          "description":  "Un viaggio nella storia delle piattaforme domestiche, tra cartucce, dischi, rete e servizi digitali."
                      },
@@ -158,7 +158,7 @@
                          "category":  "Guide",
                          "date":  "2025-12-31",
                          "url":  "articoli/league-of-legends-base.html",
-                         "image":  "https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/league-of-legends-base.png",
                          "imageAlt":  "League of Legends: ruoli, mappa e primi passi nella Landa",
                          "description":  "Una panoramica per capire struttura della partita, collaborazione e apprendimento senza sovraccaricarsi di informazioni."
                      },
@@ -168,7 +168,7 @@
                          "category":  "Speciale",
                          "date":  "2025-12-31",
                          "url":  "articoli/horror-videogiochi.html",
-                         "image":  "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/horror-videogiochi.webp",
                          "imageAlt":  "Videogiochi horror: come scegliere in base a atmosfera e sensibilità",
                          "description":  "Una guida non spoiler ai diversi stili dell’horror e alle classificazioni da controllare prima di giocare."
                      },
@@ -178,7 +178,7 @@
                          "category":  "Guide",
                          "date":  "2025-12-31",
                          "url":  "articoli/assetto-corsa-competizione.html",
-                         "image":  "https://assettocorsa.gg/wp-content/uploads/805550_20240122195948_1-1920x804.jpg",
+                         "image":  "/immagini/articoli/assetto-corsa-competizione.jpg",
                          "imageAlt":  "Assetto Corsa Competizione: auto GT in pit lane su pista bagnata",
                          "description":  "Come affrontare le opzioni del simulatore, leggere i feedback e costruire un’esperienza di guida virtuale coerente."
                      },
@@ -188,7 +188,7 @@
                          "category":  "News e approfondimenti",
                          "date":  "2025-12-31",
                          "url":  "articoli/the-witcher-4-ufficiale.html",
-                         "image":  "https://images.unsplash.com/photo-1592478411213-6153e4f07d4f?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/the-witcher-4-ufficiale.webp",
                          "imageAlt":  "The Witcher 4: cosa sappiamo e come riconoscere le indiscrezioni",
                          "description":  "Un metodo per seguire lo sviluppo del prossimo capitolo senza confondere materiale ufficiale e rumor."
                      },
@@ -198,7 +198,7 @@
                          "category":  "Hardware",
                          "date":  "2025-12-31",
                          "url":  "articoli/monitor-oled-ips.html",
-                         "image":  "https://www.lgnewsroom.it/wp-content/uploads/2025/03/IT_27GX790A_1920X1080px-810x456.jpg",
+                         "image":  "/immagini/articoli/monitor-oled-ips.png",
                          "imageAlt":  "Monitor gaming LG UltraGear OLED",
                          "description":  "Una guida all’acquisto che considera contrasto, luminosità, refresh rate, uso quotidiano e budget."
                      },
@@ -208,7 +208,7 @@
                          "category":  "Classifiche",
                          "date":  "2026-11-09",
                          "url":  "articoli/top-10-giochi-mobile-2026.html",
-                         "image":  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/top-10-giochi-mobile-2026.jpg",
                          "imageAlt":  "Videogiochi mobile: giochi su smartphone",
                          "description":  "Dieci giochi mobile da provare nel 2026: strategia, avventura, carte, azione e multiplayer, tra esperienze gratuite e premium."
                      },
@@ -218,7 +218,7 @@
                          "category":  "Mobile",
                          "date":  "2026-11-09",
                          "url":  "articoli/giochi-mobile-novita-2026.html",
-                         "image":  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/giochi-mobile-novita-2026.jpg",
                          "imageAlt":  "Novità e giochi mobile del 2026",
                          "description":  "Una panoramica di giochi e conversioni mobile da scoprire nel 2026, tra avventure indie, strategia e grandi nomi."
                      },
@@ -228,7 +228,7 @@
                          "category":  "PlayStation",
                          "date":  "2026-11-09",
                          "url":  "articoli/gta-6-preload-ps5-novembre-2026.html",
-                         "image":  "https://global-img.gamergen.com/grand-theft-auto-vi-gta-6-46-06-05-2025_0001047718.jpg",
+                         "image":  "/immagini/articoli/gta-6-preload-ps5-novembre-2026.jpg",
                          "imageAlt":  "Grand Theft Auto VI: scena urbana di Vice City con veicoli in strada",
                          "description":  "Il Playstation Blog ha annunciato il pre-download di Grand Theft Auto VI: ecco cosa significa e come preparare la console."
                      },
@@ -238,7 +238,7 @@
                          "category":  "PlayStation",
                          "date":  "2026-11-09",
                          "url":  "articoli/ps5-vendite-2026-100-milioni.html",
-                         "image":  "https://gmedia.playstation.com/is/image/SIEPDC/ps5-console-product-thumbnail-01-en-14sep21",
+                         "image":  "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
                          "imageAlt":  "Console PlayStation 5: design e hardware",
                          "description":  "La base installata di PlayStation 5 si avvicina a un traguardo simbolico: analizziamo cosa significa per giocatori e industria."
                      },
@@ -248,7 +248,7 @@
                          "category":  "Xbox",
                          "date":  "2026-11-09",
                          "url":  "articoli/xbox-game-pass-novembre-2026.html",
-                         "image":  "https://news.xbox.com/en-us/wp-content/uploads/sites/2/2024/06/Xbox-Game-Pass-Logo.jpg",
+                         "image":  "https://images.unsplash.com/photo-1603481546238-487240415921?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
                          "imageAlt":  "Xbox Game Pass: catalogo di giochi su console",
                          "description":  "Nuovi giochi, livelli di abbonamento e valore del Game Pass: una guida per capire se il servizio conviene davvero."
                      },
@@ -258,7 +258,7 @@
                          "category":  "News e approfondimenti",
                          "date":  "2026-11-09",
                          "url":  "articoli/sonic-racing-crossworlds-anno-2.html",
-                         "image":  "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/sonic-racing-crossworlds-anno-2.jpg",
                          "imageAlt":  "Auto da corsa su circuito",
                          "description":  "SEGA ha annunciato l’avvio dell’Anno 2 con la modalità Duello, nuovi personaggi e gadget: ecco cosa cambia."
                      },
@@ -288,7 +288,7 @@
                          "category":  "Xbox",
                          "date":  "2026-11-09",
                          "url":  "articoli/cloud-gaming-smart-tv-controller-2026.html",
-                         "image":  "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/cloud-gaming-smart-tv-controller-2026.jpg",
                          "imageAlt":  "Cloud gaming su televisore e dispositivi connessi",
                          "description":  "Microsoft sta sperimentando nuove modalità di controllo per il cloud gaming: vantaggi, limiti e cosa cambia per i giocatori."
                      },
@@ -298,7 +298,7 @@
                          "category":  "Nintendo",
                          "date":  "2026-11-09",
                          "url":  "articoli/nintendo-switch-2-giochi-2026.html",
-                         "image":  "https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/ccb3e8ca3c296e21a8c933e8369031511589d0ef6b079cf5bb3667b09893482c/features/mode-tv",
+                         "image":  "/immagini/articoli/nintendo-switch-2-giochi-2026.webp",
                          "imageAlt":  "Nintendo Switch 2 collegata al televisore con la dock",
                          "description":  "Una guida pratica per orientarsi tra giochi compatibili, modalità portatile, multiplayer e spazio di archiviazione."
                      },
@@ -318,7 +318,7 @@
                          "category":  "Hardware",
                          "date":  "2026-11-09",
                          "url":  "articoli/come-scegliere-smartphone-gaming-2026.html",
-                         "image":  "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/come-scegliere-smartphone-gaming-2026.jpg",
                          "imageAlt":  "Smartphone moderno per il gaming mobile",
                          "description":  "Processore, schermo, batteria, raffreddamento e memoria: guida pratica per scegliere un telefono adatto ai videogiochi."
                      },
@@ -328,7 +328,7 @@
                          "category":  "Esports",
                          "date":  "2026-11-09",
                          "url":  "articoli/worlds-2026-blg-gen-g-finale.html",
-                         "image":  "https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/worlds-2026-blg-gen-g-finale.webp",
                          "imageAlt":  "Arena esports con giocatori e schermi durante un torneo",
                          "description":  "La semifinale si chiude 3-1: ecco cosa racconta il risultato e cosa aspettarsi dall’ultimo atto del mondiale di League of Legends."
                      },
@@ -338,7 +338,7 @@
                          "category":  "PC",
                          "date":  "2026-11-09",
                          "url":  "articoli/wow-forever-hotfix-esperienza-dungeon-novembre-2026.html",
-                         "image":  "https://bnetcmsus-a.akamaihd.net/cms/blog_header/9u/9UXC0XRFWRX31756509452053.png",
+                         "image":  "/immagini/articoli/wow-forever-hotfix-esperienza-dungeon-novembre-2026.webp",
                          "imageAlt":  "World of Warcraft: ambientazione fantasy del gioco",
                          "description":  "Il hotfix dell’8 novembre interviene sull’esperienza ottenuta dai nemici nei dungeon dopo le critiche dei giocatori: cosa cambia nel livellamento."
                      },
@@ -358,7 +358,7 @@
                          "category":  "Nintendo",
                          "date":  "2026-11-09",
                          "url":  "articoli/switch-2-ocarina-of-time-lancio-fisico-regno-unito.html",
-                         "image":  "https://images.nintendolife.com/e2a0e0ba51b37/zelda.large.jpg",
+                         "image":  "/immagini/articoli/switch-2-ocarina-of-time-lancio-fisico-regno-unito.webp",
                          "imageAlt":  "The Legend of Zelda: Ocarina of Time: immagine del gioco",
                          "description":  "Secondo i dati riportati l’8 novembre, il remake ha ottenuto il secondo miglior debutto fisico della serie Zelda nel mercato britannico."
                      },
@@ -368,7 +368,7 @@
                          "category":  "Nintendo",
                          "date":  "2026-11-09",
                          "url":  "articoli/nintendo-switch-2-vendite-trimestre-novembre-2026.html",
-                         "image":  "https://assets.nintendo.com/image/upload/f_auto/q_auto/dpr_1.5/ccb3e8ca3c296e21a8c933e8369031511589d0ef6b079cf5bb3667b09893482c/index/index_soloProduct",
+                         "image":  "/immagini/articoli/nintendo-switch-2-vendite-trimestre-novembre-2026.webp",
                          "imageAlt":  "Nintendo Switch 2: console e dati di vendita trimestrali",
                          "description":  "I dati trimestrali riportati il 9 novembre mostrano un rallentamento anno su anno: perché il confronto con il lancio va interpretato nel contesto."
                      },
@@ -378,7 +378,7 @@
                          "category":  "PC",
                          "date":  "2026-11-09",
                          "url":  "articoli/path-of-exile-2-uscita-early-access-dicembre-2026.html",
-                         "image":  "https://www.buffed.de/screenshots/1280x1024/2024/06/Path-of-Exile-2-Witch-Gameplay-Walkthrough_03-buffed.jpeg",
+                         "image":  "/immagini/articoli/path-of-exile-2-uscita-early-access-dicembre-2026.jpg",
                          "imageAlt":  "Path of Exile 2: schermata di gioco in un\u0027ambientazione fantasy",
                          "description":  "Grinding Gear Games prepara il passaggio fuori dall’early access con nuove classi, atti e una nuova lega: ecco come leggere l’annuncio."
                      },
@@ -388,7 +388,7 @@
                          "category":  "Mobile",
                          "date":  "2026-11-09",
                          "url":  "articoli/honkai-nexus-anima-beta-primavera-2027.html",
-                         "image":  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/honkai-nexus-anima-beta-primavera-2027.jpg",
                          "imageAlt":  "Schermata colorata di un videogioco fantasy e fantascientifico",
                          "description":  "HoYoverse ha indicato una finestra di lancio per la primavera 2027 e ha aperto le registrazioni per l’ultima closed beta."
                      },
@@ -398,7 +398,7 @@
                          "category":  "Xbox",
                          "date":  "2026-11-09",
                          "url":  "articoli/xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.html",
-                         "image":  "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.png",
                          "imageAlt":  "Postazione gaming PC con monitor e periferiche",
                          "description":  "L’aggiornamento per gli Insider promette un avvio dell’app fino al 60% più rapido e un’esperienza rivista tra PC, web e cloud."
                      },
@@ -408,7 +408,7 @@
                          "category":  "News e approfondimenti",
                          "date":  "2026-11-09",
                          "url":  "articoli/uscite-videogiochi-9-15-novembre-2026.html",
-                         "image":  "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/uscite-videogiochi-9-15-novembre-2026.jpg",
                          "imageAlt":  "Collezione di videogiochi e controller su una scrivania",
                          "description":  "Una guida alle uscite annunciate tra il 9 e il 16 novembre 2026, con piattaforme e date da controllare prima dell’acquisto."
                      },
@@ -418,7 +418,7 @@
                          "category":  "PlayStation",
                          "date":  "2026-11-09",
                          "url":  "articoli/gta-6-festival-miami-novembre-2026.html",
-                         "image":  "https://global-img.gamergen.com/grand-theft-auto-vi-gta-6-46-06-05-2025_0001047718.jpg",
+                         "image":  "/immagini/articoli/gta-6-festival-miami-novembre-2026.jpg",
                          "imageAlt":  "Grand Theft Auto VI: scena urbana di Vice City con veicoli in strada",
                          "description":  "Il 21 novembre è previsto un evento a Mana Wynwood con artisti legati alla colonna sonora e una lotteria per i biglietti: i dettagli riportati."
                      },
@@ -428,7 +428,7 @@
                          "category":  "Nintendo",
                          "date":  "2026-11-12",
                          "url":  "articoli/metaphor-refantazio-switch-2-lancio.html",
-                         "image":  "https://metaphor.atlus.com/media/img/story/ss-story.webp",
+                         "image":  "/immagini/articoli/metaphor-refantazio-switch-2-lancio.webp",
                          "imageAlt":  "Scena ambientale di Metaphor: ReFantazio",
                          "description":  "Metaphor: ReFantazio arriva su Nintendo Switch 2 con tre modalità grafiche e un nuovo prezzo."
                      },
@@ -438,7 +438,7 @@
                          "category":  "Nintendo",
                          "date":  "2026-11-12",
                          "url":  "articoli/zelda-ocarina-time-52-milioni-switch-2.html",
-                         "image":  "https://images.nintendolife.com/e2a0e0ba51b37/zelda.large.jpg",
+                         "image":  "/immagini/articoli/zelda-ocarina-time-52-milioni-switch-2.webp",
                          "imageAlt":  "The Legend of Zelda: Ocarina of Time",
                          "description":  "Il remake per Nintendo Switch 2 supera 5,2 milioni di copie vendute nei primi quattro giorni dal lancio."
                      },
@@ -448,7 +448,7 @@
                          "category":  "News e approfondimenti",
                          "date":  "2025-12-31",
                          "url":  "articoli/gta-6-vice-city.html",
-                         "image":  "https://images.unsplash.com/photo-1749342235844-98f55c5ed87b?auto=format\u0026fit=crop\u0026w=900\u0026q=78",
+                         "image":  "/immagini/articoli/gta-6-vice-city.jpg",
                          "imageAlt":  "GTA 6: ambientazione Vice City",
                          "description":  "Un’analisi di ambientazione, personaggi e linguaggio visivo, separando ciò che è stato mostrato dalle ipotesi della community."
                      }

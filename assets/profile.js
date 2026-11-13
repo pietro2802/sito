@@ -128,7 +128,7 @@ async function deleteAccount() {
   }
 }
 
-async function initProfilePage() {
+document.addEventListener('DOMContentLoaded', async () => {
   try {
     const {
       data: { session },
@@ -163,10 +163,4 @@ async function initProfilePage() {
         'Errore nel caricamento: ' + error.message;
     }
   }
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initProfilePage);
-} else {
-  initProfilePage();
-}
+});
