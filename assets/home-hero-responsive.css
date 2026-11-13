@@ -1,0 +1,60 @@
+/* Homepage hero: dimensioni compatte e responsive, senza alterare le altre pagine */
+.ng-cinematic{
+  min-height:310px;
+  padding:34px 28px 32px!important;
+  gap:14px;
+  margin:18px 0 12px;
+}
+.ng-cinematic h1{
+  font-size:clamp(2.1rem,4.2vw,3.55rem)!important;
+  line-height:1.08;
+}
+.ng-cinematic p{
+  font-size:.98rem;
+  line-height:1.55;
+}
+.ng-hero-art{height:220px}
+.ng-core{
+  width:104px;
+  height:104px;
+  font-size:42px;
+  border-radius:30px;
+}
+.ng-orbit{width:205px;height:104px}
+.ng-orbit-two{width:180px;height:160px}
+.ng-float{font-size:.58rem;padding:5px 7px}
+@media(max-width:700px){
+  .ng-cinematic{
+    min-height:0;
+    padding:22px 17px!important;
+    gap:8px;
+    margin:14px 0 10px;
+  }
+  .ng-hero-art{height:145px;grid-row:1}
+  .ng-core{
+    width:78px;
+    height:78px;
+    font-size:32px;
+    border-radius:23px;
+  }
+  .ng-orbit{width:155px;height:78px}
+  .ng-orbit-two{width:135px;height:122px}
+  .ng-float{font-size:.5rem;letter-spacing:.14em;padding:4px 6px}
+  .ng-float-a{top:5px;right:0}
+  .ng-float-b{bottom:5px;left:0}
+  .ng-cinematic h1{
+    font-size:clamp(1.75rem,7vw,2.45rem)!important;
+    line-height:1.1;
+    margin:8px 0 12px;
+  }
+  .ng-cinematic p{font-size:.91rem;line-height:1.5}
+  .ng-hero-actions{gap:8px}
+  .ng-hero-actions .btn,
+  .ng-hero-actions .ng-ghost-btn{padding:9px 12px;font-size:.88rem}
+}
+@media(max-width:380px){
+  .ng-cinematic{padding:18px 13px!important}
+  .ng-hero-art{height:125px}
+  .ng-cinematic h1{font-size:1.7rem!important}
+  .ng-cinematic p{font-size:.87rem}
+}
