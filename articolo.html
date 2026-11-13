@@ -10,6 +10,7 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient(window.NG_SUPABASE_URL,window.NG_SUPABASE_PUBLISHABLE_KEY);
 const slug=new URLSearchParams(location.search).get('slug');
 const esc=v=>(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const safeHttpUrl=value=>{try{const url=new URL(String(value||''),location.origin);return ['http:','https:'].includes(url.protocol)?url.href:'';}catch{return '';}};
 // Render article HTML only after parsing it into a strict element/attribute allowlist.
 const sanitizeArticleHtml=(html)=>{
  const allowed=new Set(['P','H2','H3','H4','UL','OL','LI','STRONG','B','EM','I','U','S','BLOCKQUOTE','A','BR','HR','IMG','FIGURE','FIGCAPTION','PRE','CODE','TABLE','THEAD','TBODY','TR','TH','TD']);
@@ -65,7 +66,7 @@ else{
   document.title=data.title+' | NEWSGAMING2'; document.querySelector('#category').textContent=data.category;
   document.querySelector('#title').textContent=data.title; document.querySelector('#excerpt').textContent=data.excerpt||'';
   document.querySelector('#meta').innerHTML=`<span>${data.published_at?new Date(data.published_at).toLocaleDateString('it-IT'):'Bozza'}</span><span>${esc((data.platforms||[]).join(' · '))}</span>`;
-  if(data.cover_url){const im=document.querySelector('#cover');im.src=data.cover_url;im.alt=data.title;im.hidden=false}
+  const coverUrl=safeHttpUrl(data.cover_url);if(coverUrl){const im=document.querySelector('#cover');im.src=coverUrl;im.alt=data.title;im.hidden=false}
   document.querySelector('#body').innerHTML=sanitizeArticleHtml(data.body);
   document.querySelector('#discussion').href='/community.html?article='+encodeURIComponent(data.slug);
  }
