@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+﻿import crypto from "node:crypto";
 
 const supabaseUrl = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -81,10 +81,10 @@ export default async function handler(req, res) {
         `newsletter_article_notifications?slug=eq.${encodeURIComponent(cleanSlug)}&select=status`
       );
       if (existing[0]?.status === "sent") {
-        return res.status(200).json({ message: "Articolo già notificato.", duplicate: true });
+        return res.status(200).json({ message: "Articolo giÃ  notificato.", duplicate: true });
       }
       if (existing[0]?.status === "processing") {
-        return res.status(409).json({ error: "Notifica già in elaborazione." });
+        return res.status(409).json({ error: "Notifica giÃ  in elaborazione." });
       }
       await supabase(`newsletter_article_notifications?slug=eq.${encodeURIComponent(cleanSlug)}`, {
         method: "PATCH",
@@ -135,7 +135,7 @@ export default async function handler(req, res) {
               ${cleanDescription ? `<p>${escapeHtml(cleanDescription)}</p>` : ""}
               <p><a href="${articleUrl.toString()}" style="display:inline-block;padding:12px 20px;background:#00d9ff;color:#07111f;text-decoration:none;border-radius:8px;font-weight:bold">Leggi l'articolo</a></p>
               <hr>
-              <p style="font-size:12px;color:#667085">Ricevi questa email perché hai confermato l'iscrizione alla newsletter di NEWSGAMING2.</p>
+              <p style="font-size:12px;color:#667085">Ricevi questa email perchÃ© hai confermato l'iscrizione alla newsletter di NEWSGAMING2.</p>
               <p style="font-size:12px"><a href="${item.unsubscribeUrl}">Disiscriviti dalla newsletter</a></p>
             </div>
           `,

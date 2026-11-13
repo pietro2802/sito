@@ -1,5 +1,5 @@
-
-const crypto = require("crypto");
+﻿
+import crypto from "node:crypto";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     if (!subscribers.length) {
       return res.status(400).send(`
-        <h2>Link non valido o già utilizzato</h2>
+        <h2>Link non valido o giÃ  utilizzato</h2>
         <p><a href="${siteUrl}">Torna a NEWSGAMING2</a></p>
       `);
     }
@@ -130,7 +130,7 @@ export default async function handler(req, res) {
       </head>
       <body style="background:#07111f;color:#fff;font-family:Arial;text-align:center;padding:50px 20px">
         <h1 style="color:#00d9ff">Iscrizione confermata!</h1>
-        <p>Grazie! La tua iscrizione alla newsletter NEWSGAMING2 è attiva.</p>
+        <p>Grazie! La tua iscrizione alla newsletter NEWSGAMING2 Ã¨ attiva.</p>
         <a href="${siteUrl}" style="color:#00d9ff">Torna alla homepage</a>
       </body>
       </html>
@@ -138,6 +138,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Newsletter confirmation error:", error.message);
-    return res.status(500).send("Si è verificato un errore. Riprova più tardi.");
+    return res.status(500).send("Si Ã¨ verificato un errore. Riprova piÃ¹ tardi.");
   }
 }
