@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+﻿import crypto from "node:crypto";
 
 const supabaseUrl = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -70,12 +70,12 @@ export default async function handler(req, res) {
       });
 
       if (!updated.length) {
-        return res.status(200).send(page("Disiscrizione già completata", "Non riceverai altre email della newsletter."));
+        return res.status(200).send(page("Disiscrizione giÃ  completata", "Non riceverai altre email della newsletter."));
       }
-      return res.status(200).send(page("Disiscrizione completata", "Non riceverai più la newsletter di NEWSGAMING2."));
+      return res.status(200).send(page("Disiscrizione completata", "Non riceverai piÃ¹ la newsletter di NEWSGAMING2."));
     }
 
-    // Compatibilità con il link presente nell'email iniziale di benvenuto.
+    // CompatibilitÃ  con il link presente nell'email iniziale di benvenuto.
     const legacy = await db(
       `newsletter_subscribers?unsubscribe_token_hash=eq.${tokenHash}&status=eq.confirmed`,
       {
@@ -90,11 +90,11 @@ export default async function handler(req, res) {
     );
 
     if (!legacy.length) {
-      return res.status(400).send(page("Link non valido o già utilizzato", "Questo link non è più valido."));
+      return res.status(400).send(page("Link non valido o giÃ  utilizzato", "Questo link non Ã¨ piÃ¹ valido."));
     }
-    return res.status(200).send(page("Disiscrizione completata", "Non riceverai più la newsletter di NEWSGAMING2."));
+    return res.status(200).send(page("Disiscrizione completata", "Non riceverai piÃ¹ la newsletter di NEWSGAMING2."));
   } catch (error) {
     console.error("Newsletter unsubscribe error:", error.message);
-    return res.status(500).send("Si è verificato un errore. Riprova più tardi.");
+    return res.status(500).send("Si Ã¨ verificato un errore. Riprova piÃ¹ tardi.");
   }
 }
