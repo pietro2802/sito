@@ -16,8 +16,7 @@ function confirmationPage(token) {
   <body style="background:#07111f;color:#fff;font-family:Arial;text-align:center;padding:50px 20px">
     <h1 style="color:#00d9ff">Conferma la tua iscrizione</h1>
     <p>Per attivare la newsletter di NEWSGAMING2, conferma la richiesta qui sotto.</p>
-    <form method="POST" action="${siteUrl}/api/newsletter-confirm">
-      <input type="hidden" name="token" value="${token}">
+    <form method="POST" action="${siteUrl}/api/newsletter-confirm?token=${encodeURIComponent(token)}">
       <button type="submit" style="padding:13px 22px;border:0;border-radius:8px;background:#00d9ff;color:#07111f;font-weight:bold;cursor:pointer">Conferma iscrizione</button>
     </form>
     <p><a href="${siteUrl}" style="color:#00d9ff">Torna a NEWSGAMING2</a></p>
