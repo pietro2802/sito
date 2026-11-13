@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d14">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23090d14'/%3E%3Ctext x='50' y='67' font-size='54' text-anchor='middle' fill='%2363e6f4' font-family='Arial' font-weight='bold'%3ENG%3C/text%3E%3C/svg%3E">
+  <title>DLSS, FSR e PSSR spiegati semplici: quale modalità grafica scegliere | NEWSGAMING2</title>
+  <meta name="description" content="Guida pratica alle tecnologie di upscaling su PC e console: differenze tra modalità Qualità e Prestazioni, nitidezza e fluidità.">
+  <link rel="canonical" href="https://newsgaming2.it/articoli/upscaling-dlss-fsr-pssr-guida.html">
+  <meta property="og:title" content="DLSS, FSR e PSSR spiegati semplici: quale modalità grafica scegliere">
+  <meta property="og:description" content="Guida pratica alle tecnologie di upscaling su PC e console: differenze tra modalità Qualità e Prestazioni, nitidezza e fluidità.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://newsgaming2.it/immagini/articoli/upscaling-dlss-fsr-pssr-guida.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://newsgaming2.it/immagini/articoli/upscaling-dlss-fsr-pssr-guida.jpg">
+  <style>
+    :root{color-scheme:dark;--bg:#090d14;--panel:#111a28;--line:#26364b;--text:#eef5ff;--muted:#a9b7c9;--cyan:#63e6f4;--max:1180px}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% -5%,#142b40 0,transparent 35%),var(--bg);color:var(--text);font:16px/1.75 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}img{max-width:100%;display:block}
+    .wrap{width:min(var(--max),calc(100% - 36px));margin:auto}.topline{border-bottom:1px solid var(--line);background:#0b111bdc}
+    .nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{font-size:1.45rem;font-weight:950;letter-spacing:.08em;color:#fff}.brand span{color:var(--cyan)}
+    .navlinks{display:flex;gap:20px;align-items:center;font-weight:650}.navlinks a{color:#d6e4f4}
+    .eyebrow{color:var(--cyan);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+    .article-head{padding:38px 0 22px;max-width:900px}.article-head h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.12;letter-spacing:-.035em;margin:10px 0}
+    .dek{color:var(--muted);font-size:1.12rem}.crumb,.meta{color:var(--muted);font-size:.88rem}
+    .article-hero-image{margin:12px 0 28px}.article-hero-image figcaption{color:var(--muted);font-size:.78rem;margin-top:7px}
+    .article-cover{display:block;width:100%;aspect-ratio:16/8.5;object-fit:cover;border-radius:18px;border:1px solid var(--line)}
+    .article-layout{display:grid;grid-template-columns:minmax(0,900px);align-items:start}.article-body{font-size:1.06rem}
+    .article-body p{color:#d5dfeb;margin:0 0 18px}.article-body h2{font-size:1.55rem;line-height:1.25;margin:36px 0 12px;color:#fff}
+    .article-body ul{padding-left:22px;color:#d5dfeb}
+    .summary,.article-resources,.faq{margin:30px 0;padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+    .summary h2,.article-resources h2,.faq h2{margin:0 0 10px;color:var(--cyan);font-size:1.2rem}
+    .faq h3{margin:16px 0 5px}
+    footer{border-top:1px solid var(--line);margin-top:60px;padding:30px 0 40px;color:var(--muted);font-size:.9rem}
+    .footlinks{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0}
+    @media(max-width:580px){.nav{align-items:flex-start;padding:15px 0;flex-direction:column}.navlinks{flex-wrap:wrap}}
+  </style>
+  <link rel="stylesheet" href="/assets/neon-futuristico.css">
+  <link rel="stylesheet" href="/assets/ng-community.css">
+</head>
+<body>
+  <div class="topline">
+    <header class="wrap nav">
+      <a class="brand" href="../index.html">NEWS<span>GAMING2</span></a>
+      <nav class="navlinks">
+        <a href="../index.html">Home</a>
+        <a href="../scopri.html">Scopri</a>
+        <a href="../giochi.html">Giochi</a>
+        <a href="../community.html">Community</a>
+        <a href="../about.html">Chi siamo</a>
+        <a href="../contatti.html">Contatti</a>
+        <a href="/account.html">Area personale</a>
+      </nav>
+    </header>
+  </div>
+
+  <main class="wrap">
+    <header class="article-head">
+      <p class="crumb"><a href="../index.html">Home</a> / Hardware · Guide</p>
+      <div class="eyebrow">Hardware · Approfondimento</div>
+      <h1>DLSS, FSR e PSSR spiegati semplici: quale modalità grafica scegliere</h1>
+      <p class="dek">Nei giochi moderni su PC e console compaiono sempre più sigle per aumentare la fluidità senza sacrificare troppo il dettaglio: ecco come orientarsi senza perdersi nei menu.</p>
+      <figure class="article-hero-image">
+        <img class="article-cover" src="../immagini/articoli/upscaling-dlss-fsr-pssr-guida.jpg" alt="Postazione gaming PC e monitor ad alta risoluzione per testare le modalità grafiche" width="1200" height="675" fetchpriority="high">
+        <figcaption>Immagine illustrativa: confronto tra modalità Qualità e Prestazioni nei giochi moderni.</figcaption>
+      </figure>
+      <p class="meta">NEWSGAMING2 · Guida hardware e impostazioni</p>
+    </header>
+
+    <div class="article-layout">
+      <article class="article-body">
+        <p>Chi apre oggi il menu video di un videogioco recente si trova davanti a una lista di sigle che fino a pochi anni fa non esistevano: <strong>DLSS</strong>, <strong>FSR</strong>, <strong>XeSS</strong> su PC e <strong>PSSR</strong> su PlayStation 5 Pro, oltre ai classici selettori tra modalità <em>Qualità</em> e <em>Prestazioni</em>. Capire cosa fanno davvero queste tecnologie aiuta a evitare immagini sfocate, scatti improvvisi e compromessi inutili.</p>
+
+        <h2>Che cos'è l'upscaling (e perché si usa quasi ovunque)</h2>
+        <p>Disegnare un videogioco completo a risoluzione 4K nativa con illuminazione avanzata richiede moltissima potenza di calcolo. Per mantenere un buon numero di fotogrammi al secondo (FPS), i motori grafici moderni calcolano la scena a una risoluzione interna più bassa e poi la ricostruiscono alla risoluzione dello schermo.</p>
+        <p>La differenza rispetto al passato sta negli algoritmi temporali e di apprendimento automatico: invece di allargare semplicemente i pixel, il sistema confronta più fotogrammi consecutivi e i vettori di movimento per recuperare bordi, dettagli sottili e stabilità dell'immagine.</p>
+
+        <h2>DLSS, FSR e PSSR: cosa cambia tra le sigle</h2>
+        <ul>
+          <li><strong>NVIDIA DLSS:</strong> disponibile sulle schede video GeForce RTX, usa unità hardware dedicate per la ricostruzione dell'immagine e offre risultati generalmente molto stabili anche su dettagli fini come recinzioni, cavi e vegetazione.</li>
+          <li><strong>AMD FSR:</strong> funziona su un ventaglio molto ampio di schede video e anche su molte console e PC portatili. Le versioni più recenti hanno migliorato la pulizia in movimento, anche se i risultati dipendono molto dall'implementazione del singolo gioco.</li>
+          <li><strong>Intel XeSS:</strong> supportato da diverse GPU moderne, offre spesso un buon equilibrio su hardware Intel e una modalità di compatibilità su altre schede.</li>
+          <li><strong>Sony PSSR:</strong> la soluzione integrata su PS5 Pro per aiutare gli sviluppatori a combinare fluidità elevata e nitidezza su schermi 4K.</li>
+        </ul>
+
+        <h2>Qualità, Bilanciata o Prestazioni: come scegliere</h2>
+        <p>Senza complicarsi la vita con decine di prove tecniche, basta partire dalla risoluzione del proprio schermo e dal tipo di gioco:</p>
+        <ul>
+          <li><strong>Su monitor Full HD (1080p):</strong> conviene restare su risoluzione nativa o usare al massimo il profilo <em>Qualità</em>. Scendere su <em>Prestazioni</em> a 1080p riduce molto la risoluzione di partenza e può rendere l'immagine impastata.</li>
+          <li><strong>Su schermi 1440p:</strong> il profilo <em>Qualità</em> è quasi sempre il punto di equilibrio migliore tra nitidezza e fluidità.</li>
+          <li><strong>Su TV o monitor 4K:</strong> i profili <em>Qualità</em> o <em>Bilanciata</em> offrono un ottimo dettaglio visivo; <em>Prestazioni</em> ha senso soprattutto nei giochi d'azione veloci dove servono 60 FPS stabili o superiori.</li>
+        </ul>
+
+        <h2>Attenzione a Frame Generation e nitidezza artificiale</h2>
+        <p>Alcuni giochi includono anche la generazione di fotogrammi intermedi (<em>Frame Generation</em>). Questa opzione può rendere il movimento visivamente più fluido, ma funziona bene solo quando il gioco parte già da una base fluida: se il sistema fatica a mantenere un frame rate regolare, aggiungere fotogrammi generati non elimina la sensazione di pesantezza nei comandi.</p>
+        <p>Lo stesso vale per i filtri di nitidezza (<em>Sharpness</em>): un valore moderato aiuta a compensare eventuali morbidezze, ma esagerare crea aloni bianchi attorno ai contorni.</p>
+
+        <div class="summary">
+          <h2>In breve</h2>
+          <ul>
+            <li>L'upscaling calcola il gioco a risoluzione più bassa per aumentare gli FPS e poi ricostruisce l'immagine.</li>
+            <li>Su 1080p usa risoluzione nativa o profilo <em>Qualità</em>; in 4K funzionano bene <em>Qualità</em> e <em>Bilanciata</em>.</li>
+            <li>La qualità finale cambia da gioco a gioco: prova una scena in movimento prima di decidere.</li>
+          </ul>
+        </div>
+
+        <section class="faq">
+          <h2>Domande frequenti</h2>
+          <h3>Attivare DLSS o FSR rovina sempre la grafica?</h3>
+          <p>No: nei profili più conservativi (come <em>Qualità</em>) la perdita di dettaglio è spesso minima rispetto al guadagno di fluidità, soprattutto su schermi 1440p e 4K.</p>
+          <h3>Conviene scegliere sempre 60 FPS su console?</h3>
+          <p>Nei giochi d'azione, sparatutto e corse la maggiore fluidità migliora molto la reattività. Nei titoli lenti o narrativi si può preferire la modalità Qualità se la stabilità resta buona.</p>
+        </section>
+      </article>
+    </div>
+
+    <section class="article-resources" aria-label="Collegamenti utili e fonti">
+      <h2>Collegamenti utili e fonti</h2>
+      <p>Documentazione ufficiale dei produttori citati nell'approfondimento.</p>
+      <ul>
+        <li><a href="https://www.playstation.com/it-it/ps5/ps5-pro/" target="_blank" rel="noopener noreferrer">PlayStation 5 Pro – pagina ufficiale</a> <span>↗</span></li>
+        <li><a href="https://www.nvidia.com/it-it/geforce/drivers/" target="_blank" rel="noopener noreferrer">NVIDIA – driver e tecnologie GeForce</a> <span>↗</span></li>
+        <li><a href="https://www.amd.com/" target="_blank" rel="noopener noreferrer">AMD – sito ufficiale</a> <span>↗</span></li>
+      </ul>
+    </section>
+
+    <section id="ngArticleComments" class="ng-panel" style="margin:28px 0">
+      <h2>Commenti della community</h2>
+      <p id="ngArticleCommentsLogin" class="muted"></p>
+      <form id="ngArticleCommentForm" class="ng-form">
+        <label>Scrivi un commento<textarea id="ngArticleCommentBody" maxlength="3000" required placeholder="Il tuo contributo…"></textarea></label>
+        <button class="ng-btn" type="submit">Pubblica</button>
+      </form>
+      <p id="ngArticleCommentMsg" class="muted" aria-live="polite"></p>
+      <div id="ngArticleCommentsList"></div>
+    </section>
+    <section id="ngArticleSocial" class="ng-panel" style="margin:28px 0"></section>
+
+    <section class="related-feed">
+      <h2>Scopri altri articoli</h2>
+      <p>Continua a leggere gli approfondimenti di NEWSGAMING2.</p>
+      <p><a href="../scopri.html">Apri tutti gli articoli →</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>NEWSGAMING2</strong>
+      <div class="footlinks">
+        <a href="/index.html">Home</a>
+        <a href="/about.html">Chi siamo</a>
+        <a href="/contatti.html">Contatti</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/cookie-policy.html">Cookie</a>
+      </div>
+      <p>Progetto editoriale indipendente. I marchi citati appartengono ai rispettivi titolari.</p>
+    </div>
+  </footer>
+
+  <script src="/assets/supabase-config.js"></script>
+  <script type="module" src="/assets/article-comments.js"></script>
+  <script type="module" src="/assets/article-social.js"></script>
+</body>
+</html>

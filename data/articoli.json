@@ -452,5 +452,16 @@
                          "imageAlt":  "GTA 6: ambientazione Vice City",
                          "description":  "Un’analisi di ambientazione, personaggi e linguaggio visivo, separando ciò che è stato mostrato dalle ipotesi della community."
                      }
-                 ]
+                 ,
+{
+      "id": "dlss, fsr e pssr spiegati semplici: quale modalità grafica scegliere",
+      "title": "DLSS, FSR e PSSR spiegati semplici: quale modalità grafica scegliere",
+      "category": "Hardware",
+      "date": "2026-11-13",
+      "url": "articoli/upscaling-dlss-fsr-pssr-guida.html",
+      "image": "/immagini/articoli/upscaling-dlss-fsr-pssr-guida.jpg",
+      "imageAlt": "Postazione gaming PC e monitor ad alta risoluzione per testare le modalità grafiche",
+      "description": "Guida pratica alle tecnologie di upscaling su PC e console: differenze tra modalità Qualità e Prestazioni, nitidezza e fluidità."
+    }
+  ]
 }
