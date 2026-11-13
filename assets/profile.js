@@ -1,4 +1,3 @@
-```javascript
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const sb = createClient(
@@ -129,7 +128,7 @@ async function deleteAccount() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+async function initProfilePage() {
   try {
     const {
       data: { session },
@@ -164,5 +163,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         'Errore nel caricamento: ' + error.message;
     }
   }
-});
-```
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initProfilePage);
+} else {
+  initProfilePage();
+}
