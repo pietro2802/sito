@@ -10,6 +10,53 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient(window.NG_SUPABASE_URL,window.NG_SUPABASE_PUBLISHABLE_KEY);
 const slug=new URLSearchParams(location.search).get('slug');
 const esc=v=>(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+// Render article HTML only after parsing it into a strict element/attribute allowlist.
+const sanitizeArticleHtml=(html)=>{
+ const allowed=new Set(['P','H2','H3','H4','UL','OL','LI','STRONG','B','EM','I','U','S','BLOCKQUOTE','A','BR','HR','IMG','FIGURE','FIGCAPTION','PRE','CODE','TABLE','THEAD','TBODY','TR','TH','TD']);
+ const template=document.createElement('template');
+ template.innerHTML=String(html??'');
+ const cleanNode=node=>{
+  if(node.nodeType===Node.TEXT_NODE)return document.createTextNode(node.textContent||'');
+  if(node.nodeType!==Node.ELEMENT_NODE)return document.createDocumentFragment();
+  const tag=node.tagName;
+  if(!allowed.has(tag)){
+   const fragment=document.createDocumentFragment();
+   // Drop active/embedded content completely; unwrap harmless unknown formatting.
+   if(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','SVG','MATH','FORM','INPUT','BUTTON','VIDEO','AUDIO','SOURCE'].includes(tag))return fragment;
+   [...node.childNodes].forEach(child=>fragment.append(cleanNode(child)));
+   return fragment;
+  }
+  const out=document.createElement(tag.toLowerCase());
+  if(tag==='A'){
+   const href=node.getAttribute('href')||'';
+   try{
+    const url=new URL(href,location.origin);
+    if(['https:','http:','mailto:'].includes(url.protocol))out.setAttribute('href',url.href);
+   }catch{}
+   if(out.hasAttribute('href')){out.setAttribute('rel','noopener noreferrer');out.setAttribute('target','_blank');}
+   const title=node.getAttribute('title');if(title)out.setAttribute('title',title.slice(0,300));
+  }
+  if(tag==='IMG'){
+   const src=node.getAttribute('src')||'';
+   try{
+    const url=new URL(src,location.origin);
+    if(!['https:','http:'].includes(url.protocol))return document.createDocumentFragment();
+    out.setAttribute('src',url.href);
+   }catch{return document.createDocumentFragment();}
+   out.setAttribute('loading','lazy');out.setAttribute('decoding','async');
+   for(const attr of ['alt','title']){const value=node.getAttribute(attr);if(value)out.setAttribute(attr,value.slice(0,500));}
+  }
+  if(tag==='TH'||tag==='TD'){
+   const span=node.getAttribute('colspan');
+   if(span&&/^([1-9]|1[0-2])$/.test(span))out.setAttribute('colspan',span);
+  }
+  [...node.childNodes].forEach(child=>out.append(cleanNode(child)));
+  return out;
+ };
+ const result=document.createDocumentFragment();
+ [...template.content.childNodes].forEach(node=>result.append(cleanNode(node)));
+ const holder=document.createElement('div');holder.append(result);return holder.innerHTML;
+};
 if(!slug){document.querySelector('#title').textContent='Articolo non trovato';}
 else{
  const {data,error}=await sb.from('articles').select('*').eq('slug',slug).maybeSingle();
@@ -19,7 +66,7 @@ else{
   document.querySelector('#title').textContent=data.title; document.querySelector('#excerpt').textContent=data.excerpt||'';
   document.querySelector('#meta').innerHTML=`<span>${data.published_at?new Date(data.published_at).toLocaleDateString('it-IT'):'Bozza'}</span><span>${esc((data.platforms||[]).join(' · '))}</span>`;
   if(data.cover_url){const im=document.querySelector('#cover');im.src=data.cover_url;im.alt=data.title;im.hidden=false}
-  document.querySelector('#body').innerHTML=data.body;
+  document.querySelector('#body').innerHTML=sanitizeArticleHtml(data.body);
   document.querySelector('#discussion').href='/community.html?article='+encodeURIComponent(data.slug);
  }
 }
