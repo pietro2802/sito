@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070b13">
+  <title>Area personale | NEWSGAMING2</title>
+
+  <link rel="stylesheet" href="/assets/neon-futuristico.css">
+  <link rel="stylesheet" href="/assets/ng-community.css">
+</head>
+
+<body>
+  <div class="topline">
+    <header class="wrap nav">
+      <a class="brand" href="/">NEWS<span>GAMING2</span></a>
+
+      <nav class="navlinks">
+        <a href="/">Home</a>
+        <a href="/community.html">Community</a>
+        <a href="/giochi.html">Giochi</a>
+        <a href="/redazione.html">Redazione</a>
+      </nav>
+    </header>
+  </div>
+
+  <main class="ng-page">
+
+    <header class="ng-page-head">
+      <div>
+        <div class="ng-kicker">ACCOUNT · NEWSGAMING2</div>
+        <h1>Area personale</h1>
+        <p class="muted">Gestisci le tue ricompense e il tuo account.</p>
+      </div>
+
+      <button id="logout" class="ng-btn secondary" type="button">
+        Esci
+      </button>
+    </header>
+
+    <!-- RICOMPENSA GIORNALIERA -->
+    <section class="ng-daily-panel">
+      <div>
+        <div class="ng-kicker">RICOMPENSA GIORNALIERA</div>
+        <h2>Accesso quotidiano</h2>
+
+        <p id="dailyStatus" class="muted">
+          Caricamento…
+        </p>
+
+        <div class="ng-reward-track">
+          <span>10 XP base</span>
+          <span>+5 XP per giorno</span>
+          <span>Bonus 7 / 14 / 30 giorni</span>
+        </div>
+      </div>
+
+      <button id="dailyClaim" class="ng-btn" type="button">
+        Riscatta XP
+      </button>
+    </section>
+
+    <!-- STATISTICHE -->
+    <section class="ng-stat-grid">
+
+      <div class="ng-stat">
+        <strong id="level">1</strong>
+        <span>LIVELLO</span>
+      </div>
+
+      <div class="ng-stat">
+        <strong id="xp">0</strong>
+        <span>XP TOTALI</span>
+      </div>
+
+      <div class="ng-stat">
+        <strong>FREE</strong>
+        <span>ACCESSO</span>
+      </div>
+
+    </section>
+
+    <!-- CANCELLAZIONE ACCOUNT -->
+    <section class="ng-panel" style="margin-top:22px">
+      <h2>Cancellazione account</h2>
+
+      <p class="muted">
+        La cancellazione è definitiva e viene gestita tramite una funzione
+        Vercel protetta dal token della sessione.
+      </p>
+
+      <button id="delete" class="ng-btn danger" type="button">
+        Richiedi cancellazione account
+      </button>
+    </section>
+
+  </main>
+
+  <script src="/assets/supabase-config.js"></script>
+  <script type="module" src="/assets/profile.js"></script>
+
+</body>
+</html>
