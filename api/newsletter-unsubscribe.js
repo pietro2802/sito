@@ -25,8 +25,7 @@ async function db(path, options = {}) {
 
 function page(title, message, token = "") {
   const form = token ? `
-    <form method="POST" action="${siteUrl}/api/newsletter-unsubscribe" style="margin:28px auto">
-      <input type="hidden" name="token" value="${token}">
+    <form method="POST" action="${siteUrl}/api/newsletter-unsubscribe?token=${encodeURIComponent(token)}" style="margin:28px auto">
       <button type="submit" style="padding:13px 22px;border:0;border-radius:8px;background:#00d9ff;color:#07111f;font-weight:bold;cursor:pointer">Conferma disiscrizione</button>
     </form>
   ` : "";
