@@ -1,4 +1,4 @@
-﻿import crypto from "node:crypto";
+import crypto from "node:crypto";
 
 const supabaseUrl = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -23,13 +23,35 @@ async function db(path, options = {}) {
   return body ? JSON.parse(body) : [];
 }
 
-function page(title, message) {
-  return `<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head><body style="background:#07111f;color:#fff;font-family:Arial;text-align:center;padding:50px 20px"><h1 style="color:#00d9ff">${title}</h1><p>${message}</p><a href="${siteUrl}" style="color:#00d9ff">Torna a NEWSGAMING2</a></body></html>`;
+function page(title, message, token = "") {
+  const form = token ? `
+    <form method="POST" action="${siteUrl}/api/newsletter-unsubscribe?token=${encodeURIComponent(token)}" style="margin:28px auto">
+      <button type="submit" style="padding:13px 22px;border:0;border-radius:8px;background:#00d9ff;color:#07111f;font-weight:bold;cursor:pointer">Conferma disiscrizione</button>
+    </form>
+  ` : "";
+  return `<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head><body style="background:#07111f;color:#fff;font-family:Arial;text-align:center;padding:50px 20px"><h1 style="color:#00d9ff">${title}</h1><p>${message}</p>${form}<a href="${siteUrl}" style="color:#00d9ff">Torna a NEWSGAMING2</a></body></html>`;
 }
 
 export default async function handler(req, res) {
   if (!["GET", "POST"].includes(req.method)) {
+    res.setHeader("Allow", "GET, POST");
     return res.status(405).send("Metodo non consentito.");
+  }
+
+  const body = req.body && typeof req.body === "object" ? req.body : {};
+  const token = String(req.query?.token || body.token || "");
+  if (!/^[a-f0-9]{64}$/.test(token)) {
+    return res.status(400).send("Link di disiscrizione non valido.");
+  }
+
+  // I GET mostrano solo una pagina di conferma: nessun dato viene modificato.
+  // Il POST del modulo o il POST one-click di List-Unsubscribe esegue l'azione.
+  if (req.method === "GET") {
+    return res.status(200).send(page(
+      "Conferma la disiscrizione",
+      "Per interrompere le email della newsletter, conferma qui sotto.",
+      token
+    ));
   }
 
   try {
@@ -37,14 +59,7 @@ export default async function handler(req, res) {
       return res.status(500).send("Configurazione non disponibile.");
     }
 
-    const token = String(req.query.token || "");
-    if (!/^[a-f0-9]{64}$/.test(token)) {
-      return res.status(400).send("Link di disiscrizione non valido.");
-    }
-
     const tokenHash = hashToken(token);
-
-    // Prima controlla i token individuali creati per ogni email di notifica.
     const tokenRows = await db(
       `newsletter_unsubscribe_tokens?token_hash=eq.${tokenHash}&used_at=is.null&select=id,subscriber_id`
     );
@@ -70,12 +85,12 @@ export default async function handler(req, res) {
       });
 
       if (!updated.length) {
-        return res.status(200).send(page("Disiscrizione giÃ  completata", "Non riceverai altre email della newsletter."));
+        return res.status(200).send(page("Disiscrizione già completata", "Non riceverai altre email della newsletter."));
       }
-      return res.status(200).send(page("Disiscrizione completata", "Non riceverai piÃ¹ la newsletter di NEWSGAMING2."));
+      return res.status(200).send(page("Disiscrizione completata", "Non riceverai più la newsletter di NEWSGAMING2."));
     }
 
-    // CompatibilitÃ  con il link presente nell'email iniziale di benvenuto.
+    // Compatibilità con il token presente nella precedente email di benvenuto.
     const legacy = await db(
       `newsletter_subscribers?unsubscribe_token_hash=eq.${tokenHash}&status=eq.confirmed`,
       {
@@ -90,11 +105,11 @@ export default async function handler(req, res) {
     );
 
     if (!legacy.length) {
-      return res.status(400).send(page("Link non valido o giÃ  utilizzato", "Questo link non Ã¨ piÃ¹ valido."));
+      return res.status(400).send(page("Link non valido o già utilizzato", "Questo link non è più valido."));
     }
-    return res.status(200).send(page("Disiscrizione completata", "Non riceverai piÃ¹ la newsletter di NEWSGAMING2."));
+    return res.status(200).send(page("Disiscrizione completata", "Non riceverai più la newsletter di NEWSGAMING2."));
   } catch (error) {
     console.error("Newsletter unsubscribe error:", error.message);
-    return res.status(500).send("Si Ã¨ verificato un errore. Riprova piÃ¹ tardi.");
+    return res.status(500).send("Si è verificato un errore. Riprova più tardi.");
   }
 }
