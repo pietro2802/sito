@@ -28,11 +28,17 @@ export default async function handler(req, res) {
       });
     }
 
-    const { email, website, consent } = req.body || {};
+    const { email, website, consent, privacyNoticeAccepted } = req.body || {};
 
     if (website) {
       return res.status(200).json({
         message: "Se la richiesta è valida, riceverai un'email."
+      });
+    }
+
+    if (privacyNoticeAccepted !== true) {
+      return res.status(400).json({
+        error: "Devi prima leggere e confermare la presa visione dell'Informativa sulla Privacy."
       });
     }
 

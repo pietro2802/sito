@@ -6,9 +6,12 @@ const form=document.querySelector('#auth-form'), msg=document.querySelector('#me
 const savedEmail=localStorage.getItem('ng2-email'); if(savedEmail) emailInput.value=savedEmail;
 const email=()=>emailInput.value.trim(); const password=()=>document.querySelector('#password').value;
 document.querySelector('#signup').addEventListener('click',async()=>{
- if(!form.reportValidity()) return; localStorage.setItem('ng2-email',email());
+ if(!form.reportValidity()) return;
+ const privacyNotice=document.querySelector('#privacyNotice');
+ if(!privacyNotice?.checked){msg.textContent='Per creare l’account devi prima leggere e confermare la presa visione dell’Informativa sulla Privacy.';privacyNotice?.focus();return;}
+ localStorage.setItem('ng2-email',email());
  msg.textContent='Creazione account in corso…';
- const {error}=await supabase.auth.signUp({email:email(),password:password(),options:{emailRedirectTo:location.origin+'/account.html',data:{display_name:(document.querySelector('#display-name')?.value||'').trim()}}});
+ const {error}=await supabase.auth.signUp({email:email(),password:password(),options:{emailRedirectTo:location.origin+'/account.html',data:{display_name:(document.querySelector('#display-name')?.value||'').trim(),privacy_notice_version:'2026-11-13',privacy_notice_read_at:new Date().toISOString()}}});
  msg.textContent=error?error.message:'Registrazione inviata. Controlla la tua email e conferma l’indirizzo prima di accedere.';
 });
 form.addEventListener('submit',async e=>{
