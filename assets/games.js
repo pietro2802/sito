@@ -2,6 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const sb=createClient(window.NG_SUPABASE_URL,window.NG_SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=s=>document.querySelector(s);
 const esc=v=>(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const safeHttpUrl=value=>{try{const url=new URL(String(value||''),location.origin);return ['http:','https:'].includes(url.protocol)?url.href:'';}catch{return '';}};
 const fallback=[
  {slug:'gta-6',title:'Grand Theft Auto VI',release_date:'2026-11-19',genre:'Azione / Open world',platforms:['PS5','Xbox Series X|S'],description:'Lancio ufficiale indicato da PlayStation per il 19 novembre 2026.',official_url:'https://www.playstation.com/it-it/ps5/games/'},
  {slug:'until-dawn-2',title:'Until Dawn 2',release_date:'2027-01-28',genre:'Horror / Avventura',platforms:['PS5'],description:'Nuovo capitolo annunciato da PlayStation; data indicata: 28 gennaio 2027.',official_url:'https://www.playstation.com/it-it/ps5/games/'},
@@ -31,7 +32,8 @@ function render(games){
  box.innerHTML=games.length?games.map(g=>{
   const date=g.release_date?new Date(g.release_date+'T00:00:00').toLocaleDateString('it-IT',{dateStyle:'long'}):'Data da confermare';
   const platforms=(g.platforms||[]).map(x=>`<span class="ng-pill">${esc(x)}</span>`).join('');
-  return `<article class="ng-game-card"><div class="ng-game-art"><img src="${esc(g.cover_url||'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80')}" alt="" loading="lazy"></div><div><div class="ng-game-date">${esc(date)}</div><h3>${esc(g.title)}</h3><p class="muted">${esc(g.description||'')}</p><div class="ng-meta"><span>${esc(g.genre||'Genere non indicato')}</span>${platforms}</div>${g.official_url?`<p><a class="ng-source" href="${esc(g.official_url)}" target="_blank" rel="noopener noreferrer">Fonte ufficiale →</a></p>`:''}</div></article>`;
+  const coverUrl=safeHttpUrl(g.cover_url)||'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80';
+  return `<article class="ng-game-card"><div class="ng-game-art"><img src="${esc(coverUrl)}" alt="" loading="lazy"></div><div><div class="ng-game-date">${esc(date)}</div><h3>${esc(g.title)}</h3><p class="muted">${esc(g.description||'')}</p><div class="ng-meta"><span>${esc(g.genre||'Genere non indicato')}</span>${platforms}</div>${g.official_url?`<p><a class="ng-source" href="${esc(g.official_url)}" target="_blank" rel="noopener noreferrer">Fonte ufficiale →</a></p>`:''}</div></article>`;
  }).join(''):'<div class="ng-empty">Nessun gioco trovato.</div>';
 }
 boot();
