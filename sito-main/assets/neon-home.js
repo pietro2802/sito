@@ -1,7 +1,0 @@
-(()=>{
- const chips=[...document.querySelectorAll('.ng-chip')],cat=document.getElementById('category'),search=document.getElementById('search');
- chips.forEach(chip=>chip.addEventListener('click',()=>{if(!cat)return;cat.value=chip.dataset.filter||'';cat.dispatchEvent(new Event('change',{bubbles:true}));chips.forEach(c=>c.classList.toggle('is-active',c===chip));}));
- if(cat){cat.addEventListener('change',()=>chips.forEach(c=>c.classList.toggle('is-active',(c.dataset.filter||'')===cat.value)));}
- if(search){search.setAttribute('aria-label','Cerca tra tutte le notizie');search.addEventListener('keydown',e=>{if(e.key==='Escape'){search.value='';search.dispatchEvent(new Event('input',{bubbles:true}));search.blur();}});}
- const hero=document.querySelector('.ng-cinematic');if(hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){const layer=document.createElement('div');layer.className='ng-particles';layer.setAttribute('aria-hidden','true');for(let i=0;i<22;i++){const p=document.createElement('i');p.style.setProperty('--x',(Math.random()*100).toFixed(2)+'%');p.style.setProperty('--delay',(-Math.random()*12).toFixed(2)+'s');p.style.setProperty('--duration',(8+Math.random()*10).toFixed(2)+'s');p.style.setProperty('--size',(2+Math.random()*3).toFixed(2)+'px');layer.append(p);}hero.append(layer);}
-})();
