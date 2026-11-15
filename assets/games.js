@@ -60,19 +60,10 @@ const upcoming = [
     genre: 'GDR / Collezione di creature',
     platforms: ['PC', 'PS5', 'Xbox Series X|S', 'Nintendo Switch', 'Nintendo Switch 2'],
     description: 'Nuovo capitolo della serie Dragon Quest Monsters, in arrivo il 3 dicembre.',
-    cover_url: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3681610/header.jpg',
+    cover_url: 'https://cdn11.bigcommerce.com/s-6kgfzq4siu/images/stencil/1280x1280/products/3572/17981/DQMTWW_SQEX_SEE_500x718_NoRating_v03__51970.1781005848.jpg?c=1',
     official_url: 'https://store.steampowered.com/app/3681610/'
   },
-  {
-    slug: 'rayman-legends-retold',
-    title: 'Rayman Legends Retold',
-    release_date: '2026-12-03',
-    genre: 'Platform',
-    platforms: ['PC', 'PS5', 'Xbox Series X|S', 'Nintendo Switch 2'],
-    description: 'Rivisitazione del platform con nuovi contenuti.',
-    cover_url: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4084710/header.jpg',
-    official_url: 'https://store.steampowered.com/app/4084710/'
-  },
+
   {
     slug: 'warhammer-40000-dawn-of-war-iv',
     title: 'Warhammer 40,000: Dawn of War IV',
@@ -80,7 +71,7 @@ const upcoming = [
     genre: 'Strategia / RTS',
     platforms: ['PC'],
     description: 'Nuovo capitolo strategico ambientato nell’universo di Warhammer 40,000.',
-    cover_url: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2272360/header.jpg',
+    cover_url: 'https://images.everyeye.it/img-articoli/dawn-of-war-iv-strategia-personalizzazione-battaglie-epiche-mondo-warhammer-40k-v10-65994.jpg',
     official_url: 'https://store.steampowered.com/app/2272360/'
   },
   {
@@ -110,7 +101,7 @@ const upcoming = [
     genre: 'Azione / Avventura',
     platforms: ['PC', 'PS5', 'Xbox Series X|S', 'Nintendo Switch 2'],
     description: 'Nuovo capitolo videoludico ispirato alla serie.',
-    cover_url: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2916700/header.jpg',
+    cover_url: 'https://item-yoyaku.bookoff.co.jp/img/item/pkg_img/4988615217708.jpg',
     official_url: 'https://store.steampowered.com/app/2916700/'
   },
   {
@@ -120,7 +111,7 @@ const upcoming = [
     genre: 'Avventura / Puzzle',
     platforms: ['PC', 'PS5', 'Nintendo Switch', 'Nintendo Switch 2'],
     description: 'Nuova avventura investigativa con il Professor Layton e Luke.',
-    cover_url: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3384600/header.jpg',
+    cover_url: 'https://d1lss44hh2trtw.cloudfront.net/assets/article/2023/11/29/nintendoswitch-professor-layton-and-the-new-world-of-steam-keyart-horizontal_feature.jpg',
     official_url: 'https://store.steampowered.com/app/3384600/'
   }
 ];
