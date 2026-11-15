@@ -166,6 +166,7 @@ async function boot() {
     games = mergeGames(data || []);
     note.textContent = 'Calendario delle uscite future aggiornato. I giochi già usciti sono esclusi.';
   } catch (error) {
+    games = mergeGames(upcoming);
     note.textContent = 'Calendario redazionale delle prossime uscite. Il collegamento al database non è al momento disponibile.';
     console.warn('Calendario Supabase non disponibile; mostro le uscite verificate.', error);
   }
