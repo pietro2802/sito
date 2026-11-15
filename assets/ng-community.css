@@ -971,3 +971,31 @@
     transition: none !important;
   }
 }
+
+
+/* COPERTINE DEL CALENDARIO GIOCHI */
+.ng-game-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  border-radius: 11px;
+  background: #101a2a;
+}
+
+.ng-game-no-cover {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 100px;
+  aspect-ratio: 16 / 9;
+  padding: 12px;
+  border: 1px dashed rgba(86,240,255,.25);
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(13,23,38,.95), rgba(31,20,50,.9));
+  color: #9fb0c3;
+  font-size: .78rem;
+  text-align: center;
+}
+.ng-game-no-cover[hidden] { display: none; }
