@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/assets/neon-futuristico.css"><link rel="stylesheet" href="/assets/ng-community.css">
 <!-- Google AdSense: tag per Privacy & messaging; nessun blocco annunci -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436901367597680" crossorigin="anonymous"></script>
-</head>
+<meta name="robots" content="noindex,nofollow"></head>
 <body><div class="topline"><header class="wrap nav"><a class="brand" href="/">NEWS<span>GAMING2</span></a><nav class="navlinks"><a href="/">Home</a><a href="/scopri.html">Scopri</a><a href="/giochi.html">Giochi</a><a href="/community.html">Community</a><a href="/area-personale.html">Area personale</a></nav></header></div>
 <main class="ng-page"><article id="article" class="ng-panel"><div class="ng-kicker" id="category"></div><h1 id="title">Caricamento…</h1><p id="excerpt" class="muted"></p><div id="meta" class="ng-meta"></div><img id="cover" hidden class="article-cover" alt=""><div id="body" class="article-body"></div></article>
 <section class="ng-grid-2" style="margin-top:22px"><div class="ng-panel"><h2>Commenti</h2><p class="muted">Partecipa alla discussione su questo articolo.</p><a id="discussion" class="ng-btn" href="/community.html">Apri community</a></div><aside class="ng-panel"><h2>Nota editoriale</h2><p class="muted">Le informazioni soggette a cambiamento vanno verificate sulle fonti ufficiali. Le pubblicazioni dinamiche sono separate dagli articoli statici già presenti nel sito.</p></aside></section></main>
@@ -74,4 +74,9 @@ else{
   document.querySelector('#discussion').href='/community.html?article='+encodeURIComponent(data.slug);
  }
 }
-</script><footer class="site-legal-footer"><a href="/privacy.html">Privacy</a> · <a href="/chi-siamo.html">Chi siamo</a> · <a href="/contatti.html">Contatti</a></footer></body></html>
+</script><footer class="site-legal-footer"><a href="/privacy.html">Privacy</a> · <a href="/chi-siamo.html">Chi siamo</a> · <a href="/contatti.html">Contatti</a><div class="footlinks"><a href="#" id="ngConsentSettings" hidden>Impostazioni privacy e cookie</a><script>
+window.googlefc=window.googlefc||{};
+window.googlefc.callbackQueue=window.googlefc.callbackQueue||[];
+window.googlefc.callbackQueue.push({"CONSENT_API_READY":function(){const link=document.getElementById("ngConsentSettings");if(link)link.hidden=false;}});
+document.getElementById("ngConsentSettings")?.addEventListener("click",function(e){e.preventDefault();window.googlefc=window.googlefc||{};window.googlefc.callbackQueue=window.googlefc.callbackQueue||[];window.googlefc.callbackQueue.push(function(){if(typeof window.googlefc.showRevocationMessage==="function")window.googlefc.showRevocationMessage();});});
+</script></div></footer></body></html>
