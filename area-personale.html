@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="/assets/neon-futuristico.css">
   <link rel="stylesheet" href="/assets/ng-community.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436901367597680" crossorigin="anonymous" referrerpolicy="strict-origin-when-cross-origin"></script>
 </head>
 
 <body>
@@ -99,5 +100,11 @@
   <script src="/assets/supabase-config.js"></script>
   <script type="module" src="/assets/profile.js"></script>
 
-<footer><div class="wrap"><a href="/privacy.html">Privacy</a> · <a href="/chi-siamo.html">Chi siamo</a> · <a href="/contatti.html">Contatti</a></div></footer></body>
+<footer><div class="wrap"><a href="/privacy.html">Privacy</a> · <a href="/chi-siamo.html">Chi siamo</a> · <a href="/contatti.html">Contatti</a></div><div class="footlinks"><a href="#" id="ngConsentSettings" hidden>Impostazioni privacy e cookie</a></div><script>
+window.googlefc=window.googlefc||{};
+window.googlefc.callbackQueue=window.googlefc.callbackQueue||[];
+window.googlefc.callbackQueue.push({"CONSENT_API_READY":function(){const link=document.getElementById("ngConsentSettings");if(link)link.hidden=false;}});
+document.getElementById("ngConsentSettings")?.addEventListener("click",function(e){e.preventDefault();window.googlefc=window.googlefc||{};window.googlefc.callbackQueue=window.googlefc.callbackQueue||[];window.googlefc.callbackQueue.push(function(){if(typeof window.googlefc.showRevocationMessage==="function")window.googlefc.showRevocationMessage();});});
+</script>
+</footer></body>
 </html>
