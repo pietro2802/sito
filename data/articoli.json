@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12",
+  "updatedAt": "2026-11-16",
   "articles": [
+    {
+      "id": "rainbow six vegas potrebbe tornare rumor",
+      "title": "Rainbow Six Vegas potrebbe tornare: il rumor che fa parlare i fan",
+      "category": "News e approfondimenti",
+      "date": "2026-11-16",
+      "url": "articoli/rainbow-six-vegas-ritorno-rumor-novembre-2026.html",
+      "image": "/immagini/articoli/rainbow-six-vegas-rumor.svg",
+      "imageAlt": "Panorama notturno illustrativo di Las Vegas",
+      "description": "Un'indiscrezione su un possibile progetto in fase iniziale: cosa si sa e cosa non è confermato."
+    },
     {
       "id": "gta 6: una mappa dettagliata circola online, cosa mostra il video",
       "title": "GTA 6: una mappa dettagliata circola online, cosa mostra il video?",
