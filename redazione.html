@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/assets/neon-futuristico.css"><link rel="stylesheet" href="/assets/ng-community.css">
 <!-- Google AdSense: tag per Privacy & messaging; nessun blocco annunci -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436901367597680" crossorigin="anonymous"></script>
-</head>
+<meta name="robots" content="noindex,nofollow"></head>
 <body><div class="topline"><header class="wrap nav"><a class="brand" href="/">NEWS<span>GAMING2</span></a><nav class="navlinks"><a href="/articoli.html">Articoli</a><a href="/scopri.html">Scopri</a><a href="/giochi.html">Giochi</a><a href="/community.html">Community</a><a href="/chi-siamo.html">Chi siamo</a><a href="/contatti.html">Contatti</a><a href="/account.html">Area personale</a></nav></header></div>
 <main class="ng-page"><header class="ng-page-head"><div><div class="ng-kicker">CONTROL ROOM · ACCESSO PROTETTO</div><h1>Redazione</h1><p class="muted">Ruolo: <strong id="role">verifica…</strong></p></div><button id="refresh" class="ng-btn secondary">Aggiorna</button></header>
 <section id="editorPanel" class="ng-panel"><h2>Articolo dinamico</h2><p class="muted">Gli articoli già presenti nel sito restano intatti. Questa redazione gestisce le nuove pubblicazioni dinamiche tramite Supabase.</p>
@@ -13,4 +13,9 @@
 </main>
 <script>
 const bodyEditor=document.getElementById('bodyEditor');bodyEditor.addEventListener('input',()=>document.querySelector('[name=body]').value=bodyEditor.value);
-</script><script src="/assets/supabase-config.js"></script><script type="module" src="/assets/admin.js"></script><footer><div class="wrap"><a href="/privacy.html">Privacy</a> · <a href="/chi-siamo.html">Chi siamo</a> · <a href="/contatti.html">Contatti</a> · <a href="/termini.html">Termini</a></div></footer></body></html>
+</script><script src="/assets/supabase-config.js"></script><script type="module" src="/assets/admin.js"></script><footer><div class="wrap"><a href="/privacy.html">Privacy</a> · <a href="/chi-siamo.html">Chi siamo</a> · <a href="/contatti.html">Contatti</a> · <a href="/termini.html">Termini</a></div><div class="footlinks"><a href="#" id="ngConsentSettings" hidden>Impostazioni privacy e cookie</a><script>
+window.googlefc=window.googlefc||{};
+window.googlefc.callbackQueue=window.googlefc.callbackQueue||[];
+window.googlefc.callbackQueue.push({"CONSENT_API_READY":function(){const link=document.getElementById("ngConsentSettings");if(link)link.hidden=false;}});
+document.getElementById("ngConsentSettings")?.addEventListener("click",function(e){e.preventDefault();window.googlefc=window.googlefc||{};window.googlefc.callbackQueue=window.googlefc.callbackQueue||[];window.googlefc.callbackQueue.push(function(){if(typeof window.googlefc.showRevocationMessage==="function")window.googlefc.showRevocationMessage();});});
+</script></div></footer></body></html>
