@@ -45,7 +45,7 @@
 <h2>Guarda il video originale</h2>
 <p>Puoi visualizzare qui sotto il post condiviso su X. Se il player non dovesse caricarsi, usa il collegamento al post originale.</p>
 <div style="position:relative;width:100%;max-width:720px;margin:22px auto;aspect-ratio:16/9;background:#111a28;border:1px solid #26364b;border-radius:14px;overflow:hidden">
-<iframe src="https://platform.twitter.com/embed/Tweet.html?id=2121888108387983423&amp;theme=dark" title="Post originale su X: video della mappa attribuita a GTA 6" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+<button type="button" id="loadXPost" style="position:absolute;inset:0;width:100%;border:0;background:#111a28;color:#fff;font:600 1rem Arial;cursor:pointer">Carica il post da X</button><div id="xPostFrame" style="position:absolute;inset:0"></div><script>document.getElementById("loadXPost")?.addEventListener("click",function(){const frame=document.createElement("iframe");frame.src="https://platform.twitter.com/embed/Tweet.html?id=2121888108387983423&theme=dark";frame.title="Post originale su X: video della mappa attribuita a GTA 6";frame.loading="lazy";frame.referrerPolicy="strict-origin-when-cross-origin";frame.allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share";frame.style="position:absolute;inset:0;width:100%;height:100%;border:0";document.getElementById("xPostFrame").appendChild(frame);this.remove();});</script>
 </div>
 <p><a href="https://x.com/Johnsmithyyb4/status/2121888108387983423" rel="nofollow noopener" target="_blank">Apri il post originale su X</a></p>
 </article>

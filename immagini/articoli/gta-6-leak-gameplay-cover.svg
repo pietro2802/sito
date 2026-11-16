@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="t d">
+<title id="t">GTA 6: immagine illustrativa di una città costiera al tramonto</title>
+<desc id="d">Scenario urbano costiero ispirato all'atmosfera di Vice City, con palme, grattacieli, automobile sportiva e colori neon. Illustrazione originale non tratta dal gioco.</desc>
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#34235e"/><stop offset=".55" stop-color="#ed6b91"/><stop offset="1" stop-color="#ffb36b"/></linearGradient><linearGradient id="sea" x2="0" y2="1"><stop stop-color="#653b7f"/><stop offset="1" stop-color="#102b45"/></linearGradient><linearGradient id="road" x2="0" y2="1"><stop stop-color="#293047"/><stop offset="1" stop-color="#090f1b"/></linearGradient></defs>
+<rect width="1200" height="675" fill="url(#sky)"/><circle cx="880" cy="330" r="86" fill="#ffe5ae" opacity=".9"/>
+<path d="M0 390 L0 280 65 280 65 240 135 240 135 305 190 305 190 215 270 215 270 330 335 330 335 190 410 190 410 360 475 360 475 245 545 245 545 345 625 345 625 220 705 220 705 355 780 355 780 275 845 275 845 380Z" fill="#342b59" opacity=".95"/>
+<path d="M0 400 L1200 400 1200 675 0 675Z" fill="url(#sea)"/><path d="M0 440 Q300 420 600 445 T1200 430" fill="none" stroke="#ffb3c4" stroke-width="5" opacity=".65"/>
+<g fill="none" stroke="#ff9ac5" stroke-width="5" opacity=".75"><path d="M60 475h1080M120 510h960M220 550h760M350 590h500"/></g>
+<path d="M0 520 L1200 470 1200 675 0 675Z" fill="url(#road)"/><path d="M580 520l-18 155M650 510l25 165" stroke="#f7c86c" stroke-width="5" stroke-dasharray="24 24" opacity=".8"/>
+<g fill="#101729" stroke="#f36bb5" stroke-width="5"><path d="M90 430 Q110 365 170 365 L275 365 Q320 365 345 420 L365 470 65 470Z"/><path d="M135 370l35-55h90l45 55Z" fill="#22314b"/><path d="M850 445 Q875 395 930 395h105q42 0 70 50l18 42H830Z" fill="#18263b"/></g>
+<g fill="#ff5e9b"><rect x="80" y="430" width="38" height="12" rx="5"/><rect x="315" y="430" width="38" height="12" rx="5"/></g>
+<g fill="#142039"><path d="M30 400q-5-95 35-150 18 72 5 150z"/><path d="M45 280q-45-50-28-85 48 24 54 70 14-67 65-73-5 52-56 86 59-20 83 15-48 34-115 6z"/></g>
+<g fill="#16223a"><path d="M1080 400q-6-110 42-175 20 85 8 175z"/><path d="M1105 245q-45-55-24-91 50 26 58 78 16-68 70-72-5 55-60 88 60-20 83 18-50 36-119 5z"/></g>
+<g fill="#fff1c9" opacity=".9"><circle cx="180" cy="260" r="5"/><circle cx="380" cy="230" r="5"/><circle cx="690" cy="265" r="5"/><circle cx="760" cy="305" r="5"/></g>
+<rect x="30" y="28" width="310" height="44" rx="22" fill="#0b1020" opacity=".8"/><text x="55" y="57" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2">NEWSGAMING2 · ILLUSTRATIVA</text>
+</svg>
