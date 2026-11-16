@@ -571,7 +571,7 @@
 
 .ng-stat-grid {
   display: grid;
-  grid-template-columns: repeat(4,minmax(0,1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 11px;
   margin: 20px 0;
 }
