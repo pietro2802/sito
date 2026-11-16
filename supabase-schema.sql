@@ -139,12 +139,47 @@ create table if not exists public.newsletter_subscribers (
   user_id uuid references public.profiles(id) on delete set null,
   confirmation_token text unique,
   unsubscribe_token text unique,
+  confirmation_token_hash text,
+  unsubscribe_token_hash text,
+  status text not null default 'pending' check (status in ('pending','confirmed','unsubscribed')),
+  consent_at timestamptz,
   confirmed_at timestamptz,
   unsubscribed_at timestamptz,
   created_at timestamptz not null default now()
 );
 
 alter table public.newsletter_subscribers add column if not exists unsubscribe_token text unique;
+alter table public.newsletter_subscribers add column if not exists confirmation_token_hash text;
+alter table public.newsletter_subscribers add column if not exists unsubscribe_token_hash text;
+alter table public.newsletter_subscribers add column if not exists status text;
+alter table public.newsletter_subscribers add column if not exists consent_at timestamptz;
+
+-- Per le installazioni precedenti, ricostruisce lo stato usando solo date già registrate.
+update public.newsletter_subscribers
+set status = case
+  when unsubscribed_at is not null
+       and (confirmed_at is null or unsubscribed_at >= confirmed_at) then 'unsubscribed'
+  when confirmed_at is not null then 'confirmed'
+  else 'pending'
+end
+where status is null;
+
+alter table public.newsletter_subscribers
+  alter column status set default 'pending',
+  alter column status set not null;
+
+alter table public.newsletter_subscribers
+  drop constraint if exists newsletter_subscribers_status_check;
+alter table public.newsletter_subscribers
+  add constraint newsletter_subscribers_status_check
+  check (status in ('pending','confirmed','unsubscribed'));
+
+create unique index if not exists newsletter_confirmation_token_hash_uidx
+  on public.newsletter_subscribers (confirmation_token_hash)
+  where confirmation_token_hash is not null;
+create unique index if not exists newsletter_unsubscribe_token_hash_uidx
+  on public.newsletter_subscribers (unsubscribe_token_hash)
+  where unsubscribe_token_hash is not null;
 
 create index if not exists newsletter_confirm_idx on public.newsletter_subscribers(confirmation_token);
 create index if not exists notifications_user_idx on public.notifications(user_id, created_at desc);
