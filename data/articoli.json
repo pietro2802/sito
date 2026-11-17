@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-16",
+  "updatedAt": "2026-11-17",
   "articles": [
+    {
+      "id": "intelligenza artificiale videogiochi big walk dibattito 2026",
+      "title": "Intelligenza artificiale nei videogiochi: il caso Big Walk riaccende il dibattito",
+      "category": "News e approfondimenti",
+      "date": "2026-11-17",
+      "url": "articoli/intelligenza-artificiale-videogiochi-big-walk-dibattito-2026.html",
+      "image": "/immagini/articoli/ai-nel-gaming-2026-cover.webp",
+      "imageAlt": "Illustrazione originale sul rapporto tra intelligenza artificiale e videogiochi",
+      "description": "Il caso Big Walk divide sviluppatori e giurati: ecco cosa è successo, come viene usata l’IA nello sviluppo e cosa dovrebbero controllare i giocatori."
+    },
     {
       "id": "gta 6 presunto video leak gameplay x novembre 2026",
       "title": "GTA 6: spunta un presunto video leak con gameplay",
