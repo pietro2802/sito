@@ -170,7 +170,7 @@ function showToast(msg) {
 async function loadProfiles() {
   const { data, error } = await sb
     .from('profiles')
-    .select('id,display_name,username,avatar_url,xp,daily_streak');
+    .select('id,username,avatar_url,xp,daily_streak');
 
   if (!error) {
     (data || []).forEach(x => profiles.set(x.id, x));
@@ -297,8 +297,8 @@ async function reactionCounts(ids) {
 // GRAFICA DEL COMMENTO
 function renderComment(c, counts, depth) {
   const p = profiles.get(c.user_id) || {};
-  const name = esc(p.display_name || p.username || 'Player');
-  const initial = esc((p.display_name || p.username || 'P').slice(0, 1).toUpperCase());
+  const name = esc(p.username || 'Player');
+  const initial = esc((p.username || 'P').slice(0, 1).toUpperCase());
 
   const date = new Date(c.created_at).toLocaleString('it-IT', {
     dateStyle: 'medium',
@@ -632,7 +632,7 @@ async function loadLeaderboard() {
     .map((p, i) => `
       <div class="ng-rank">
         <span>#${i + 1}</span>
-        <b>${esc(p.display_name || p.username || 'Player')}</b>
+        <b>${esc(p.username || 'Player')}</b>
         <span>LV ${levelFromXp(p.xp)} · ${p.xp} XP</span>
       </div>
     `)
