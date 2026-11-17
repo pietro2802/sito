@@ -11,7 +11,7 @@ document.querySelector('#signup').addEventListener('click',async()=>{
  if(!privacyNotice?.checked){msg.textContent='Per creare l’account devi prima leggere e confermare la presa visione dell’Informativa sulla Privacy.';privacyNotice?.focus();return;}
  localStorage.setItem('ng2-email',email());
  msg.textContent='Creazione account in corso…';
- const {error}=await supabase.auth.signUp({email:email(),password:password(),options:{emailRedirectTo:location.origin+'/account.html',data:{display_name:(document.querySelector('#display-name')?.value||'').trim(),privacy_notice_version:'2026-11-13',privacy_notice_read_at:new Date().toISOString()}}});
+ const {error}=await supabase.auth.signUp({email:email(),password:password(),options:{emailRedirectTo:location.origin+'/account.html',data:{display_name:(document.querySelector('#display-name')?.value||'').trim(),privacy_notice_version:'2026-11-17',privacy_notice_read_at:new Date().toISOString()}}});
  msg.textContent=error?error.message:'Registrazione inviata. Controlla la tua email e conferma l’indirizzo prima di accedere.';
 });
 form.addEventListener('submit',async e=>{
