@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-17",
+  "updatedAt": "2026-11-18",
   "articles": [
+    {
+      "id": "xbox game pass novita seconda meta novembre 2026",
+      "title": "Xbox Game Pass: le novità della seconda metà di novembre 2026",
+      "category": "Xbox",
+      "date": "2026-11-18",
+      "url": "articoli/xbox-game-pass-novembre-2026-wave-2-selezione.html",
+      "image": "/immagini/articoli/xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.png",
+      "imageAlt": "Postazione PC e servizi dell'ecosistema Xbox",
+      "description": "Una selezione di avventure, enigmi e proposte cooperative in arrivo tra novembre e inizio dicembre 2026."
+    },
     {
       "id": "intelligenza artificiale videogiochi big walk dibattito 2026",
       "title": "Intelligenza artificiale nei videogiochi: il caso Big Walk riaccende il dibattito",
