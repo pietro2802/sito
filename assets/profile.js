@@ -62,6 +62,29 @@ async function loadProfile(user) {
   }
 }
 
+async function showEditorialLink(user) {
+  const link = $('openEditorial');
+  if (!link) return;
+
+  // Il collegamento resta nascosto finché Supabase non conferma un ruolo staff.
+  link.hidden = true;
+
+  const { data, error } = await sb
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Errore nel controllo del ruolo redazione:', error);
+    return;
+  }
+
+  if (['admin', 'editor', 'moderator'].includes(data?.role)) {
+    link.hidden = false;
+  }
+}
+
 async function claimDailyXP(user) {
   const button = $('dailyClaim');
 
@@ -143,6 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = session.user;
 
     await loadProfile(user);
+    await showEditorialLink(user);
 
     $('dailyClaim')?.addEventListener('click', () => {
       claimDailyXP(user);
