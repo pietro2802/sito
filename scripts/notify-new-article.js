@@ -3,7 +3,7 @@ const path = require("path");
 
 const file = process.argv[2];
 const token = process.env.PUBLISH_TOKEN;
-const siteUrl = (process.env.SITE_URL || "https://www.newsgaming2.it").replace(/\/$/, "");
+const siteUrl = (process.env.SITE_URL || "https://newsgaming2.it").replace(/\/$/, "");
 
 if (!file || !file.startsWith("articoli/") || !file.endsWith(".html")) {
   throw new Error("File articolo non valido.");
