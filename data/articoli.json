@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-18",
+  "updatedAt": "2026-11-19",
   "articles": [
+    {
+      "id": "gta 6 prestazioni ps5 xbox series x community bug",
+      "title": "GTA 6 su PS5 e Xbox Series X: prestazioni, bug e pareri della community",
+      "category": "News e approfondimenti",
+      "date": "2026-11-19",
+      "url": "articoli/gta-6-prestazioni-ps5-xbox-series-x-community-bug.html",
+      "image": "/immagini/articoli/gta-6-festival-miami-novembre-2026.jpg",
+      "imageAlt": "Panorama costiero al tramonto usato come copertina illustrativa per l'analisi di GTA 6",
+      "description": "Cosa emerge dai test di Digital Foundry su PS5, PS5 Pro e Xbox Series X|S, quali problemi sono stati osservati e come distinguere i bug dalle clip virali."
+    },
     {
       "id": "xbox game pass novita seconda meta novembre 2026",
       "title": "Xbox Game Pass: le novità della seconda metà di novembre 2026",
