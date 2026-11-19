@@ -59,9 +59,10 @@ async function gh(path,token,options={}){
 async function blob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 export async function onRequest({request,env}){
  try{
-  if(request.method==="OPTIONS")return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":SITE,"Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Vary":"Origin"}});
+  const origin=request.headers.get("Origin");
+  if(request.method==="OPTIONS"){if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":SITE,"Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Vary":"Origin"} });}
   if(request.method!=="POST")return reply({error:"Metodo non consentito."},405);
-  const origin=request.headers.get("Origin");if(origin&&origin!==SITE)return reply({error:"Origine non autorizzata."},403);
+  if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);
   const sb=String(env.SUPABASE_URL||"").replace(/\/$/,""),service=env.SUPABASE_SERVICE_ROLE_KEY,token=env.GITHUB_PUBLISH_TOKEN;
   if(!sb||!service||!token)return reply({error:"Configurazione server incompleta."},500);
   const auth=(request.headers.get("Authorization")||"").match(/^Bearer\s+([A-Za-z0-9._-]+)$/i);if(!auth)return reply({error:"Autenticazione richiesta."},401);
