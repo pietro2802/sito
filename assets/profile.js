@@ -68,6 +68,7 @@ async function showEditorialLink(user) {
 
   // Il collegamento resta nascosto finché Supabase non conferma un ruolo staff.
   link.hidden = true;
+  link.style.display = 'none';
 
   const { data, error } = await sb
     .from('user_roles')
@@ -82,6 +83,7 @@ async function showEditorialLink(user) {
 
   if (['admin', 'editor', 'moderator'].includes(data?.role)) {
     link.hidden = false;
+    link.style.display = '';
   }
 }
 
