@@ -51,7 +51,6 @@ function initStaticPublisher(){
  slug.addEventListener('input',()=>{slug.value=makeStaticSlug(slug.value);slug.dataset.edited='1';updatePreview();});
  function updatePreview(){preview.textContent='https://newsgaming2.it/articoli/'+(slug.value||'...')+'.html';}
  form.addEventListener('submit',e=>form.dataset.editSlug?updateStaticArticle(e):publishStaticArticle(e));
- $('#staticPreviewButton')?.addEventListener('click',previewStaticArticle);
 }
 async function compressCover(file){
  if(!file)return null;if(!file.type.startsWith('image/'))throw new Error('Seleziona un file immagine valido.');
@@ -122,7 +121,7 @@ function cleanPreviewHtml(source){
   [...node.childNodes].forEach(child=>{
    if(child.nodeType===Node.COMMENT_NODE){child.remove();return;}
    if(child.nodeType!==Node.ELEMENT_NODE)return;
-   if(!allowed.has(child.tagName)){child.replaceWith(...child.childNodes);return;}
+   if(!allowed.has(child.tagName)){clean(child);child.replaceWith(...child.childNodes);return;}
    [...child.attributes].forEach(attr=>{
     const n=attr.name.toLowerCase(),v=attr.value;
     if(child.tagName==='A'&&n==='href'){try{const u=new URL(v,location.origin);if(!['https:','http:'].includes(u.protocol)||u.username||u.password)child.removeAttribute(n);else if(u.protocol==='http:'&&u.origin!==location.origin)child.removeAttribute(n);}catch{child.removeAttribute(n);}}
