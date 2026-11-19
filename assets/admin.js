@@ -11,7 +11,7 @@ async function boot(){
  $('#role').textContent=role.role.toUpperCase();
  if(role.role==='moderator'){document.querySelector('#editorPanel')?.remove();document.querySelector('#gamePanel')?.remove();}
  await loadArticles(); await loadReports();
- if(['admin','editor'].includes(role.role)) initStaticPublisher();
+ if(['admin','editor'].includes(role.role)){initStaticPublisher();initStaticArticleManager();}
  $('#articleForm')?.addEventListener('submit',saveArticle);
  $('#refresh')?.addEventListener('click',()=>{loadArticles();loadReports()});
 }
@@ -50,7 +50,7 @@ function initStaticPublisher(){
  title.addEventListener('input',()=>{if(!slug.dataset.edited)slug.value=makeStaticSlug(title.value);updatePreview();});
  slug.addEventListener('input',()=>{slug.value=makeStaticSlug(slug.value);slug.dataset.edited='1';updatePreview();});
  function updatePreview(){preview.textContent='https://newsgaming2.it/articoli/'+(slug.value||'...')+'.html';}
- form.addEventListener('submit',publishStaticArticle);
+ form.addEventListener('submit',e=>form.dataset.editSlug?updateStaticArticle(e):publishStaticArticle(e));
 }
 async function compressCover(file){
  if(!file)return null;if(!file.type.startsWith('image/'))throw new Error('Seleziona un file immagine valido.');
@@ -80,6 +80,129 @@ async function publishStaticArticle(e){
   form.reset();delete form.elements.staticSlug.dataset.edited;$('#staticSlugPreview').textContent='https://newsgaming2.it/articoli/';
  }catch(err){msg.textContent='Errore: '+err.message;}
  finally{button.disabled=false;button.textContent='Pubblica ora su NEWSGAMING2';}
+}
+
+
+let staticArchive=[];
+let staticPreviewMeta='Redazione NEWSGAMING2 · '+new Date().toLocaleDateString('it-IT');
+function staticForm(){return $('#staticPublishForm');}
+function staticVal(name){return staticForm()?.elements[name]?.value?.trim()||'';}
+function setStaticMessage(message,isError=false){const node=$('#staticPublishMsg');if(node){node.textContent=message;node.style.color=isError?'#ff8d8d':'';}}
+async function staticApi(action,payload={}){
+ if(!session?.access_token)throw new Error('Sessione scaduta: accedi di nuovo.');
+ const res=await fetch('/api/manage-article',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({action,...payload})});
+ const data=await res.json().catch(()=>({error:'Risposta server non valida.'}));
+ if(!res.ok)throw new Error(data.error||'Operazione non riuscita ('+res.status+').');
+ return data;
+}
+async function loadStaticArchive(){
+ const body=$('#staticArticlesList');if(!body)return;
+ body.innerHTML='<p class="muted">Caricamento articoli…</p>';
+ try{
+  const res=await fetch('/data/articoli.json',{cache:'no-store'});if(!res.ok)throw new Error('Archivio non disponibile.');
+  const data=await res.json();staticArchive=Array.isArray(data.articles)?data.articles.filter(a=>a&&/^articoli\/[a-z0-9-]+\.html$/.test(a.url||'')): [];
+  renderStaticArchive();
+ }catch(error){body.textContent='Errore: '+error.message;}
+}
+function renderStaticArchive(){
+ const body=$('#staticArticlesList'),query=($('#staticArticleSearch')?.value||'').trim().toLocaleLowerCase('it');
+ if(!body)return;
+ const rows=staticArchive.filter(a=>(String(a.title||'')+' '+String(a.url||'').replace(/^articoli\/|\.html$/g,'')).toLocaleLowerCase('it').includes(query));
+ if(!rows.length){body.innerHTML='<p class="muted">Nessun articolo trovato.</p>';return;}
+ body.innerHTML=rows.map(a=>{
+  const slug=a.url.replace(/^articoli\//,'').replace(/\.html$/,'');
+  return '<article class="static-article-row"><div class="static-article-info"><strong>'+esc(a.title||slug)+'</strong><small>'+esc(a.category||'')+' · '+esc(slug)+'</small></div><div class="static-article-actions"><a class="ng-mini" href="/'+esc(a.url)+'" target="_blank" rel="noopener noreferrer">Apri</a><button class="ng-mini" type="button" data-static-edit="'+esc(slug)+'">Modifica</button><button class="ng-mini danger" type="button" data-static-delete="'+esc(slug)+'">Elimina</button></div></article>';
+ }).join('');
+ body.querySelectorAll('[data-static-edit]').forEach(b=>b.addEventListener('click',()=>editStaticArticle(b.dataset.staticEdit)));
+ body.querySelectorAll('[data-static-delete]').forEach(b=>b.addEventListener('click',()=>deleteStaticArticle(b.dataset.staticDelete)));
+}
+function cleanPreviewHtml(source){
+ const doc=new DOMParser().parseFromString('<div>'+source+'</div>','text/html'),allowed=new Set(['A','P','BR','H2','H3','H4','STRONG','B','EM','I','U','UL','OL','LI','BLOCKQUOTE','FIGURE','FIGCAPTION','IMG','HR','CODE','PRE','TABLE','THEAD','TBODY','TR','TH','TD']);
+ function clean(node){
+  [...node.childNodes].forEach(child=>{
+   if(child.nodeType===Node.COMMENT_NODE){child.remove();return;}
+   if(child.nodeType!==Node.ELEMENT_NODE)return;
+   if(!allowed.has(child.tagName)){clean(child);child.replaceWith(...child.childNodes);return;}
+   [...child.attributes].forEach(attr=>{
+    const n=attr.name.toLowerCase(),v=attr.value;
+    if(child.tagName==='A'&&n==='href'){try{const u=new URL(v,location.origin);if(!['https:','http:'].includes(u.protocol)||u.username||u.password)child.removeAttribute(n);else if(u.protocol==='http:'&&u.origin!==location.origin)child.removeAttribute(n);}catch{child.removeAttribute(n);}}
+    else if(child.tagName==='IMG'&&n==='src'){try{const u=new URL(v,location.origin);if(u.protocol!=='https:'&&u.origin!==location.origin)child.removeAttribute(n);}catch{child.removeAttribute(n);}}
+    else if((child.tagName==='IMG'&&['alt','title'].includes(n))||(child.tagName==='A'&&['title','target','rel'].includes(n)))return;
+    else child.removeAttribute(n);
+   });
+   if(child.tagName==='A'&&child.target==='_blank')child.rel='noopener noreferrer';
+   clean(child);
+  });
+ }
+ const root=doc.body.firstElementChild;clean(root);return root;
+}
+function previewStaticArticle(){
+ const form=staticForm();if(!form)return;
+ const dialog=$('#staticPreviewDialog'),content=$('#staticPreviewContent');if(!dialog||!content)return;
+ content.replaceChildren();
+ const category=document.createElement('p');category.className='preview-category';category.textContent=staticVal('staticCategory')||'News e approfondimenti';
+ const title=document.createElement('h1');title.textContent=staticVal('staticTitle')||'Titolo articolo';
+ const description=document.createElement('p');description.className='preview-description';description.textContent=staticVal('staticDescription')||'Descrizione articolo';
+ const meta=document.createElement('p');meta.className='preview-meta';meta.textContent=staticPreviewMeta;
+ content.append(category,title,description,meta);
+ const file=$('#staticImageFile')?.files?.[0],url=staticVal('staticImageUrl');
+ if(file||url){const img=document.createElement('img');img.className='preview-cover';img.alt=staticVal('staticTitle')||'Copertina articolo';img.src=file?URL.createObjectURL(file):url;content.append(img);}
+ const article=document.createElement('article');article.className='preview-body';article.append(cleanPreviewHtml(staticVal('staticContent')||'<p>Il contenuto dell’articolo apparirà qui.</p>'));content.append(article);
+ if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+}
+async function editStaticArticle(slug){
+ try{
+  const data=await staticApi('load',{slug}),a=data.article,form=staticForm();
+  if(!form)throw new Error('Modulo di pubblicazione non trovato.');
+  form.elements.staticTitle.value=a.title||'';form.elements.staticDescription.value=a.description||'';form.elements.staticSlug.value=a.slug||slug;form.elements.staticSlug.dataset.edited='1';form.elements.staticSlug.readOnly=true;
+  form.elements.staticCategory.value=a.category||'News e approfondimenti';form.elements.staticPlatforms.value=(a.platforms||[]).join(', ');
+  form.elements.staticImageUrl.value=a.imageUrl||'';form.elements.staticContent.value=a.content||'';
+  const articleDate=a.date?new Date(a.date+'T12:00:00').toLocaleDateString('it-IT'):'Data non disponibile';
+  staticPreviewMeta=(a.author||'Redazione NEWSGAMING2')+' · '+articleDate;
+  const editMeta=$('#staticEditMeta');if(editMeta){editMeta.textContent='Autore: '+(a.author||'Redazione NEWSGAMING2')+' · Data: '+articleDate;editMeta.hidden=false;}
+  $('#staticImageFile').value='';form.dataset.editSlug=slug;
+  form.elements.staticSendNewsletter.checked=false;
+  $('#staticPublishHeading').textContent='Modifica articolo: '+slug;
+  $('#staticPublishButton').textContent='Salva modifiche';
+  $('#staticCancelEdit').hidden=false;
+  $('#staticSlugPreview').textContent='https://newsgaming2.it/articoli/'+slug+'.html';
+  setStaticMessage('Articolo caricato da GitHub. Le modifiche non saranno pubblicate finché non premi “Salva modifiche”.');
+  form.scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(error){setStaticMessage('Errore: '+error.message,true);}
+}
+async function updateStaticArticle(e){
+ e.preventDefault();const form=e.currentTarget,button=$('#staticPublishButton'),slug=form.dataset.editSlug;
+ const payload={slug,title:staticVal('staticTitle'),description:staticVal('staticDescription'),category:staticVal('staticCategory'),platforms:staticVal('staticPlatforms').split(',').map(x=>x.trim()).filter(Boolean),content:staticVal('staticContent'),imageUrl:staticVal('staticImageUrl'),imageAlt:staticVal('staticTitle'),sendNewsletter:form.elements.staticSendNewsletter.checked};
+ try{
+  button.disabled=true;button.textContent='Salvataggio…';
+  const image=await compressCover($('#staticImageFile').files[0]);if(image)Object.assign(payload,image);
+  const data=await staticApi('update',payload);
+  setStaticMessage('Modifiche salvate. '+data.commitUrl);
+  cancelStaticEdit(false);await loadStaticArchive();
+ }catch(error){setStaticMessage('Errore: '+error.message,true);}
+ finally{button.disabled=false;button.textContent=form.dataset.editSlug?'Salva modifiche':'Pubblica ora su NEWSGAMING2';}
+}
+function cancelStaticEdit(showMessage=true){
+ const form=staticForm();if(!form)return;
+ delete form.dataset.editSlug;form.reset();form.elements.staticSlug.readOnly=false;delete form.elements.staticSlug.dataset.edited;
+ $('#staticPublishHeading').textContent='Pubblica nuovo articolo sul sito';$('#staticPublishButton').textContent='Pubblica ora su NEWSGAMING2';$('#staticCancelEdit').hidden=true;
+ const editMeta=$('#staticEditMeta');if(editMeta){editMeta.hidden=true;editMeta.textContent='';}staticPreviewMeta='Redazione NEWSGAMING2 · '+new Date().toLocaleDateString('it-IT');
+ $('#staticSlugPreview').textContent='https://newsgaming2.it/articoli/';
+ if(showMessage)setStaticMessage('Modifica annullata. Nessuna modifica è stata pubblicata.');
+}
+async function deleteStaticArticle(slug){
+ if(!confirm('Sei sicuro di voler eliminare definitivamente questo articolo?'))return;
+ if(!confirm('Conferma finale: l’articolo e l’eventuale immagine non utilizzata saranno eliminati definitivamente. Continuare?'))return;
+ try{const data=await staticApi('delete',{slug});if(staticForm()?.dataset.editSlug===slug)cancelStaticEdit(false);await loadStaticArchive();setStaticMessage('Articolo eliminato. '+data.commitUrl);}
+ catch(error){setStaticMessage('Errore durante l’eliminazione: '+error.message,true);}
+}
+function initStaticArticleManager(){
+ const panel=$('#staticArticlesPanel');if(!panel)return;
+ panel.hidden=false;$('#staticArticleSearch')?.addEventListener('input',renderStaticArchive);
+ $('#staticCancelEdit')?.addEventListener('click',()=>cancelStaticEdit());
+ $('#staticPreviewButton')?.addEventListener('click',previewStaticArticle);
+ $('#staticPreviewClose')?.addEventListener('click',()=>$('#staticPreviewDialog')?.close());
+ loadStaticArchive();
 }
 
 boot();
