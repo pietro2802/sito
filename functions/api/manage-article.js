@@ -20,6 +20,8 @@ function updatePage(html,p,slug,date,author){
  replace(/(<meta\s+property=["']og:title["']\s+content=["'])[^"']*(["'][^>]*>)/i,title);
  replace(/(<meta\s+property=["']og:description["']\s+content=["'])[^"']*(["'][^>]*>)/i,description);
  replace(/(<meta\s+property=["']og:image["']\s+content=["'])[^"']*(["'][^>]*>)/i,image);
+ replace(/(<meta\s+name=["']twitter:title["']\s+content=["'])[^"']*(["'][^>]*>)/i,title);
+ replace(/(<meta\s+name=["']twitter:description["']\s+content=["'])[^"']*(["'][^>]*>)/i,description);
  replace(/(<meta\s+name=["']twitter:image["']\s+content=["'])[^"']*(["'][^>]*>)/i,image);
  replace(/(<link\s+rel=["']canonical["']\s+href=["'])[^"']*(["'][^>]*>)/i,SITE+"/articoli/"+slug+".html");
  replace(/(<meta\s+property=["']og:url["']\s+content=["'])[^"']*(["'][^>]*>)/i,SITE+"/articoli/"+slug+".html");
