@@ -43,7 +43,7 @@ async function loadReports(){
  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=async()=>{await sb.from('reports').update({status:'reviewed',reviewed_by:session.user.id,reviewed_at:new Date().toISOString()}).eq('id',b.dataset.close);loadReports()});
 }
 
-function makeStaticSlug(value){return value.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120);}
+function makeStaticSlug(value){return value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120);}
 function initStaticPublisher(){
  const panel=$('#staticPublishPanel'),form=$('#staticPublishForm');if(!panel||!form)return;panel.hidden=false;
  const title=form.elements.staticTitle,slug=form.elements.staticSlug,preview=$('#staticSlugPreview');
@@ -61,7 +61,7 @@ async function compressCover(file){
  const blob=await new Promise((resolve,reject)=>canvas.toBlob(v=>v?resolve(v):reject(new Error('Compressione WebP non riuscita.')),'image/webp',0.82));
  if(blob.size>4*1024*1024)throw new Error('Immagine compressa troppo grande (massimo 4 MB).');
  const data=await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(String(fr.result).split(',')[1]);fr.onerror=()=>reject(new Error('Lettura immagine non riuscita.'));fr.readAsDataURL(blob);});
- return {imageDataBase64:data,imageFilename:(file.name.replace(/\\.[^.]+$/,'')||'copertina')+'.webp'};
+ return {imageDataBase64:data,imageFilename:(file.name.replace(/\.[^.]+$/,'')||'copertina')+'.webp'};
 }
 async function publishStaticArticle(e){
  e.preventDefault();const form=e.currentTarget,button=$('#staticPublishButton'),msg=$('#staticPublishMsg'),val=n=>form.elements[n].value.trim();

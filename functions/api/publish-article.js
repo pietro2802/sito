@@ -99,7 +99,7 @@ export async function onRequest({request,env}){
   sitemap=sitemap.replace("</urlset>",'  <url><loc>'+esc(SITE+"/"+articlePath)+'</loc><lastmod>'+date+'</lastmod></url>\n</urlset>');
   const items=[],pageBlob=await blob(articlePath,page,token);items.push({path:articlePath,mode:"100644",type:"blob",sha:pageBlob.sha});
   if(imageBase64){const ib=await blob(imagePath,imageBase64,token,"base64");items.push({path:imagePath,mode:"100644",type:"blob",sha:ib.sha});}
-  const [newJson,newMap]=await Promise.all([blob("data/articoli.json",JSON.stringify(archive,null,2)+"\\n",token),blob("sitemap.xml",sitemap,token)]);
+  const [newJson,newMap]=await Promise.all([blob("data/articoli.json",JSON.stringify(archive,null,2)+"\n",token),blob("sitemap.xml",sitemap,token)]);
   items.push({path:"data/articoli.json",mode:"100644",type:"blob",sha:newJson.sha},{path:"sitemap.xml",mode:"100644",type:"blob",sha:newMap.sha});
   const nextTree=await gh("/repos/"+REPO+"/git/trees",token,{method:"POST",body:JSON.stringify({base_tree:treeSha,tree:items})});
   const message=p.sendNewsletter===true?"Pubblica articolo: "+slug:"[skip actions] Pubblica articolo: "+slug;
