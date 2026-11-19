@@ -61,7 +61,7 @@ export async function onRequest({request,env}){
   const origin=request.headers.get("Origin");if(origin&&origin!==SITE)return reply({error:"Origine non autorizzata."},403);
   const sb=String(env.SUPABASE_URL||"").replace(/\/$/,""),service=env.SUPABASE_SERVICE_ROLE_KEY,token=env.GITHUB_PUBLISH_TOKEN;
   if(!sb||!service||!token)return reply({error:"Configurazione server incompleta."},500);
-  const auth=(request.headers.get("Authorization")||"").match(/^Bearer\\s+([A-Za-z0-9._-]+)$/i);if(!auth)return reply({error:"Autenticazione richiesta."},401);
+  const auth=(request.headers.get("Authorization")||"").match(/^Bearer\s+([A-Za-z0-9._-]+)$/i);if(!auth)return reply({error:"Autenticazione richiesta."},401);
   const userRes=await fetch(sb+"/auth/v1/user",{headers:{"apikey":service,"Authorization":"Bearer "+auth[1]}});
   if(!userRes.ok)return reply({error:"Sessione Supabase non valida."},401);
   const user=await userRes.json();if(!user?.id)return reply({error:"Utente non autenticato."},401);
@@ -90,13 +90,13 @@ export async function onRequest({request,env}){
   const je=entries.find(x=>x.path==="data/articoli.json"&&x.type==="blob"),se=entries.find(x=>x.path==="sitemap.xml"&&x.type==="blob");
   if(!je||!se)return reply({error:"Archivio JSON o sitemap non trovati."},500);
   const [jb,sbBlob]=await Promise.all([gh("/repos/"+REPO+"/git/blobs/"+je.sha,token),gh("/repos/"+REPO+"/git/blobs/"+se.sha,token)]);
-  const decode=b=>new TextDecoder().decode(Uint8Array.from(atob(b.content.replace(/\\n/g,"")),c=>c.charCodeAt(0)));
+  const decode=b=>new TextDecoder().decode(Uint8Array.from(atob(b.content.replace(/\n/g,"")),c=>c.charCodeAt(0)));
   let archive,sitemap;try{archive=JSON.parse(decode(jb));sitemap=decode(sbBlob);}catch{return reply({error:"Archivio o sitemap non leggibili."},500);}
   if(!Array.isArray(archive.articles)||!sitemap.includes("<urlset"))return reply({error:"Formato archivio o sitemap non valido."},500);
-  const imageAlt=String(p.imageFilename||title).replace(/\\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250);
+  const imageAlt=String(p.imageFilename||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250);
   const page=makeArticle({title,description,slug,category,platforms,imageUrl,imageAlt,content,date}),record={id:title.toLocaleLowerCase("it"),title,category,date,url:articlePath,image:imageUrl,imageAlt,description};
   archive.articles=archive.articles.filter(x=>x.url!==articlePath);archive.articles.unshift(record);archive.updatedAt=date;archive.version=archive.version||1;
-  sitemap=sitemap.replace("</urlset>",'  <url><loc>'+esc(SITE+"/"+articlePath)+'</loc><lastmod>'+date+'</lastmod></url>\\n</urlset>');
+  sitemap=sitemap.replace("</urlset>",'  <url><loc>'+esc(SITE+"/"+articlePath)+'</loc><lastmod>'+date+'</lastmod></url>\n</urlset>');
   const items=[],pageBlob=await blob(articlePath,page,token);items.push({path:articlePath,mode:"100644",type:"blob",sha:pageBlob.sha});
   if(imageBase64){const ib=await blob(imagePath,imageBase64,token,"base64");items.push({path:imagePath,mode:"100644",type:"blob",sha:ib.sha});}
   const [newJson,newMap]=await Promise.all([blob("data/articoli.json",JSON.stringify(archive,null,2)+"\\n",token),blob("sitemap.xml",sitemap,token)]);
