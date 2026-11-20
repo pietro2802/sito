@@ -6,7 +6,26 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const slugOk=s=>/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(s||""))&&String(s).length<=120;
 function safeUrl(value,image=false){if(!String(value||"").trim())return "";try{const raw=String(value).trim();if(image&&raw.startsWith("/")&&!raw.startsWith("//"))return raw;const u=new URL(raw,SITE);if(!["https:","http:"].includes(u.protocol)||u.username||u.password)return "";if(image&&u.protocol!=="https:")return "";if(!image&&u.protocol==="http:"&&u.origin!==SITE)return "";return u.href;}catch{return "";}}
 function textHtml(s){return String(s).split(/\r?\n\s*\r?\n/).map(b=>{b=b.trim();if(!b)return "";if(/^##\s+/.test(b))return "<h2>"+esc(b.replace(/^##\s+/,""))+"</h2>";if(/^###\s+/.test(b))return "<h3>"+esc(b.replace(/^###\s+/,""))+"</h3>";return "<p>"+esc(b).replace(/\r?\n/g,"<br>")+"</p>";}).join("\n");}
-async function sanitize(s){const html="<!doctype html><html><body>"+s+"</body></html>";const out=await new HTMLRewriter().on("*",{element(el){const tag=el.tagName.toLowerCase();if(DROP.has(tag)){el.remove();return;}if(!TAGS.has(tag)){el.removeAndKeepContent();return;}for(const name of el.getAttributeNames()){const n=name.toLowerCase(),v=el.getAttribute(name)||"";if(n==="href"&&tag==="a"){const u=safeUrl(v);if(u)el.setAttribute("href",u);else el.removeAttribute(name);}else if(n==="src"&&tag==="img"){const u=safeUrl(v,true);if(u)el.setAttribute("src",u);else el.removeAttribute(name);}else if(n==="alt"&&tag==="img")el.setAttribute("alt",v.slice(0,300));else if(n==="title"&&(tag==="img"||tag==="a"))el.setAttribute("title",v.slice(0,200));else if(n==="target"&&tag==="a"&&v==="_blank")el.setAttribute("rel","noopener noreferrer");else el.removeAttribute(name);}if(tag==="a"&&el.getAttribute("target")==="_blank")el.setAttribute("rel","noopener noreferrer");if(tag==="img"){el.setAttribute("loading","lazy");el.setAttribute("decoding","async");}}}).on("body",{comments(c){c.remove();}}).transform(new Response(html)).text();const m=out.match(/<body[^>]*>([\s\S]*?)<\/body>/i);return m?m[1].trim():"";}
+async function sanitize(s){
+ const html="<!doctype html><html><body>"+s+"</body></html>";
+ const out=await new HTMLRewriter().on("*",{element(el){
+  const tag=String(el.tagName||"").toLowerCase();
+  if(DROP.has(tag)){el.remove();return;}
+  if(!TAGS.has(tag)){el.removeAndKeepContent();return;}
+  for(const pair of Array.from(el.attributes||[])){
+   const name=String(pair[0]||"").toLowerCase(),value=String(pair[1]||"");
+   if(name==="href"&&tag==="a"){const u=safeUrl(value);if(u)el.setAttribute("href",u);else el.removeAttribute(name);}
+   else if(name==="src"&&tag==="img"){const u=safeUrl(value,true);if(u)el.setAttribute("src",u);else el.removeAttribute(name);}
+   else if(name==="alt"&&tag==="img")el.setAttribute("alt",value.slice(0,300));
+   else if(name==="title"&&(tag==="img"||tag==="a"))el.setAttribute("title",value.slice(0,200));
+   else if(name==="target"&&tag==="a"&&value==="_blank")el.setAttribute("rel","noopener noreferrer");
+   else el.removeAttribute(name);
+  }
+  if(tag==="a"&&el.getAttribute("target")==="_blank")el.setAttribute("rel","noopener noreferrer");
+  if(tag==="img"){el.setAttribute("loading","lazy");el.setAttribute("decoding","async");}
+ }}).on("body",{comments(c){c.remove();}}).transform(new Response(html)).text();
+ const m=out.match(/<body[^>]*>([\s\S]*?)<\/body>/i);return m?m[1].trim():"";
+}
 async function gh(path,token,options={}){const res=await fetch("https://api.github.com"+path,{...options,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json",...(options.headers||{})}});const body=await res.json().catch(()=>({}));if(!res.ok)throw new Error("GitHub API "+res.status+": "+(body.message||"errore"));return body;}
 async function makeBlob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 function decodeBlob(blob){const bytes=Uint8Array.from(atob(String(blob.content||"").replace(/\n/g,"")),c=>c.charCodeAt(0));return new TextDecoder().decode(bytes);}
