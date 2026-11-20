@@ -56,8 +56,8 @@ function makeArticle(p){
 <a class="ng-social-link ng-social-tt" href="https://www.tiktok.com/@ytita__" target="_blank" rel="noopener noreferrer" aria-label="NEWSGAMING2 su TikTok" title="TikTok"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34V8.87a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.3z"/></svg><span>TikTok</span></a></div></footer></body></html>`;
 }
 async function gh(path,token,options={}){
- const res=await fetch("https://api.github.com"+path,{...options,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json",...(options.headers||{})}});
- const body=await res.json().catch(()=>({}));if(!res.ok)throw new Error("GitHub API "+res.status+": "+(body.message||"errore"));return body;
+ const res=await fetch("https://api.github.com"+path,{...options,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token,"User-Agent":"newsgaming2-redazione","X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json",...(options.headers||{})}});
+ const raw=await res.text();let body={};try{body=JSON.parse(raw)||{};}catch{}if(!res.ok)throw new Error("GitHub API "+res.status+": "+(body.message||raw.slice(0,250)||"Risposta vuota"));return body;
 }
 async function blob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 export async function onRequest({request,env}){
