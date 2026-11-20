@@ -95,7 +95,18 @@ function updatePage(html,p,slug,date,author){
  const figure=/<figure[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<\/figure>/i;
  const newFigure='<figure class="article-hero-image"><img src="'+image+'" alt="'+alt+'" loading="eager"><figcaption>'+alt+'</figcaption></figure>';
  if(figure.test(html))html=html.replace(figure,()=>newFigure);
- html=html.replace(/(<article[^>]*class=["'][^"']*article-body[^"']*["'][^>]*>)[\s\S]*?(<\/article>)/i,(_,open,close)=>open+p.content+close);
+ else html=html.replace(/<img\b[^>]*class=["'][^"']*\bcover\b[^"']*["'][^>]*>/i,tag=>{
+  let next=tag.replace(/\bsrc=["'][^"']*["']/i,'src="'+image+'"').replace(/\balt=["'][^"']*["']/i,'alt="'+alt+'"');
+  if(!/\balt=/i.test(next))next=next.replace(/>$/,' alt="'+alt+'">');
+  return next;
+ });
+ let bodyReplaced=false;
+ html=html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/i,(_,open,inner,close)=>{
+  let next=inner.replace(/(<article\b[^>]*class=["'][^"']*\barticle-body\b[^"']*["'][^>]*>)[\s\S]*?(<\/article>)/i,(_,a,z)=>{bodyReplaced=true;return a+p.content+z;});
+  if(!bodyReplaced)next=next.replace(/(<article\b[^>]*>)[\s\S]*?(<\/article>)/i,(_,a,z)=>{bodyReplaced=true;return a+p.content+z;});
+  return open+next+close;
+ });
+ if(!bodyReplaced)throw new Error("Impossibile individuare il corpo editoriale nell'HTML originale.");
  const ld={"@context":"https://schema.org","@type":"Article","headline":p.title,"description":p.description,"image":[p.imageUrl],"datePublished":date,"dateModified":date,"author":{"@type":"Organization","name":author},"publisher":{"@type":"Organization","name":"NEWSGAMING2","url":SITE},"mainEntityOfPage":{"@type":"WebPage","@id":SITE+"/articoli/"+slug+".html"}};
  const ldText=JSON.stringify(ld).replace(/</g,"\\u003c");
  html=html.replace(/(<script\s+type=["']application\/ld\+json["']>)[\s\S]*?(<\/script>)/i,(_,open,close)=>open+ldText+close);
@@ -103,6 +114,17 @@ function updatePage(html,p,slug,date,author){
 }
 function localImagePath(value){const v=String(value||"").replace(/^\/+/,"");return /^immagini\/articoli\/[a-z0-9._-]+\.(?:webp|png|jpe?g|gif|svg)$/i.test(v)?v:"";}
 async function getRepoState(token){const ref=await gh("/repos/"+REPO+"/git/ref/heads/"+BRANCH,token),parent=ref.object.sha,commit=await gh("/repos/"+REPO+"/git/commits/"+parent,token),tree=await gh("/repos/"+REPO+"/git/trees/"+commit.tree.sha+"?recursive=1",token);if(tree.truncated)throw new Error("Albero repository troppo grande.");const entries=tree.tree||[],byPath=new Map(entries.map(x=>[x.path,x])),je=byPath.get("data/articoli.json"),se=byPath.get("sitemap.xml");if(!je||!se)throw new Error("Archivio JSON o sitemap non trovati.");const [jb,mb]=await Promise.all([gh("/repos/"+REPO+"/git/blobs/"+je.sha,token),gh("/repos/"+REPO+"/git/blobs/"+se.sha,token)]);const archive=JSON.parse(decodeBlob(jb)),sitemap=decodeBlob(mb);if(!Array.isArray(archive.articles)||!sitemap.includes("<urlset"))throw new Error("Formato archivio o sitemap non valido.");return {parent,treeSha:commit.tree.sha,entries,byPath,archive,sitemap};}
+function removeSitemapArticle(sitemap,slug){
+ return sitemap.replace(/<url\b[^>]*>[\s\S]*?<\/url>/gi,block=>{
+  const loc=(block.match(/<loc>\s*([^<]+)\s*<\/loc>/i)||[])[1]||"";
+  return slugFromUrl(loc)===slug?"":block;
+ });
+}
+function addSitemapArticle(sitemap,slug,date){
+ sitemap=removeSitemapArticle(sitemap,slug);
+ const url=SITE+"/articoli/"+slug+".html";
+ return sitemap.replace(/<\/urlset>/i,"  <url><loc>"+url+"</loc><lastmod>"+date+"</lastmod></url>\n</urlset>");
+}
 async function commitChanges(state,token,items,message){const tree=await gh("/repos/"+REPO+"/git/trees",token,{method:"POST",body:JSON.stringify({base_tree:state.treeSha,tree:items})}),commit=await gh("/repos/"+REPO+"/git/commits",token,{method:"POST",body:JSON.stringify({message,tree:tree.sha,parents:[state.parent]})});await gh("/repos/"+REPO+"/git/refs/heads/"+BRANCH,token,{method:"PATCH",body:JSON.stringify({sha:commit.sha,force:false})});return commit.sha;}
 export async function onRequest({request,env}){try{const origin=request.headers.get("Origin");if(request.method==="OPTIONS"){if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":SITE,"Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Vary":"Origin"}});}if(request.method!=="POST")return reply({error:"Metodo non consentito."},405);if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);const sb=String(env.SUPABASE_URL||"").replace(/\/$/,""),service=env.SUPABASE_SERVICE_ROLE_KEY,token=env.GITHUB_PUBLISH_TOKEN;if(!sb||!service||!token)return reply({error:"Configurazione server incompleta."},500);const auth=(request.headers.get("Authorization")||"").match(/^Bearer\s+([A-Za-z0-9._-]+)$/i);if(!auth)return reply({error:"Autenticazione richiesta."},401);const userRes=await fetch(sb+"/auth/v1/user",{headers:{"apikey":service,"Authorization":"Bearer "+auth[1]}});if(!userRes.ok)return reply({error:"Sessione Supabase non valida."},401);const user=await userRes.json();if(!user?.id)return reply({error:"Utente non autenticato."},401);const roleRes=await fetch(sb+"/rest/v1/user_roles?select=role&user_id=eq."+encodeURIComponent(user.id),{headers:{"apikey":service,"Authorization":"Bearer "+service}});if(!roleRes.ok)return reply({error:"Verifica del ruolo non disponibile."},503);const role=(await roleRes.json())?.[0]?.role;if(!["admin","editor"].includes(role))return reply({error:"Permessi insufficienti: richiesto ruolo admin o editor."},403);const raw=await request.arrayBuffer();if(raw.byteLength>MAX_BODY)return reply({error:"Richiesta troppo grande."},413);let p;try{p=JSON.parse(new TextDecoder().decode(raw));}catch{return reply({error:"JSON non valido."},400);}const action=String(p.action||""),slug=String(p.slug||"");if(!["load","update","delete"].includes(action)||!slugOk(slug))return reply({error:"Azione o slug non valido."},400);const state=await getRepoState(token),articlePath="articoli/"+slug+".html";
 const recordMatches=state.archive.articles.map((a,index)=>({a,index})).filter(x=>x.a&&slugFromUrl(x.a.url)===slug);
