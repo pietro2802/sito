@@ -9,14 +9,16 @@ function textHtml(s){return String(s).split(/\r?\n\s*\r?\n/).map(b=>{b=b.trim();
 async function sanitize(s){
  const html="<!doctype html><html><body>"+s+"</body></html>";
  const out=await new HTMLRewriter().on("*",{element(el){
-  const tag=el.tagName.toLowerCase();if(DROP.has(tag)){el.remove();return;}if(!TAGS.has(tag)){el.removeAndKeepContent();return;}
-  for(const name of el.getAttributeNames()){
-   const n=name.toLowerCase(),v=el.getAttribute(name)||"";
-   if(n==="href"&&tag==="a"){const u=safeUrl(v);if(u)el.setAttribute("href",u);else el.removeAttribute(name);}
-   else if(n==="src"&&tag==="img"){const u=safeUrl(v,true);if(u)el.setAttribute("src",u);else el.removeAttribute(name);}
-   else if(n==="alt"&&tag==="img")el.setAttribute("alt",v.slice(0,300));
-   else if(n==="title"&&(tag==="img"||tag==="a"))el.setAttribute("title",v.slice(0,200));
-   else if(n==="target"&&tag==="a"&&v==="_blank")el.setAttribute("rel","noopener noreferrer");
+  const tag=String(el.tagName||"").toLowerCase();
+  if(DROP.has(tag)){el.remove();return;}
+  if(!TAGS.has(tag)){el.removeAndKeepContent();return;}
+  for(const pair of Array.from(el.attributes||[])){
+   const name=String(pair[0]||"").toLowerCase(),value=String(pair[1]||"");
+   if(name==="href"&&tag==="a"){const u=safeUrl(value);if(u)el.setAttribute("href",u);else el.removeAttribute(name);}
+   else if(name==="src"&&tag==="img"){const u=safeUrl(value,true);if(u)el.setAttribute("src",u);else el.removeAttribute(name);}
+   else if(name==="alt"&&tag==="img")el.setAttribute("alt",value.slice(0,300));
+   else if(name==="title"&&(tag==="img"||tag==="a"))el.setAttribute("title",value.slice(0,200));
+   else if(name==="target"&&tag==="a"&&value==="_blank")el.setAttribute("rel","noopener noreferrer");
    else el.removeAttribute(name);
   }
   if(tag==="a"&&el.getAttribute("target")==="_blank")el.setAttribute("rel","noopener noreferrer");
