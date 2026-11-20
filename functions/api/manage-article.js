@@ -145,14 +145,36 @@ const articleBlob=await gh("/repos/"+REPO+"/git/blobs/"+articleEntry.sha,token),
  const commit=await commitChanges(state,token,items,"[skip actions] Elimina articolo statico: "+slug);
  return reply({ok:true,deleted:slug,commit,commitUrl:"https://github.com/"+REPO+"/commit/"+commit});
 }
-const title=String(p.title||"").trim().slice(0,180),description=String(p.description||"").trim().slice(0,500),category=String(p.category||"News e approfondimenti").trim().slice(0,80),platforms=Array.isArray(p.platforms)?p.platforms.map(x=>String(x).trim().slice(0,60)).filter(Boolean).slice(0,12):[];if(!title||!description||!category)return reply({error:"Titolo, descrizione e categoria sono obbligatori."},400);let imageUrl="",imagePath="",imageBase64=String(p.imageDataBase64||"");if(imageBase64){if(imageBase64.length>6*1024*1024||!/^[A-Za-z0-9+/]+={0,2}$/.test(imageBase64))return reply({error:"Immagine base64 non valida o troppo grande."},400);let bytes;try{bytes=Uint8Array.from(atob(imageBase64),c=>c.charCodeAt(0));}catch{return reply({error:"Base64 immagine non valido."},400);}if(bytes.length<12||String.fromCharCode(...bytes.slice(0,4))!=="RIFF"||String.fromCharCode(...bytes.slice(8,12))!=="WEBP")return reply({error:"L'immagine caricata deve essere WebP."},400);imagePath="immagini/articoli/"+slug+".webp";imageUrl="/"+imagePath;}else{imageUrl=safeUrl(String(p.imageUrl||""),true);if(!imageUrl)return reply({error:"Inserisci un URL HTTPS valido o carica un WebP."},400);imagePath=localImagePath(imageUrl);}let content=String(p.content||"").trim();if(!content||content.length>2_000_000)return reply({error:"Testo articolo vuoto o troppo lungo."},400);if(!/<[a-z][\s\S]*>/i.test(content))content=textHtml(content);content=await sanitize(content);if(!content)return reply({error:"Contenuto senza elementi HTML consentiti."},400);const imageAlt=String(p.imageAlt||p.imageFilename||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250),updatedHtml=updatePage(originalHtml,{title,description,category,platforms,imageUrl,imageAlt,content},slug,today,current.author||"Redazione NEWSGAMING2");record.title=title;record.category=category;record.date=today;record.image=imageUrl;record.imageAlt=imageAlt;record.description=description;state.archive.updatedAt=today;const sitemapUrl=SITE+"/"+articlePath;
-let sitemapEntryFound=false;
-state.sitemap=state.sitemap.replace(/<url>\s*<loc>[^<]*<\/loc>[\s\S]*?<\/url>/g,block=>{
- if(!block.includes("<loc>"+sitemapUrl+"</loc>"))return block;
- sitemapEntryFound=true;
- return /<lastmod>[\s\S]*?<\/lastmod>/.test(block)
-  ?block.replace(/<lastmod>[\s\S]*?<\/lastmod>/,"<lastmod>"+today+"</lastmod>")
-  :block.replace("</url>","<lastmod>"+today+"</lastmod></url>");
+const title=String(p.title||"").trim().slice(0,180),description=String(p.description||"").trim().slice(0,500),category=String(p.category||"News e approfondimenti").trim().slice(0,80),platforms=Array.isArray(p.platforms)?p.platforms.map(x=>String(x).trim().slice(0,60)).filter(Boolean).slice(0,12):[];
+if(!title||!description||!category)return reply({error:"Titolo, descrizione e categoria sono obbligatori."},400);
+let imageUrl="",imagePath="",imageBase64=String(p.imageDataBase64||"");
+if(imageBase64){
+ if(imageBase64.length>6*1024*1024||!/^[A-Za-z0-9+/]+={0,2}$/.test(imageBase64))return reply({error:"Immagine base64 non valida o troppo grande."},400);
+ let bytes;try{bytes=Uint8Array.from(atob(imageBase64),c=>c.charCodeAt(0));}catch{return reply({error:"Base64 immagine non valido."},400);}
+ if(bytes.length<12||String.fromCharCode(...bytes.slice(0,4))!=="RIFF"||String.fromCharCode(...bytes.slice(8,12))!=="WEBP")return reply({error:"L'immagine caricata deve essere WebP."},400);
+ imagePath="immagini/articoli/"+slug+".webp";imageUrl="/"+imagePath;
+}else{
+ const requestedImage=String(p.imageUrl||"").trim()||String(current.imageUrl||record.image||"").trim();
+ imageUrl=safeUrl(requestedImage,true);
+ if(!imageUrl)return reply({error:"L'immagine esistente non è valida: inserisci un URL HTTPS o carica un WebP."},400);
+ imagePath=localImagePath(imageUrl);
+}
+let content=String(p.content||"").trim();
+if(!content||content.length>2_000_000)return reply({error:"Testo articolo vuoto o troppo lungo."},400);
+if(!/<[a-z][\s\S]*>/i.test(content))content=textHtml(content);
+content=await sanitize(content);
+if(!content)return reply({error:"Contenuto senza elementi HTML consentiti."},400);
+const imageAlt=String(p.imageAlt||current.imageAlt||record.imageAlt||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250);
+const updatedHtml=updatePage(originalHtml,{title,description,category,platforms,imageUrl,imageAlt,content},slug,today,current.author||"Redazione NEWSGAMING2");
+const seen=new Set();
+state.archive.articles=state.archive.articles.filter(a=>{
+ const itemSlug=slugFromUrl(a&&a.url);
+ if(itemSlug!==slug)return true;
+ if(seen.has(itemSlug))return false;
+ seen.add(itemSlug);return true;
 });
-if(!sitemapEntryFound)state.sitemap=state.sitemap.replace("</urlset>","  <url><loc>"+sitemapUrl+"</loc><lastmod>"+today+"</lastmod></url>\n</urlset>");
+record.url=articlePath;record.title=title;record.category=category;record.date=today;record.image=imageUrl;record.imageAlt=imageAlt;record.description=description;
+if(platforms.length)record.platforms=platforms;else delete record.platforms;
+state.archive.updatedAt=today;
+state.sitemap=addSitemapArticle(state.sitemap,slug,today);
 const [pageBlob,newJson,newMap]=await Promise.all([makeBlob(articlePath,updatedHtml,token),makeBlob("data/articoli.json",JSON.stringify(state.archive,null,2)+"\n",token),makeBlob("sitemap.xml",state.sitemap,token)]);const items=[{path:articlePath,mode:"100644",type:"blob",sha:pageBlob.sha},{path:"data/articoli.json",mode:"100644",type:"blob",sha:newJson.sha},{path:"sitemap.xml",mode:"100644",type:"blob",sha:newMap.sha}];if(imageBase64){const imageBlob=await makeBlob(imagePath,imageBase64,token,"base64");items.push({path:imagePath,mode:"100644",type:"blob",sha:imageBlob.sha});}const oldImage=localImagePath(current.imageUrl),stillUsed=oldImage&&state.archive.articles.some(a=>a.url!==articlePath&&localImagePath(a.image)===oldImage);if(oldImage&&oldImage!==imagePath&&!stillUsed&&state.byPath.has(oldImage))items.push({path:oldImage,mode:"100644",type:"blob",sha:null});const message=p.sendNewsletter===true?"Aggiorna articolo statico: "+slug:"[skip actions] Aggiorna articolo statico: "+slug;const commit=await commitChanges(state,token,items,message);return reply({ok:true,slug,url:SITE+"/"+articlePath,commit,commitUrl:"https://github.com/"+REPO+"/commit/"+commit,newsletterRequested:p.sendNewsletter===true});}catch(error){return reply({error:error?.message||"Errore interno di gestione articolo."},500);}}
