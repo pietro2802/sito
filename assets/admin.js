@@ -133,7 +133,7 @@ function sanitizeEditorHtml(source){
  function clean(node){
   for(const child of Array.from(node.childNodes||[])){
    if(child.nodeType===3)continue;
-   if(child.nodeType!==1)continue;
+   if(child.nodeType!==1){child.remove();continue;}
    const tag=String(child.tagName||'').toUpperCase();
    if(drop.has(tag)){child.remove();continue;}
    if(!allowed.has(tag)){clean(child);child.replaceWith(...Array.from(child.childNodes||[]));continue;}
