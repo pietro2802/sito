@@ -29,7 +29,7 @@ async function sanitize(s){
 async function gh(path,token,options={}){const res=await fetch("https://api.github.com"+path,{...options,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json",...(options.headers||{})}});const body=await res.json().catch(()=>({}));if(!res.ok)throw new Error("GitHub API "+res.status+": "+(body.message||"errore"));return body;}
 async function makeBlob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 function decodeBlob(blob){const bytes=Uint8Array.from(atob(String(blob.content||"").replace(/\n/g,"")),c=>c.charCodeAt(0));return new TextDecoder().decode(bytes);}
-function htmlText(s){return String(s||"").replace(/<[^>]*>/g," ").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
+function htmlText(s){return String(s||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim().replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
 function slugFromUrl(value){
  let raw=String(value||"").trim();
  try{if(/^https?:\/\//i.test(raw))raw=new URL(raw).pathname;}catch{return "";}
