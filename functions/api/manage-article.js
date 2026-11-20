@@ -30,7 +30,50 @@ async function gh(path,token,options={}){const res=await fetch("https://api.gith
 async function makeBlob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 function decodeBlob(blob){const bytes=Uint8Array.from(atob(String(blob.content||"").replace(/\n/g,"")),c=>c.charCodeAt(0));return new TextDecoder().decode(bytes);}
 function htmlText(s){return String(s||"").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
-function extractArticle(html,record,slug){const one=re=>{const m=html.match(re);return m?htmlText(m[1].trim()):"";};const body=(html.match(/<article[^>]*class=["'][^"']*article-body[^"']*["'][^>]*>([\s\S]*?)<\/article>/i)||[])[1]||"";const imageTag=(html.match(/<figure[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<img\b[^>]*>/i)||[])[0]||"";const getAttr=(tag,n)=>{const m=tag.match(new RegExp("\\b"+n+"\\s*=\\s*(['\"])(.*?)\\1","i"));return m?htmlText(m[2]):"";};const metaLine=one(/<p[^>]*class=["'][^"']*\bmeta\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);const pieces=metaLine.split("·").map(x=>x.trim());return {slug,title:one(/<h1[^>]*>([\s\S]*?)<\/h1>/i)||one(/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*NEWSGAMING2$/i,""),description:one(/<p[^>]*class=["'][^"']*\bdek\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i)||(record&&record.description)||"",category:(record&&record.category)||pieces[2]||"News e approfondimenti",platforms:pieces.slice(3).join(" · ").split(/[·,]/).map(x=>x.trim()).filter(Boolean),imageUrl:getAttr(imageTag,"src")||(record&&record.image)||"",imageAlt:getAttr(imageTag,"alt")||(record&&record.imageAlt)||"",content:body.trim(),date:(record&&record.date)||"",author:pieces[1]||"Redazione NEWSGAMING2"};}
+function slugFromUrl(value){
+ let raw=String(value||"").trim();
+ try{if(/^https?:\/\//i.test(raw))raw=new URL(raw).pathname;}catch{return "";}
+ raw=raw.split(/[?#]/,1)[0].replace(/^\/+/,"");
+ if(raw.startsWith("articoli/"))raw=raw.slice("articoli/".length);
+ if(raw.toLowerCase().endsWith(".html"))raw=raw.slice(0,-5);
+ return slugOk(raw)?raw:"";
+}
+function extractArticle(html,record,slug){
+ const one=re=>{const m=html.match(re);return m?htmlText(m[1].trim()):"";};
+ const attr=(tag,name)=>{const m=String(tag||"").match(new RegExp("\\b"+name+"\\s*=\\s*(['\"])(.*?)\\1","i"));return m?htmlText(m[2]):"";};
+ let body=(html.match(/<article\b[^>]*class=["'][^"']*\barticle-body\b[^"']*["'][^>]*>([\s\S]*?)<\/article>/i)||[])[1]||"";
+ if(!body){
+  const main=(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)||[])[1]||html;
+  body=(main.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)||[])[1]||"";
+  if(!body)body=(main.match(/<(?:div|section)\b[^>]*class=["'][^"']*(?:article-content|article-content-body|post-content|entry-content)[^"']*["'][^>]*>([\s\S]*?)<\/(?:div|section)>/i)||[])[1]||"";
+ }
+ body=body
+  .replace(/<section\b[^>]*id=["']ngArticle(?:Social|Comments)["'][\s\S]*?<\/section>/gi,"")
+  .replace(/<(?:div|section)\b[^>]*class=["'][^"']*(?:related-feed|related-articles|related-track|article-related)[^"']*["'][\s\S]*?<\/(?:div|section)>/gi,"")
+  .replace(/<footer\b[\s\S]*?<\/footer>/gi,"")
+  .replace(/<nav\b[\s\S]*?<\/nav>/gi,"")
+  .trim();
+ const imageTag=(html.match(/<figure\b[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<img\b[^>]*>/i)||[])[0]
+  ||(html.match(/<img\b[^>]*class=["'][^"']*\bcover\b[^"']*["'][^>]*>/i)||[])[0]
+  ||(html.match(/<main\b[^>]*>[\s\S]*?<img\b[^>]*>/i)||[])[0]||"";
+ const metaLine=one(/<p[^>]*class=["'][^"']*\bmeta\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);
+ const pieces=metaLine.split("·").map(x=>x.trim()).filter(Boolean);
+ const author=pieces.find(x=>/redazion|a cura|staff/i.test(x))||"Redazione NEWSGAMING2";
+ const platforms=Array.isArray(record?.platforms)?record.platforms:[];
+ const date=(record&&record.date)||((metaLine.match(/\b\d{1,2}\s+[a-zà-ù]+\s+\d{4}\b/i)||[])[0]||"");
+ return {
+  slug,
+  title:one(/<h1[^>]*>([\s\S]*?)<\/h1>/i)||one(/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*NEWSGAMING2$/i,""),
+  description:one(/<p[^>]*class=["'][^"']*\bdek\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i)||(record&&record.description)||one(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i),
+  category:(record&&record.category)||"News e approfondimenti",
+  platforms,
+  imageUrl:attr(imageTag,"src")||(record&&record.image)||"",
+  imageAlt:attr(imageTag,"alt")||(record&&record.imageAlt)||"",
+  content:body,
+  date,
+  author
+ };
+}
 function updatePage(html,p,slug,date,author){
  const title=esc(p.title),description=esc(p.description),image=esc(p.imageUrl),alt=esc(p.imageAlt||p.title);
  const replace=(re,value)=>{html=html.replace(re,(_,open,close)=>open+value+close);};
