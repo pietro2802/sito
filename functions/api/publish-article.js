@@ -32,7 +32,7 @@ function makeArticle(p){
  const url=SITE+"/articoli/"+p.slug+".html",t=esc(p.title),d=esc(p.description),im=esc(p.imageUrl),alt=esc(p.imageAlt);
  const ld=JSON.stringify({"@context":"https://schema.org","@type":"Article","headline":p.title,"description":p.description,"image":[p.imageUrl],"datePublished":p.date,"dateModified":p.date,"author":{"@type":"Organization","name":"NEWSGAMING2"},"publisher":{"@type":"Organization","name":"NEWSGAMING2","url":SITE},"mainEntityOfPage":{"@type":"WebPage","@id":url}}).replace(/</g,"\\u003c");
  return `<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23090d14'/%3E%3Ctext x='50' y='67' font-size='54' text-anchor='middle' fill='%2363e6f4' font-family='Arial' font-weight='bold'%3ENG%3C/text%3E%3C/svg%3E" rel="icon">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
 <title>${t} | NEWSGAMING2</title><meta name="description" content="${d}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${url}">
 <meta property="og:title" content="${t}"><meta property="og:description" content="${d}"><meta property="og:type" content="article"><meta property="og:url" content="${url}"><meta property="og:image" content="${im}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${t}"><meta name="twitter:description" content="${d}"><meta name="twitter:image" content="${im}">
