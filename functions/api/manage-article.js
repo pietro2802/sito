@@ -29,7 +29,7 @@ async function sanitize(s){
 async function gh(path,token,options={}){const res=await fetch("https://api.github.com"+path,{...options,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json",...(options.headers||{})}});const body=await res.json().catch(()=>({}));if(!res.ok)throw new Error("GitHub API "+res.status+": "+(body.message||"errore"));return body;}
 async function makeBlob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 function decodeBlob(blob){const bytes=Uint8Array.from(atob(String(blob.content||"").replace(/\n/g,"")),c=>c.charCodeAt(0));return new TextDecoder().decode(bytes);}
-function htmlText(s){return String(s||"").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
+function htmlText(s){return String(s||"").replace(/<[^>]*>/g," ").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
 function slugFromUrl(value){
  let raw=String(value||"").trim();
  try{if(/^https?:\/\//i.test(raw))raw=new URL(raw).pathname;}catch{return "";}
@@ -59,13 +59,15 @@ function extractArticle(html,record,slug){
  const metaLine=one(/<p[^>]*class=["'][^"']*\bmeta\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);
  const pieces=metaLine.split("·").map(x=>x.trim()).filter(Boolean);
  const author=pieces.find(x=>/redazion|a cura|staff/i.test(x))||"Redazione NEWSGAMING2";
- const platforms=Array.isArray(record?.platforms)?record.platforms:[];
+ const category=(record&&record.category)||"News e approfondimenti";
+ const categoryIndex=pieces.findIndex(x=>x.toLocaleLowerCase("it")===String(category).toLocaleLowerCase("it"));
+ const platforms=Array.isArray(record?.platforms)?record.platforms:(categoryIndex>=0?pieces.slice(categoryIndex+1).filter(x=>x&&!/minut[oi]|tempo di lettura/i.test(x)):[]);
  const date=(record&&record.date)||((metaLine.match(/\b\d{1,2}\s+[a-zà-ù]+\s+\d{4}\b/i)||[])[0]||"");
  return {
   slug,
   title:one(/<h1[^>]*>([\s\S]*?)<\/h1>/i)||one(/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*NEWSGAMING2$/i,""),
   description:one(/<p[^>]*class=["'][^"']*\bdek\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i)||(record&&record.description)||one(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i),
-  category:(record&&record.category)||"News e approfondimenti",
+  category,
   platforms,
   imageUrl:attr(imageTag,"src")||(record&&record.image)||"",
   imageAlt:attr(imageTag,"alt")||(record&&record.imageAlt)||"",
@@ -112,7 +114,12 @@ function updatePage(html,p,slug,date,author){
  html=html.replace(/(<script\s+type=["']application\/ld\+json["']>)[\s\S]*?(<\/script>)/i,(_,open,close)=>open+ldText+close);
  return html;
 }
-function localImagePath(value){const v=String(value||"").replace(/^\/+/,"");return /^immagini\/articoli\/[a-z0-9._-]+\.(?:webp|png|jpe?g|gif|svg)$/i.test(v)?v:"";}
+function localImagePath(value){
+ let v=String(value||"").trim();
+ try{const u=new URL(v,SITE);if(u.origin!==SITE)return "";v=u.pathname;}catch{return "";}
+ v=v.replace(/^\/+/,"");
+ return /^immagini\/articoli\/[a-z0-9._-]+\.(?:webp|png|jpe?g|gif|svg)$/i.test(v)?v:"";
+}
 async function getRepoState(token){const ref=await gh("/repos/"+REPO+"/git/ref/heads/"+BRANCH,token),parent=ref.object.sha,commit=await gh("/repos/"+REPO+"/git/commits/"+parent,token),tree=await gh("/repos/"+REPO+"/git/trees/"+commit.tree.sha+"?recursive=1",token);if(tree.truncated)throw new Error("Albero repository troppo grande.");const entries=tree.tree||[],byPath=new Map(entries.map(x=>[x.path,x])),je=byPath.get("data/articoli.json"),se=byPath.get("sitemap.xml");if(!je||!se)throw new Error("Archivio JSON o sitemap non trovati.");const [jb,mb]=await Promise.all([gh("/repos/"+REPO+"/git/blobs/"+je.sha,token),gh("/repos/"+REPO+"/git/blobs/"+se.sha,token)]);const archive=JSON.parse(decodeBlob(jb)),sitemap=decodeBlob(mb);if(!Array.isArray(archive.articles)||!sitemap.includes("<urlset"))throw new Error("Formato archivio o sitemap non valido.");return {parent,treeSha:commit.tree.sha,entries,byPath,archive,sitemap};}
 function removeSitemapArticle(sitemap,slug){
  return sitemap.replace(/<url\b[^>]*>[\s\S]*?<\/url>/gi,block=>{
