@@ -4,13 +4,18 @@
   "articles": [
     {
       "id": "gta 6, nuovo clamoroso leak: build xbox online e ricatti crypto",
-      "title": "GTA 6, nuovo clamoroso leak: build Xbox online e ricatti crypto",
+      "title": "GTA 6, nuovo clamoroso leak: build Xbox online e ricatti crypto.",
       "category": "News e approfondimenti",
       "date": "2026-11-20",
       "url": "articoli/gta-6-nuovo-clamoroso-leak-build-xbox-online-e-ricatti-crypto.html",
       "image": "/immagini/articoli/gta-6-nuovo-clamoroso-leak-build-xbox-online-e-ricatti-crypto.webp",
-      "imageAlt": "Gemini Generated Image vyqducvyqducvyqd",
-      "description": "Nuovo grave leak per GTA 6: online i file di una build Xbox. L'hacker minaccia il rilascio della versione PC se il suo token crypto raggiunge 15M di cap."
+      "imageAlt": "GTA 6, nuovo clamoroso leak: build Xbox online e ricatti crypto.",
+      "description": "Nuovo grave leak per GTA 6: online i file di una build Xbox. L'hacker minaccia il rilascio della versione PC se il suo token crypto raggiunge 15M di cap.",
+      "platforms": [
+        "Xbox Series X|S (riferimento leak)",
+        "PS5",
+        "PC (annunciate)"
+      ]
     },
     {
       "id": "rob run: come funziona il gioco e tecniche per principianti",
