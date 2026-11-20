@@ -10,6 +10,7 @@ async function sanitize(s){
  const html="<!doctype html><html><body>"+s+"</body></html>";
  const out=await new HTMLRewriter().on("*",{element(el){
   const tag=String(el.tagName||"").toLowerCase();
+  if(tag==="body")return; // Mantiene il contenitore temporaneo usato per estrarre il contenuto sanificato.
   if(DROP.has(tag)){el.remove();return;}
   if(!TAGS.has(tag)){el.removeAndKeepContent();return;}
   for(const pair of Array.from(el.attributes||[])){
