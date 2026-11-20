@@ -115,11 +115,11 @@ async function loadStaticArchive(){
 function renderStaticArchive(){
  const body=$('#staticArticlesList'),query=($('#staticArticleSearch')?.value||'').trim().toLocaleLowerCase('it');
  if(!body)return;
- const rows=staticArchive.filter(a=>(String(a.title||'')+' '+String(a.url||'').replace(/^articoli\/|\.html$/g,'')).toLocaleLowerCase('it').includes(query));
+ const rows=staticArchive.filter(a=>(String(a.title||'')+' '+staticSlugFromUrl(a.url)).toLocaleLowerCase('it').includes(query));
  if(!rows.length){body.innerHTML='<p class="muted">Nessun articolo trovato.</p>';return;}
  body.innerHTML=rows.map(a=>{
   const slug=staticSlugFromUrl(a.url);
-  return '<article class="static-article-row"><div class="static-article-info"><strong>'+esc(a.title||slug)+'</strong><small>'+esc(a.category||'')+' · '+esc(slug)+'</small></div><div class="static-article-actions"><a class="ng-mini" href="/'+esc(a.url)+'" target="_blank" rel="noopener noreferrer">Apri</a><button class="ng-mini" type="button" data-static-edit="'+esc(slug)+'">Modifica</button><button class="ng-mini danger" type="button" data-static-delete="'+esc(slug)+'">Elimina</button></div></article>';
+  return '<article class="static-article-row"><div class="static-article-info"><strong>'+esc(a.title||slug)+'</strong><small>'+esc(a.category||'')+' · '+esc(slug)+'</small></div><div class="static-article-actions"><a class="ng-mini" href="/articoli/'+esc(slug)+'.html" target="_blank" rel="noopener noreferrer">Apri</a><button class="ng-mini" type="button" data-static-edit="'+esc(slug)+'">Modifica</button><button class="ng-mini danger" type="button" data-static-delete="'+esc(slug)+'">Elimina</button></div></article>';
  }).join('');
  body.querySelectorAll('[data-static-edit]').forEach(b=>b.addEventListener('click',()=>editStaticArticle(b.dataset.staticEdit)));
  body.querySelectorAll('[data-static-delete]').forEach(b=>b.addEventListener('click',()=>deleteStaticArticle(b.dataset.staticDelete)));
