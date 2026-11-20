@@ -6,12 +6,76 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const slugOk=s=>/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(s||""))&&String(s).length<=120;
 function safeUrl(value,image=false){if(!String(value||"").trim())return "";try{const raw=String(value).trim();if(image&&raw.startsWith("/")&&!raw.startsWith("//"))return raw;const u=new URL(raw,SITE);if(!["https:","http:"].includes(u.protocol)||u.username||u.password)return "";if(image&&u.protocol!=="https:")return "";if(!image&&u.protocol==="http:"&&u.origin!==SITE)return "";return u.href;}catch{return "";}}
 function textHtml(s){return String(s).split(/\r?\n\s*\r?\n/).map(b=>{b=b.trim();if(!b)return "";if(/^##\s+/.test(b))return "<h2>"+esc(b.replace(/^##\s+/,""))+"</h2>";if(/^###\s+/.test(b))return "<h3>"+esc(b.replace(/^###\s+/,""))+"</h3>";return "<p>"+esc(b).replace(/\r?\n/g,"<br>")+"</p>";}).join("\n");}
-async function sanitize(s){const html="<!doctype html><html><body>"+s+"</body></html>";const out=await new HTMLRewriter().on("*",{element(el){const tag=el.tagName.toLowerCase();if(DROP.has(tag)){el.remove();return;}if(!TAGS.has(tag)){el.removeAndKeepContent();return;}for(const name of el.getAttributeNames()){const n=name.toLowerCase(),v=el.getAttribute(name)||"";if(n==="href"&&tag==="a"){const u=safeUrl(v);if(u)el.setAttribute("href",u);else el.removeAttribute(name);}else if(n==="src"&&tag==="img"){const u=safeUrl(v,true);if(u)el.setAttribute("src",u);else el.removeAttribute(name);}else if(n==="alt"&&tag==="img")el.setAttribute("alt",v.slice(0,300));else if(n==="title"&&(tag==="img"||tag==="a"))el.setAttribute("title",v.slice(0,200));else if(n==="target"&&tag==="a"&&v==="_blank")el.setAttribute("rel","noopener noreferrer");else el.removeAttribute(name);}if(tag==="a"&&el.getAttribute("target")==="_blank")el.setAttribute("rel","noopener noreferrer");if(tag==="img"){el.setAttribute("loading","lazy");el.setAttribute("decoding","async");}}}).on("body",{comments(c){c.remove();}}).transform(new Response(html)).text();const m=out.match(/<body[^>]*>([\s\S]*?)<\/body>/i);return m?m[1].trim():"";}
+async function sanitize(s){
+ const html="<!doctype html><html><body>"+s+"</body></html>";
+ const out=await new HTMLRewriter().on("*",{element(el){
+  const tag=String(el.tagName||"").toLowerCase();
+  if(DROP.has(tag)){el.remove();return;}
+  if(!TAGS.has(tag)){el.removeAndKeepContent();return;}
+  for(const pair of Array.from(el.attributes||[])){
+   const name=String(pair[0]||"").toLowerCase(),value=String(pair[1]||"");
+   if(name==="href"&&tag==="a"){const u=safeUrl(value);if(u)el.setAttribute("href",u);else el.removeAttribute(name);}
+   else if(name==="src"&&tag==="img"){const u=safeUrl(value,true);if(u)el.setAttribute("src",u);else el.removeAttribute(name);}
+   else if(name==="alt"&&tag==="img")el.setAttribute("alt",value.slice(0,300));
+   else if(name==="title"&&(tag==="img"||tag==="a"))el.setAttribute("title",value.slice(0,200));
+   else if(name==="target"&&tag==="a"&&value==="_blank")el.setAttribute("rel","noopener noreferrer");
+   else el.removeAttribute(name);
+  }
+  if(tag==="a"&&el.getAttribute("target")==="_blank")el.setAttribute("rel","noopener noreferrer");
+  if(tag==="img"){el.setAttribute("loading","lazy");el.setAttribute("decoding","async");}
+ }}).on("body",{comments(c){c.remove();}}).transform(new Response(html)).text();
+ const m=out.match(/<body[^>]*>([\s\S]*?)<\/body>/i);return m?m[1].trim():"";
+}
 async function gh(path,token,options={}){const res=await fetch("https://api.github.com"+path,{...options,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+token,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json",...(options.headers||{})}});const body=await res.json().catch(()=>({}));if(!res.ok)throw new Error("GitHub API "+res.status+": "+(body.message||"errore"));return body;}
 async function makeBlob(path,content,token,encoding="utf-8"){return gh("/repos/"+REPO+"/git/blobs",token,{method:"POST",body:JSON.stringify({content,encoding})});}
 function decodeBlob(blob){const bytes=Uint8Array.from(atob(String(blob.content||"").replace(/\n/g,"")),c=>c.charCodeAt(0));return new TextDecoder().decode(bytes);}
-function htmlText(s){return String(s||"").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
-function extractArticle(html,record,slug){const one=re=>{const m=html.match(re);return m?htmlText(m[1].trim()):"";};const body=(html.match(/<article[^>]*class=["'][^"']*article-body[^"']*["'][^>]*>([\s\S]*?)<\/article>/i)||[])[1]||"";const imageTag=(html.match(/<figure[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<img\b[^>]*>/i)||[])[0]||"";const getAttr=(tag,n)=>{const m=tag.match(new RegExp("\\b"+n+"\\s*=\\s*(['\"])(.*?)\\1","i"));return m?htmlText(m[2]):"";};const metaLine=one(/<p[^>]*class=["'][^"']*\bmeta\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);const pieces=metaLine.split("·").map(x=>x.trim());return {slug,title:one(/<h1[^>]*>([\s\S]*?)<\/h1>/i)||one(/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*NEWSGAMING2$/i,""),description:one(/<p[^>]*class=["'][^"']*\bdek\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i)||(record&&record.description)||"",category:(record&&record.category)||pieces[2]||"News e approfondimenti",platforms:pieces.slice(3).join(" · ").split(/[·,]/).map(x=>x.trim()).filter(Boolean),imageUrl:getAttr(imageTag,"src")||(record&&record.image)||"",imageAlt:getAttr(imageTag,"alt")||(record&&record.imageAlt)||"",content:body.trim(),date:(record&&record.date)||"",author:pieces[1]||"Redazione NEWSGAMING2"};}
+function htmlText(s){return String(s||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim().replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;|&#039;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16)));}
+function slugFromUrl(value){
+ let raw=String(value||"").trim();
+ try{if(/^https?:\/\//i.test(raw))raw=new URL(raw).pathname;}catch{return "";}
+ raw=raw.split(/[?#]/,1)[0].replace(/^\/+/,"");
+ if(raw.startsWith("articoli/"))raw=raw.slice("articoli/".length);
+ if(raw.toLowerCase().endsWith(".html"))raw=raw.slice(0,-5);
+ return slugOk(raw)?raw:"";
+}
+function extractArticle(html,record,slug){
+ const one=re=>{const m=html.match(re);return m?htmlText(m[1].trim()):"";};
+ const attr=(tag,name)=>{const m=String(tag||"").match(new RegExp("\\b"+name+"\\s*=\\s*(['\"])(.*?)\\1","i"));return m?htmlText(m[2]):"";};
+ let body=(html.match(/<article\b[^>]*class=["'][^"']*\barticle-body\b[^"']*["'][^>]*>([\s\S]*?)<\/article>/i)||[])[1]||"";
+ if(!body){
+  const main=(html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)||[])[1]||html;
+  body=(main.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)||[])[1]||"";
+  if(!body)body=(main.match(/<(?:div|section)\b[^>]*class=["'][^"']*(?:article-content|article-content-body|post-content|entry-content)[^"']*["'][^>]*>([\s\S]*?)<\/(?:div|section)>/i)||[])[1]||"";
+ }
+ body=body
+  .replace(/<section\b[^>]*id=["']ngArticle(?:Social|Comments)["'][\s\S]*?<\/section>/gi,"")
+  .replace(/<(?:div|section)\b[^>]*class=["'][^"']*(?:related-feed|related-articles|related-track|article-related)[^"']*["'][\s\S]*?<\/(?:div|section)>/gi,"")
+  .replace(/<footer\b[\s\S]*?<\/footer>/gi,"")
+  .replace(/<nav\b[\s\S]*?<\/nav>/gi,"")
+  .trim();
+ const imageTag=(html.match(/<figure\b[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<img\b[^>]*>/i)||[])[0]
+  ||(html.match(/<img\b[^>]*class=["'][^"']*\bcover\b[^"']*["'][^>]*>/i)||[])[0]
+  ||(html.match(/<main\b[^>]*>[\s\S]*?<img\b[^>]*>/i)||[])[0]||"";
+ const metaLine=one(/<p[^>]*class=["'][^"']*\bmeta\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i);
+ const pieces=metaLine.split("·").map(x=>x.trim()).filter(Boolean);
+ const author=pieces.find(x=>/redazion|a cura|staff/i.test(x))||"Redazione NEWSGAMING2";
+ const category=(record&&record.category)||"News e approfondimenti";
+ const categoryIndex=pieces.findIndex(x=>x.toLocaleLowerCase("it")===String(category).toLocaleLowerCase("it"));
+ const platforms=Array.isArray(record?.platforms)?record.platforms:(categoryIndex>=0?pieces.slice(categoryIndex+1).filter(x=>x&&!/minut[oi]|tempo di lettura/i.test(x)):[]);
+ const date=(record&&record.date)||((metaLine.match(/\b\d{1,2}\s+[a-zà-ù]+\s+\d{4}\b/i)||[])[0]||"");
+ return {
+  slug,
+  title:one(/<h1[^>]*>([\s\S]*?)<\/h1>/i)||one(/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*NEWSGAMING2$/i,""),
+  description:one(/<p[^>]*class=["'][^"']*\bdek\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/i)||(record&&record.description)||one(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i),
+  category,
+  platforms,
+  imageUrl:attr(imageTag,"src")||(record&&record.image)||"",
+  imageAlt:attr(imageTag,"alt")||(record&&record.imageAlt)||"",
+  content:body,
+  date,
+  author
+ };
+}
 function updatePage(html,p,slug,date,author){
  const title=esc(p.title),description=esc(p.description),image=esc(p.imageUrl),alt=esc(p.imageAlt||p.title);
  const replace=(re,value)=>{html=html.replace(re,(_,open,close)=>open+value+close);};
@@ -33,36 +97,91 @@ function updatePage(html,p,slug,date,author){
  const figure=/<figure[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<\/figure>/i;
  const newFigure='<figure class="article-hero-image"><img src="'+image+'" alt="'+alt+'" loading="eager"><figcaption>'+alt+'</figcaption></figure>';
  if(figure.test(html))html=html.replace(figure,()=>newFigure);
- html=html.replace(/(<article[^>]*class=["'][^"']*article-body[^"']*["'][^>]*>)[\s\S]*?(<\/article>)/i,(_,open,close)=>open+p.content+close);
+ else html=html.replace(/<img\b[^>]*class=["'][^"']*\bcover\b[^"']*["'][^>]*>/i,tag=>{
+  let next=tag.replace(/\bsrc=["'][^"']*["']/i,'src="'+image+'"').replace(/\balt=["'][^"']*["']/i,'alt="'+alt+'"');
+  if(!/\balt=/i.test(next))next=next.replace(/>$/,' alt="'+alt+'">');
+  return next;
+ });
+ let bodyReplaced=false;
+ html=html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/i,(_,open,inner,close)=>{
+  let next=inner.replace(/(<article\b[^>]*class=["'][^"']*\barticle-body\b[^"']*["'][^>]*>)[\s\S]*?(<\/article>)/i,(_,a,z)=>{bodyReplaced=true;return a+p.content+z;});
+  if(!bodyReplaced)next=next.replace(/(<article\b[^>]*>)[\s\S]*?(<\/article>)/i,(_,a,z)=>{bodyReplaced=true;return a+p.content+z;});
+  return open+next+close;
+ });
+ if(!bodyReplaced)throw new Error("Impossibile individuare il corpo editoriale nell'HTML originale.");
  const ld={"@context":"https://schema.org","@type":"Article","headline":p.title,"description":p.description,"image":[p.imageUrl],"datePublished":date,"dateModified":date,"author":{"@type":"Organization","name":author},"publisher":{"@type":"Organization","name":"NEWSGAMING2","url":SITE},"mainEntityOfPage":{"@type":"WebPage","@id":SITE+"/articoli/"+slug+".html"}};
  const ldText=JSON.stringify(ld).replace(/</g,"\\u003c");
  html=html.replace(/(<script\s+type=["']application\/ld\+json["']>)[\s\S]*?(<\/script>)/i,(_,open,close)=>open+ldText+close);
  return html;
 }
-function localImagePath(value){const v=String(value||"").replace(/^\/+/,"");return /^immagini\/articoli\/[a-z0-9._-]+\.(?:webp|png|jpe?g|gif|svg)$/i.test(v)?v:"";}
+function localImagePath(value){
+ let v=String(value||"").trim();
+ try{const u=new URL(v,SITE);if(u.origin!==SITE)return "";v=u.pathname;}catch{return "";}
+ v=v.replace(/^\/+/,"");
+ return /^immagini\/articoli\/[a-z0-9._-]+\.(?:webp|png|jpe?g|gif|svg)$/i.test(v)?v:"";
+}
 async function getRepoState(token){const ref=await gh("/repos/"+REPO+"/git/ref/heads/"+BRANCH,token),parent=ref.object.sha,commit=await gh("/repos/"+REPO+"/git/commits/"+parent,token),tree=await gh("/repos/"+REPO+"/git/trees/"+commit.tree.sha+"?recursive=1",token);if(tree.truncated)throw new Error("Albero repository troppo grande.");const entries=tree.tree||[],byPath=new Map(entries.map(x=>[x.path,x])),je=byPath.get("data/articoli.json"),se=byPath.get("sitemap.xml");if(!je||!se)throw new Error("Archivio JSON o sitemap non trovati.");const [jb,mb]=await Promise.all([gh("/repos/"+REPO+"/git/blobs/"+je.sha,token),gh("/repos/"+REPO+"/git/blobs/"+se.sha,token)]);const archive=JSON.parse(decodeBlob(jb)),sitemap=decodeBlob(mb);if(!Array.isArray(archive.articles)||!sitemap.includes("<urlset"))throw new Error("Formato archivio o sitemap non valido.");return {parent,treeSha:commit.tree.sha,entries,byPath,archive,sitemap};}
+function removeSitemapArticle(sitemap,slug){
+ return sitemap.replace(/<url\b[^>]*>[\s\S]*?<\/url>/gi,block=>{
+  const loc=(block.match(/<loc>\s*([^<]+)\s*<\/loc>/i)||[])[1]||"";
+  return slugFromUrl(loc)===slug?"":block;
+ });
+}
+function addSitemapArticle(sitemap,slug,date){
+ sitemap=removeSitemapArticle(sitemap,slug);
+ const url=SITE+"/articoli/"+slug+".html";
+ return sitemap.replace(/<\/urlset>/i,"  <url><loc>"+url+"</loc><lastmod>"+date+"</lastmod></url>\n</urlset>");
+}
 async function commitChanges(state,token,items,message){const tree=await gh("/repos/"+REPO+"/git/trees",token,{method:"POST",body:JSON.stringify({base_tree:state.treeSha,tree:items})}),commit=await gh("/repos/"+REPO+"/git/commits",token,{method:"POST",body:JSON.stringify({message,tree:tree.sha,parents:[state.parent]})});await gh("/repos/"+REPO+"/git/refs/heads/"+BRANCH,token,{method:"PATCH",body:JSON.stringify({sha:commit.sha,force:false})});return commit.sha;}
-export async function onRequest({request,env}){try{const origin=request.headers.get("Origin");if(request.method==="OPTIONS"){if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":SITE,"Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Vary":"Origin"}});}if(request.method!=="POST")return reply({error:"Metodo non consentito."},405);if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);const sb=String(env.SUPABASE_URL||"").replace(/\/$/,""),service=env.SUPABASE_SERVICE_ROLE_KEY,token=env.GITHUB_PUBLISH_TOKEN;if(!sb||!service||!token)return reply({error:"Configurazione server incompleta."},500);const auth=(request.headers.get("Authorization")||"").match(/^Bearer\s+([A-Za-z0-9._-]+)$/i);if(!auth)return reply({error:"Autenticazione richiesta."},401);const userRes=await fetch(sb+"/auth/v1/user",{headers:{"apikey":service,"Authorization":"Bearer "+auth[1]}});if(!userRes.ok)return reply({error:"Sessione Supabase non valida."},401);const user=await userRes.json();if(!user?.id)return reply({error:"Utente non autenticato."},401);const roleRes=await fetch(sb+"/rest/v1/user_roles?select=role&user_id=eq."+encodeURIComponent(user.id),{headers:{"apikey":service,"Authorization":"Bearer "+service}});if(!roleRes.ok)return reply({error:"Verifica del ruolo non disponibile."},503);const role=(await roleRes.json())?.[0]?.role;if(!["admin","editor"].includes(role))return reply({error:"Permessi insufficienti: richiesto ruolo admin o editor."},403);const raw=await request.arrayBuffer();if(raw.byteLength>MAX_BODY)return reply({error:"Richiesta troppo grande."},413);let p;try{p=JSON.parse(new TextDecoder().decode(raw));}catch{return reply({error:"JSON non valido."},400);}const action=String(p.action||""),slug=String(p.slug||"");if(!["load","update","delete"].includes(action)||!slugOk(slug))return reply({error:"Azione o slug non valido."},400);const state=await getRepoState(token),articlePath="articoli/"+slug+".html",articleEntry=state.byPath.get(articlePath);if(!articleEntry||articleEntry.type!=="blob")return reply({error:"Articolo non trovato su GitHub."},404);const record=state.archive.articles.find(a=>a&&a.url===articlePath);if(!record)return reply({error:"Articolo non presente nell'archivio pubblico."},404);const articleBlob=await gh("/repos/"+REPO+"/git/blobs/"+articleEntry.sha,token),originalHtml=decodeBlob(articleBlob),current=extractArticle(originalHtml,record,slug);if(action==="load")return reply({ok:true,article:current});const today=new Date().toISOString().slice(0,10);if(action==="delete"){
- state.archive.articles=state.archive.articles.filter(a=>a.url!==articlePath);
+export async function onRequest({request,env}){try{const origin=request.headers.get("Origin");if(request.method==="OPTIONS"){if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":SITE,"Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"Authorization, Content-Type","Vary":"Origin"}});}if(request.method!=="POST")return reply({error:"Metodo non consentito."},405);if(origin!==SITE)return reply({error:"Origine non autorizzata."},403);const sb=String(env.SUPABASE_URL||"").replace(/\/$/,""),service=env.SUPABASE_SERVICE_ROLE_KEY,token=env.GITHUB_PUBLISH_TOKEN;if(!sb||!service||!token)return reply({error:"Configurazione server incompleta."},500);const auth=(request.headers.get("Authorization")||"").match(/^Bearer\s+([A-Za-z0-9._-]+)$/i);if(!auth)return reply({error:"Autenticazione richiesta."},401);const userRes=await fetch(sb+"/auth/v1/user",{headers:{"apikey":service,"Authorization":"Bearer "+auth[1]}});if(!userRes.ok)return reply({error:"Sessione Supabase non valida."},401);const user=await userRes.json();if(!user?.id)return reply({error:"Utente non autenticato."},401);const roleRes=await fetch(sb+"/rest/v1/user_roles?select=role&user_id=eq."+encodeURIComponent(user.id),{headers:{"apikey":service,"Authorization":"Bearer "+service}});if(!roleRes.ok)return reply({error:"Verifica del ruolo non disponibile."},503);const role=(await roleRes.json())?.[0]?.role;if(!["admin","editor"].includes(role))return reply({error:"Permessi insufficienti: richiesto ruolo admin o editor."},403);const raw=await request.arrayBuffer();if(raw.byteLength>MAX_BODY)return reply({error:"Richiesta troppo grande."},413);let p;try{p=JSON.parse(new TextDecoder().decode(raw));}catch{return reply({error:"JSON non valido."},400);}const action=String(p.action||""),slug=String(p.slug||"");if(!["load","update","delete"].includes(action)||!slugOk(slug))return reply({error:"Azione o slug non valido."},400);const state=await getRepoState(token),articlePath="articoli/"+slug+".html";
+const recordMatches=state.archive.articles.map((a,index)=>({a,index})).filter(x=>x.a&&slugFromUrl(x.a.url)===slug);
+if(!recordMatches.length)return reply({error:"Articolo non presente nell'archivio pubblico."},404);
+const record=recordMatches[0].a,articleEntry=state.byPath.get(articlePath)||state.entries.find(x=>x.type==="blob"&&slugFromUrl(x.path)===slug);
+if(!articleEntry)return reply({error:"Articolo non trovato su GitHub."},404);
+const actualPath=articleEntry.path||articlePath;
+const articleBlob=await gh("/repos/"+REPO+"/git/blobs/"+articleEntry.sha,token),originalHtml=decodeBlob(articleBlob),current=extractArticle(originalHtml,record,slug);if(action==="load")return reply({ok:true,article:current});const today=new Date().toISOString().slice(0,10);if(action==="delete"){
+ state.archive.articles=state.archive.articles.filter(a=>slugFromUrl(a&&a.url)!==slug);
  state.archive.updatedAt=today;
- const oldImage=localImagePath(record.image||current.imageUrl);
+ const oldImage=localImagePath(current.imageUrl||record.image);
  const stillUsed=oldImage&&state.archive.articles.some(a=>localImagePath(a.image)===oldImage);
  const sitemapUrl=SITE+"/"+articlePath;
- state.sitemap=state.sitemap.replace(/<url>\s*<loc>[^<]*<\/loc>[\s\S]*?<\/url>/g,block=>block.includes("<loc>"+sitemapUrl+"</loc>")?"":block);
+ state.sitemap=removeSitemapArticle(state.sitemap,slug);
  const [newJson,newMap]=await Promise.all([makeBlob("data/articoli.json",JSON.stringify(state.archive,null,2)+"\n",token),makeBlob("sitemap.xml",state.sitemap,token)]);
- const items=[{path:articlePath,mode:"100644",type:"blob",sha:null},{path:"data/articoli.json",mode:"100644",type:"blob",sha:newJson.sha},{path:"sitemap.xml",mode:"100644",type:"blob",sha:newMap.sha}];
+ const items=[{path:actualPath,mode:"100644",type:"blob",sha:null},{path:"data/articoli.json",mode:"100644",type:"blob",sha:newJson.sha},{path:"sitemap.xml",mode:"100644",type:"blob",sha:newMap.sha}];
  if(oldImage&&!stillUsed&&state.byPath.has(oldImage))items.push({path:oldImage,mode:"100644",type:"blob",sha:null});
  const commit=await commitChanges(state,token,items,"[skip actions] Elimina articolo statico: "+slug);
  return reply({ok:true,deleted:slug,commit,commitUrl:"https://github.com/"+REPO+"/commit/"+commit});
 }
-const title=String(p.title||"").trim().slice(0,180),description=String(p.description||"").trim().slice(0,500),category=String(p.category||"News e approfondimenti").trim().slice(0,80),platforms=Array.isArray(p.platforms)?p.platforms.map(x=>String(x).trim().slice(0,60)).filter(Boolean).slice(0,12):[];if(!title||!description||!category)return reply({error:"Titolo, descrizione e categoria sono obbligatori."},400);let imageUrl="",imagePath="",imageBase64=String(p.imageDataBase64||"");if(imageBase64){if(imageBase64.length>6*1024*1024||!/^[A-Za-z0-9+/]+={0,2}$/.test(imageBase64))return reply({error:"Immagine base64 non valida o troppo grande."},400);let bytes;try{bytes=Uint8Array.from(atob(imageBase64),c=>c.charCodeAt(0));}catch{return reply({error:"Base64 immagine non valido."},400);}if(bytes.length<12||String.fromCharCode(...bytes.slice(0,4))!=="RIFF"||String.fromCharCode(...bytes.slice(8,12))!=="WEBP")return reply({error:"L'immagine caricata deve essere WebP."},400);imagePath="immagini/articoli/"+slug+".webp";imageUrl="/"+imagePath;}else{imageUrl=safeUrl(String(p.imageUrl||""),true);if(!imageUrl)return reply({error:"Inserisci un URL HTTPS valido o carica un WebP."},400);imagePath=localImagePath(imageUrl);}let content=String(p.content||"").trim();if(!content||content.length>2_000_000)return reply({error:"Testo articolo vuoto o troppo lungo."},400);if(!/<[a-z][\s\S]*>/i.test(content))content=textHtml(content);content=await sanitize(content);if(!content)return reply({error:"Contenuto senza elementi HTML consentiti."},400);const imageAlt=String(p.imageAlt||p.imageFilename||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250),updatedHtml=updatePage(originalHtml,{title,description,category,platforms,imageUrl,imageAlt,content},slug,today,current.author||"Redazione NEWSGAMING2");record.title=title;record.category=category;record.date=today;record.image=imageUrl;record.imageAlt=imageAlt;record.description=description;state.archive.updatedAt=today;const sitemapUrl=SITE+"/"+articlePath;
-let sitemapEntryFound=false;
-state.sitemap=state.sitemap.replace(/<url>\s*<loc>[^<]*<\/loc>[\s\S]*?<\/url>/g,block=>{
- if(!block.includes("<loc>"+sitemapUrl+"</loc>"))return block;
- sitemapEntryFound=true;
- return /<lastmod>[\s\S]*?<\/lastmod>/.test(block)
-  ?block.replace(/<lastmod>[\s\S]*?<\/lastmod>/,"<lastmod>"+today+"</lastmod>")
-  :block.replace("</url>","<lastmod>"+today+"</lastmod></url>");
+const title=String(p.title||"").trim().slice(0,180),description=String(p.description||"").trim().slice(0,500),category=String(p.category||"News e approfondimenti").trim().slice(0,80),platforms=Array.isArray(p.platforms)?p.platforms.map(x=>String(x).trim().slice(0,60)).filter(Boolean).slice(0,12):[];
+if(!title||!description||!category)return reply({error:"Titolo, descrizione e categoria sono obbligatori."},400);
+let imageUrl="",imagePath="",imageBase64=String(p.imageDataBase64||"");
+if(imageBase64){
+ if(imageBase64.length>6*1024*1024||!/^[A-Za-z0-9+/]+={0,2}$/.test(imageBase64))return reply({error:"Immagine base64 non valida o troppo grande."},400);
+ let bytes;try{bytes=Uint8Array.from(atob(imageBase64),c=>c.charCodeAt(0));}catch{return reply({error:"Base64 immagine non valido."},400);}
+ if(bytes.length<12||String.fromCharCode(...bytes.slice(0,4))!=="RIFF"||String.fromCharCode(...bytes.slice(8,12))!=="WEBP")return reply({error:"L'immagine caricata deve essere WebP."},400);
+ imagePath="immagini/articoli/"+slug+".webp";imageUrl="/"+imagePath;
+}else{
+ const requestedImage=String(p.imageUrl||"").trim()||String(current.imageUrl||record.image||"").trim();
+ imageUrl=safeUrl(requestedImage,true);
+ if(!imageUrl)return reply({error:"L'immagine esistente non è valida: inserisci un URL HTTPS o carica un WebP."},400);
+ imagePath=localImagePath(imageUrl);
+}
+let content=String(p.content||"").trim();
+if(!content||content.length>2_000_000)return reply({error:"Testo articolo vuoto o troppo lungo."},400);
+if(!/<[a-z][\s\S]*>/i.test(content))content=textHtml(content);
+content=await sanitize(content);
+if(!content)return reply({error:"Contenuto senza elementi HTML consentiti."},400);
+const imageAlt=String(p.imageAlt||current.imageAlt||record.imageAlt||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250);
+const updatedHtml=updatePage(originalHtml,{title,description,category,platforms,imageUrl,imageAlt,content},slug,today,current.author||"Redazione NEWSGAMING2");
+const seen=new Set();
+state.archive.articles=state.archive.articles.filter(a=>{
+ const itemSlug=slugFromUrl(a&&a.url);
+ if(itemSlug!==slug)return true;
+ if(seen.has(itemSlug))return false;
+ seen.add(itemSlug);return true;
 });
-if(!sitemapEntryFound)state.sitemap=state.sitemap.replace("</urlset>","  <url><loc>"+sitemapUrl+"</loc><lastmod>"+today+"</lastmod></url>\n</urlset>");
-const [pageBlob,newJson,newMap]=await Promise.all([makeBlob(articlePath,updatedHtml,token),makeBlob("data/articoli.json",JSON.stringify(state.archive,null,2)+"\n",token),makeBlob("sitemap.xml",state.sitemap,token)]);const items=[{path:articlePath,mode:"100644",type:"blob",sha:pageBlob.sha},{path:"data/articoli.json",mode:"100644",type:"blob",sha:newJson.sha},{path:"sitemap.xml",mode:"100644",type:"blob",sha:newMap.sha}];if(imageBase64){const imageBlob=await makeBlob(imagePath,imageBase64,token,"base64");items.push({path:imagePath,mode:"100644",type:"blob",sha:imageBlob.sha});}const oldImage=localImagePath(current.imageUrl),stillUsed=oldImage&&state.archive.articles.some(a=>a.url!==articlePath&&localImagePath(a.image)===oldImage);if(oldImage&&oldImage!==imagePath&&!stillUsed&&state.byPath.has(oldImage))items.push({path:oldImage,mode:"100644",type:"blob",sha:null});const message=p.sendNewsletter===true?"Aggiorna articolo statico: "+slug:"[skip actions] Aggiorna articolo statico: "+slug;const commit=await commitChanges(state,token,items,message);return reply({ok:true,slug,url:SITE+"/"+articlePath,commit,commitUrl:"https://github.com/"+REPO+"/commit/"+commit,newsletterRequested:p.sendNewsletter===true});}catch(error){return reply({error:error?.message||"Errore interno di gestione articolo."},500);}}
+record.url=articlePath;record.title=title;record.category=category;record.date=today;record.image=imageUrl;record.imageAlt=imageAlt;record.description=description;
+if(platforms.length)record.platforms=platforms;else delete record.platforms;
+state.archive.updatedAt=today;
+state.sitemap=addSitemapArticle(state.sitemap,slug,today);
+const [pageBlob,newJson,newMap]=await Promise.all([makeBlob(articlePath,updatedHtml,token),makeBlob("data/articoli.json",JSON.stringify(state.archive,null,2)+"\n",token),makeBlob("sitemap.xml",state.sitemap,token)]);const items=[{path:articlePath,mode:"100644",type:"blob",sha:pageBlob.sha},{path:"data/articoli.json",mode:"100644",type:"blob",sha:newJson.sha},{path:"sitemap.xml",mode:"100644",type:"blob",sha:newMap.sha}];if(imageBase64){const imageBlob=await makeBlob(imagePath,imageBase64,token,"base64");items.push({path:imagePath,mode:"100644",type:"blob",sha:imageBlob.sha});}const oldImage=localImagePath(current.imageUrl),stillUsed=oldImage&&state.archive.articles.some(a=>slugFromUrl(a&&a.url)!==slug&&localImagePath(a.image)===oldImage);if(oldImage&&oldImage!==imagePath&&!stillUsed&&state.byPath.has(oldImage))items.push({path:oldImage,mode:"100644",type:"blob",sha:null});const message=p.sendNewsletter===true?"Aggiorna articolo statico: "+slug:"[skip actions] Aggiorna articolo statico: "+slug;const commit=await commitChanges(state,token,items,message);return reply({ok:true,slug,url:SITE+"/"+articlePath,commit,commitUrl:"https://github.com/"+REPO+"/commit/"+commit,newsletterRequested:p.sendNewsletter===true});}catch(error){return reply({error:error?.message||"Errore interno di gestione articolo."},500);}}
