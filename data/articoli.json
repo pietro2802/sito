@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-19",
+  "updatedAt": "2026-11-20",
   "articles": [
+    {
+      "id": "rob run: come funziona il gioco e tecniche per principianti",
+      "title": "ROB RUN: come funziona il gioco e tecniche per principianti",
+      "category": "Guide",
+      "date": "2026-11-20",
+      "url": "articoli/rob-run-come-funziona-il-gioco-e-tecniche-per-principianti.html",
+      "image": "/immagini/articoli/rob-run-come-funziona-il-gioco-e-tecniche-per-principianti.webp",
+      "imageAlt": "Gemini Generated Image kffwpqkffwpqkffw",
+      "description": "Scopri come funziona ROB RUN, il sandbox criminale multigiocatore di Kefir: tecniche essenziali per nuovi giocatori, basi, rapine e consigli per sopravvivere."
+    },
     {
       "id": "gta 6 sfida pacifista no kill run cosa e confermato",
       "title": "GTA 6 e la sfida Pacifista: cosa è davvero possibile e cosa non è confermato",
