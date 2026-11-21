@@ -102,3 +102,35 @@ img[src*="fortnite-impostazioni.png"],img[src*="warzone-impostazioni.png"],img[s
   .ng-social-links{gap:8px;margin-top:14px}
   .ng-social-link{min-height:38px;padding:8px 11px;font-size:.84rem}
 }
+
+/* Copertine delle card: proporzioni complete su desktop, senza alterare il layout mobile. */
+@media (min-width:768px){
+  .card img:not([src*="fortnite-impostazioni.png"]):not([src*="warzone-impostazioni.png"]):not([src*="xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.png"]),
+  .featured-card>img:not([src*="fortnite-impostazioni.png"]):not([src*="warzone-impostazioni.png"]):not([src*="xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.png"]),
+  .slide .cover img:not([src*="fortnite-impostazioni.png"]):not([src*="warzone-impostazioni.png"]):not([src*="xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.png"]){
+    display:block;
+    width:100%;
+    height:auto;
+    max-height:none;
+    aspect-ratio:16 / 9;
+    object-fit:cover;
+    object-position:center;
+  }
+  /* Evita il crop aggiuntivo causato dallo zoom hover delle card. */
+  .card:hover img{transform:none}
+  /* I tre loghi restano leggibili sul fondo chiaro, senza crop. */
+  img[src*="fortnite-impostazioni.png"],
+  img[src*="warzone-impostazioni.png"],
+  img[src*="xbox-app-pc-cloud-piu-veloce-insider-novembre-2026.png"]{
+    width:100%;
+    height:auto;
+    max-height:none;
+    aspect-ratio:auto;
+    object-fit:contain;
+    object-position:center;
+    background:#f1f5f9;
+    padding:10px;
+    border-radius:10px;
+  }
+}
+
