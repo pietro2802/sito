@@ -9,7 +9,7 @@ async function load(){
  render();
 }
 async function render(){
- const {data,error}=await sb.from('comments').select('id,user_id,body,created_at,profiles(username,xp)').eq('article_slug',slug).eq('status','published').order('created_at',{ascending:false});
+ const {data,error}=await sb.from('comments').select('id,user_id,body,created_at,profiles!comments_user_id_fkey(username,xp)').eq('article_slug',slug).eq('status','published').order('created_at',{ascending:false});
  if(error){$('#ngArticleCommentsList').innerHTML='<div class="ng-alert error">'+esc(error.message)+'</div>';return}
  $('#ngArticleCommentsList').innerHTML=(data||[]).map(c=>`<article class="ng-comment"><div class="ng-comment-meta"><b>${esc(c.profiles?.username||'Player')}</b><span>LV ${Math.floor((c.profiles?.xp||0)/100)+1}</span><span>· ${new Date(c.created_at).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</span></div><div class="ng-comment-body">${esc(c.body)}</div></article>`).join('')||'<div class="ng-empty">Nessun commento ancora.</div>';
 }
