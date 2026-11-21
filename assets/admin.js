@@ -55,7 +55,7 @@ function initStaticPublisher(){
 async function compressCover(file){
  if(!file)return null;if(!file.type.startsWith('image/'))throw new Error('Seleziona un file immagine valido.');
  if(file.size>15*1024*1024)throw new Error('L’immagine originale supera 15 MB.');
- const bitmap=await createImageBitmap(file),scale=Math.min(1,1280/bitmap.width),canvas=document.createElement('canvas');
+ const bitmap=await createImageBitmap(file),maxWidth=1280,scale=Math.min(1,maxWidth/bitmap.width),canvas=document.createElement('canvas');
  canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
  canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
  const blob=await new Promise((resolve,reject)=>canvas.toBlob(v=>v?resolve(v):reject(new Error('Compressione WebP non riuscita.')),'image/webp',0.82));
