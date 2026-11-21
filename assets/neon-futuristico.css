@@ -213,4 +213,18 @@ figure.article-hero-image{width:100%;margin:0;overflow:visible}
     line-height:1.25;
   }
 }
+/* Navbar desktop compatta sui portatili: Area personale resta sempre nel viewport. */
+@media (min-width:900px) and (max-width:1366px){
+  .topline .nav{gap:clamp(10px,1.3vw,18px)}
+  .topline .ng-brand{flex-shrink:0}
+  .topline .ng-brand-word{font-size:clamp(.94rem,1vw,1.08rem)}
+  .topline .navlinks{
+    flex:0 1 auto;
+    min-width:0;
+    gap:clamp(7px,.85vw,12px);
+    font-size:clamp(.76rem,.9vw,.88rem);
+    white-space:nowrap;
+  }
+  .topline .navlinks a{white-space:nowrap}
+}
 
