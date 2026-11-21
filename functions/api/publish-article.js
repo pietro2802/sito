@@ -100,7 +100,7 @@ export async function onRequest({request,env}){
   const decode=b=>new TextDecoder().decode(Uint8Array.from(atob(b.content.replace(/\n/g,"")),c=>c.charCodeAt(0)));
   let archive,sitemap;try{archive=JSON.parse(decode(jb));sitemap=decode(sbBlob);}catch{return reply({error:"Archivio o sitemap non leggibili."},500);}
   if(!Array.isArray(archive.articles)||!sitemap.includes("<urlset"))return reply({error:"Formato archivio o sitemap non valido."},500);
-  const imageAlt=String(p.imageFilename||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250);
+  const imageAlt=title.slice(0,250);
   const page=makeArticle({title,description,slug,category,platforms,imageUrl,imageAlt,content,date}),record={id:title.toLocaleLowerCase("it"),title,category,date,url:articlePath,image:imageUrl,imageAlt,description};
   archive.articles=archive.articles.filter(x=>x.url!==articlePath);archive.articles.unshift(record);archive.updatedAt=date;archive.version=archive.version||1;
   sitemap=sitemap.replace("</urlset>",'  <url><loc>'+esc(SITE+"/"+articlePath)+'</loc><lastmod>'+date+'</lastmod></url>\n</urlset>');
