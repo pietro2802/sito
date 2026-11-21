@@ -3,6 +3,16 @@
   "updatedAt": "2026-11-21",
   "articles": [
     {
+      "id": "unreal engine 5 su pc: come eliminare lo stuttering una volta per tutte",
+      "title": "Unreal Engine 5 su PC: come eliminare lo stuttering una volta per tutte",
+      "category": "Guide",
+      "date": "2026-11-21",
+      "url": "articoli/unreal-engine-5-su-pc-come-eliminare-lo-stuttering-una-volta-per-tutte.html",
+      "image": "/immagini/articoli/unreal-engine-5-su-pc-come-eliminare-lo-stuttering-una-volta-per-tutte.webp",
+      "imageAlt": "Unreal Engine 5 su PC: come eliminare lo stuttering una volta per tutte",
+      "description": "Scatti improvvisi nei giochi Unreal Engine 5 su PC? Scopri le tecniche avanzate per ridurre lo stuttering da shader e traversal senza sacrificare la grafica."
+    },
+    {
       "id": "il boss segreto di star wars outlaws: come trovare e battere il rancor albino",
       "title": "Il boss segreto di Star Wars Outlaws: come trovare e battere il Rancor Albino",
       "category": "Guide",
