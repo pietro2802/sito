@@ -134,3 +134,9 @@ img[src*="fortnite-impostazioni.png"],img[src*="warzone-impostazioni.png"],img[s
   }
 }
 
+/* Copertine degli articoli pubblicati: immagine principale sempre intera. */
+figure.article-hero-image{width:100%;margin:0;overflow:visible}
+.article-hero-image img{display:block;width:100%;height:auto;max-height:none;aspect-ratio:auto;object-fit:contain;object-position:center}
+
+/* Miniature del carosello: riquadro uniforme 16:9 senza deformare le immagini. */
+.related-card img{display:block;width:100%;height:auto;max-height:none;aspect-ratio:16 / 9;object-fit:contain;object-position:center;background:#1b2b3c}
