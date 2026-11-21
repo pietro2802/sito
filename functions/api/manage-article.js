@@ -110,6 +110,9 @@ function updatePage(html,p,slug,date,author){
   return open+next+close;
  });
  if(!bodyReplaced)throw new Error("Impossibile individuare il corpo editoriale nell'HTML originale.");
+ // Aggiorna anche lo script del carosello nelle pagine esistenti: la vecchia regex perdeva gli slash nel template HTML.
+ const relatedScript = '<script>\n(()=>{const track=document.getElementById("relatedTrack");if(!track)return;fetch("/data/articoli.json").then(r=>{if(!r.ok)throw new Error("Archivio non disponibile");return r.json();}).then(data=>{const current="/articoli/'+slug+'.html";const items=(Array.isArray(data.articles)?data.articles:[]).filter(a=>a&&typeof a.url==="string"&&new RegExp("^articoli/[a-z0-9-]+[.]html$").test(a.url)&&("/"+a.url)!==current).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).slice(0,10);const frag=document.createDocumentFragment();items.forEach(a=>{const link=document.createElement("a");link.className="related-card";link.href="/"+a.url;const body=document.createElement("div");body.className="related-body";const tag=document.createElement("span");tag.className="related-tag";tag.textContent=String(a.category||"News");const heading=document.createElement("h3");heading.textContent=String(a.title||"Articolo");const description=document.createElement("p");description.textContent=String(a.description||"");const open=document.createElement("span");open.className="related-open";open.textContent="Leggi l’articolo →";body.append(tag,heading,description,open);link.append(body);frag.append(link);});track.replaceChildren(frag);if(!items.length)track.textContent="Altri articoli saranno disponibili a breve.";}).catch(()=>{track.textContent="Non è stato possibile caricare altri articoli.";});})();\n</script>';
+ html=html.replace(/<script>\s*\(\(\)=>\{const track=document\.getElementById\(["']relatedTrack["']\);[\s\S]*?<\/script>/i,relatedScript);
  const ld={"@context":"https://schema.org","@type":"Article","headline":p.title,"description":p.description,"image":[p.imageUrl],"datePublished":date,"dateModified":date,"author":{"@type":"Organization","name":author},"publisher":{"@type":"Organization","name":"NEWSGAMING2","url":SITE},"mainEntityOfPage":{"@type":"WebPage","@id":SITE+"/articoli/"+slug+".html"}};
  const ldText=JSON.stringify(ld).replace(/</g,"\\u003c");
  html=html.replace(/(<script\s+type=["']application\/ld\+json["']>)[\s\S]*?(<\/script>)/i,(_,open,close)=>open+ldText+close);
@@ -172,7 +175,7 @@ if(!content||content.length>2_000_000)return reply({error:"Testo articolo vuoto 
 if(!/<[a-z][\s\S]*>/i.test(content))content=textHtml(content);
 content=await sanitize(content);
 if(!content)return reply({error:"Contenuto senza elementi HTML consentiti."},400);
-const imageAlt=String(p.imageAlt||current.imageAlt||record.imageAlt||title).replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").slice(0,250);
+  const imageAlt=String(title).slice(0,250);
 const updatedHtml=updatePage(originalHtml,{title,description,category,platforms,imageUrl,imageAlt,content},slug,today,current.author||"Redazione NEWSGAMING2");
 const seen=new Set();
 state.archive.articles=state.archive.articles.filter(a=>{
