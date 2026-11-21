@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-20",
+  "updatedAt": "2026-11-21",
   "articles": [
+    {
+      "id": "il boss segreto di star wars outlaws: come trovare e battere il rancor albino",
+      "title": "Il boss segreto di Star Wars Outlaws: come trovare e battere il Rancor Albino",
+      "category": "Guide",
+      "date": "2026-11-21",
+      "url": "articoli/il-boss-segreto-di-star-wars-outlaws-come-trovare-e-battere-il-rancor-albino.html",
+      "image": "/immagini/articoli/il-boss-segreto-di-star-wars-outlaws-come-trovare-e-battere-il-rancor-albino.webp",
+      "imageAlt": "Gemini Generated Image 8fiqsq8fiqsq8fiq",
+      "description": "Guida passo-passo al boss più difficile e nascosto di Star Wars Outlaws: il Rancor Albino su Tatooine. Sblocca l'arma unica \"Dente di Krayt\"."
+    },
     {
       "id": "space marine 2: il glitch della \"requisizione infinita\" (funziona oggi)",
       "title": "Space Marine 2: il Glitch della \"Requisizione Infinita\" (Funziona Oggi)",
