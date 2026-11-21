@@ -166,7 +166,7 @@ function previewStaticArticle(){
  const meta=document.createElement('p');meta.className='preview-meta';meta.textContent=staticPreviewMeta;
  content.append(category,title,description,meta);
  const file=$('#staticImageFile')?.files?.[0],url=staticVal('staticImageUrl');
- if(file||url){const img=document.createElement('img');img.className='preview-cover';img.alt=staticVal('staticTitle')||'Copertina articolo';img.src=file?URL.createObjectURL(file):url;content.append(img);}
+ if(file||url){const img=document.createElement('img');img.className='preview-cover';img.alt=staticVal('staticTitle').trim()||'Copertina articolo';img.src=file?URL.createObjectURL(file):url;content.append(img);}
  const article=document.createElement('article');article.className='preview-body';article.innerHTML=sanitizeEditorHtml(staticVal('staticContent')||'<p>Il contenuto dell’articolo apparirà qui.</p>');content.append(article);
  if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
 }
