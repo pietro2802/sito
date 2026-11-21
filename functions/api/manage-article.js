@@ -96,7 +96,7 @@ function updatePage(html,p,slug,date,author){
  const metaLine=esc(dateLabel+" · "+author+" · "+p.category+(p.platforms.length?" · "+p.platforms.join(" · "):""));
  replace(/(<p[^>]*class=["'][^"']*\bmeta\b[^"']*["'][^>]*>)[\s\S]*?(<\/p>)/i,metaLine);
  const figure=/<figure[^>]*class=["'][^"']*article-hero-image[^"']*["'][^>]*>[\s\S]*?<\/figure>/i;
- const newFigure='<figure class="article-hero-image"><img src="'+image+'" alt="'+alt+'" loading="eager"><figcaption>'+alt+'</figcaption></figure>';
+ const newFigure='<figure class="article-hero-image"><img src="'+image+'" alt="'+alt+'" loading="eager"></figure>';
  if(figure.test(html))html=html.replace(figure,()=>newFigure);
  else html=html.replace(/<img\b[^>]*class=["'][^"']*\bcover\b[^"']*["'][^>]*>/i,tag=>{
   let next=tag.replace(/\bsrc=["'][^"']*["']/i,'src="'+image+'"').replace(/\balt=["'][^"']*["']/i,'alt="'+alt+'"');
