@@ -61,7 +61,7 @@ async function compressCover(file){
  const blob=await new Promise((resolve,reject)=>canvas.toBlob(v=>v?resolve(v):reject(new Error('Compressione WebP non riuscita.')),'image/webp',0.82));
  if(blob.size>4*1024*1024)throw new Error('Immagine compressa troppo grande (massimo 4 MB).');
  const data=await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(String(fr.result).split(',')[1]);fr.onerror=()=>reject(new Error('Lettura immagine non riuscita.'));fr.readAsDataURL(blob);});
- return {imageDataBase64:data,imageFilename:(file.name.replace(/\.[^.]+$/,'')||'copertina')+'.webp'};
+  return {imageDataBase64:data};
 }
 async function publishStaticArticle(e){
  e.preventDefault();const form=e.currentTarget,button=$('#staticPublishButton'),msg=$('#staticPublishMsg'),val=n=>form.elements[n].value.trim();
@@ -166,7 +166,7 @@ function previewStaticArticle(){
  const meta=document.createElement('p');meta.className='preview-meta';meta.textContent=staticPreviewMeta;
  content.append(category,title,description,meta);
  const file=$('#staticImageFile')?.files?.[0],url=staticVal('staticImageUrl');
- if(file||url){const img=document.createElement('img');img.className='preview-cover';img.alt=staticVal('staticTitle')||'Copertina articolo';img.src=file?URL.createObjectURL(file):url;content.append(img);}
+ if(file||url){const img=document.createElement('img');img.className='preview-cover';img.alt=staticVal('staticTitle').trim()||'Copertina articolo';img.src=file?URL.createObjectURL(file):url;content.append(img);}
  const article=document.createElement('article');article.className='preview-body';article.innerHTML=sanitizeEditorHtml(staticVal('staticContent')||'<p>Il contenuto dell’articolo apparirà qui.</p>');content.append(article);
  if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
 }
