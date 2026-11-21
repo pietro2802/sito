@@ -36,7 +36,7 @@ function makeArticle(p){
 <title>${t} | NEWSGAMING2</title><meta name="description" content="${d}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${url}">
 <meta property="og:title" content="${t}"><meta property="og:description" content="${d}"><meta property="og:type" content="article"><meta property="og:url" content="${url}"><meta property="og:image" content="${im}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${t}"><meta name="twitter:description" content="${d}"><meta name="twitter:image" content="${im}">
-<link rel="stylesheet" href="/assets/neon-futuristico.css?v=20261121c"><link rel="stylesheet" href="/assets/ng-community.css">
+<link rel="stylesheet" href="/assets/neon-futuristico.css?v=20261121d"><link rel="stylesheet" href="/assets/ng-community.css?v=20261121d">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436901367597680" crossorigin="anonymous"></script>
 <script type="application/ld+json">${ld}</script>
 <style>body{margin:0;background:#090d14;color:#eef5ff;font:16px/1.8 system-ui}.wrap{width:min(980px,calc(100% - 32px));margin:auto}.article-head{padding:30px 0}.dek,.meta,figcaption{color:#a9b7c9}.article-hero-image{width:100%;margin:0;overflow:visible}\n.article-hero-image img{display:block;width:100%;height:auto;max-height:none;aspect-ratio:auto;object-fit:contain;object-position:center;border-radius:16px}.article-body{padding:12px 0 38px}.article-body h2{margin-top:32px}.article-body p{color:#d8e2ef}.related-track{display:flex;gap:14px;overflow:auto}.related-card{min-width:220px;padding:16px;background:#111a28;border:1px solid #26364b;border-radius:12px}</style></head><body>
