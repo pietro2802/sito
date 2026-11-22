@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-21",
+  "updatedAt": "2026-11-22",
   "articles": [
+    {
+      "id": "il lato nascosto degli esport: la logistica dei tornei dal vivo",
+      "title": "Il lato nascosto degli eSport: la logistica dei tornei dal vivo",
+      "category": "eSport",
+      "date": "2026-11-22",
+      "url": "articoli/il-lato-nascosto-degli-esport-la-logistica-dei-tornei-dal-vivo.html",
+      "image": "/immagini/articoli/il-lato-nascosto-degli-esport-la-logistica-dei-tornei-dal-vivo.webp",
+      "imageAlt": "Il lato nascosto degli eSport: la logistica dei tornei dal vivo",
+      "description": "Dietro le finali eSport negli stadi si nasconde una macchina invisibile: reti LAN anti-DDoS, arbitri anti-cheat e gestione dei ritardi tecnici in diretta."
+    },
     {
       "id": "minecraft e il bug delle far lands: il mondo diventava infinito",
       "title": "Minecraft e il bug delle Far Lands: il mondo diventava infinito",
