@@ -228,3 +228,48 @@ figure.article-hero-image{width:100%;margin:0;overflow:visible}
   .topline .navlinks a{white-space:nowrap}
 }
 
+/* Brand navbar: lettering ad alto contrasto con glow ciano controllato. */
+.ng-brand-word{
+  color:#ffffff;
+  font-weight:800;
+  letter-spacing:.045em;
+  text-shadow:0 0 12px rgba(56,189,248,.55),0 0 24px rgba(56,189,248,.25);
+}
+.ng-brand-word span{
+  color:#e0f7ff;
+  font-weight:800;
+  text-shadow:0 0 12px rgba(56,189,248,.62),0 0 24px rgba(56,189,248,.3);
+}
+
+/* Orbite NG 2: bordi neon più definiti e glow, senza alterare geometria o layout. */
+.ng-orbit{
+  border-width:1.7px;
+  border-color:rgba(56,189,248,.92);
+  box-shadow:0 0 10px rgba(56,189,248,.5),0 0 24px rgba(56,189,248,.32),inset 0 0 12px rgba(103,232,249,.12);
+}
+.ng-orbit-two{
+  border-width:1.7px;
+  border-color:rgba(167,139,250,.92);
+  box-shadow:0 0 10px rgba(129,140,248,.52),0 0 25px rgba(167,139,250,.34),inset 0 0 12px rgba(167,139,250,.13);
+}
+
+
+/* Brand NEWSGAMING2 a tre colori coordinati: ciano, viola e oro. */
+.ng-brand-word{color:#38bdf8!important;text-shadow:0 0 10px rgba(56,189,248,.48),0 0 20px rgba(56,189,248,.22)}
+.ng-brand-word>span{color:#a78bfa!important;text-shadow:0 0 10px rgba(167,139,250,.5),0 0 20px rgba(167,139,250,.24)}
+.ng-brand-word .ng-brand-number{color:#facc15!important;text-shadow:0 0 9px rgba(250,204,21,.55),0 0 18px rgba(250,204,21,.28)}
+
+/* Palette navbar armonizzata con i neon già presenti nel sito. */
+.ng-brand-word{color:#56f0ff!important;text-shadow:0 0 9px rgba(86,240,255,.42),0 0 18px rgba(86,240,255,.2)!important}
+.ng-brand-word>span{color:#b9f8ff!important;text-shadow:0 0 8px rgba(185,248,255,.32),0 0 16px rgba(185,248,255,.16)!important}
+.ng-brand-word .ng-brand-number{color:#a78bfa!important;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)!important}
+
+/* Logo coerente anche negli articoli già pubblicati: GAMING ghiaccio, cifra finale viola. */
+.ng-brand-word>span:not(.ng-brand-number){background:linear-gradient(90deg,#b9f8ff 0%,#b9f8ff 88%,#a78bfa 88%,#a78bfa 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.ng-brand-word .ng-brand-number{color:#a78bfa!important;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)!important}
+
+/* Navbar identica su tutte le pagine, incluse le schede articolo già pubblicate. */
+.ng-brand-word>span{font-size:0!important;color:transparent!important}
+.ng-brand-word>span::before{content:"GAMING";font-size:1.15rem;font-weight:800;letter-spacing:inherit;color:#b9f8ff;text-shadow:0 0 8px rgba(185,248,255,.32),0 0 16px rgba(185,248,255,.16)}
+.ng-brand-word>span::after{content:"2";font-size:1.15rem;font-weight:800;letter-spacing:inherit;color:#a78bfa;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)}
+.ng-brand-word .ng-brand-number{display:none!important}
