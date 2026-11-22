@@ -258,3 +258,8 @@ figure.article-hero-image{width:100%;margin:0;overflow:visible}
 .ng-brand-word{color:#38bdf8!important;text-shadow:0 0 10px rgba(56,189,248,.48),0 0 20px rgba(56,189,248,.22)}
 .ng-brand-word>span{color:#a78bfa!important;text-shadow:0 0 10px rgba(167,139,250,.5),0 0 20px rgba(167,139,250,.24)}
 .ng-brand-word .ng-brand-number{color:#facc15!important;text-shadow:0 0 9px rgba(250,204,21,.55),0 0 18px rgba(250,204,21,.28)}
+
+/* Palette navbar armonizzata con i neon già presenti nel sito. */
+.ng-brand-word{color:#56f0ff!important;text-shadow:0 0 9px rgba(86,240,255,.42),0 0 18px rgba(86,240,255,.2)!important}
+.ng-brand-word>span{color:#b9f8ff!important;text-shadow:0 0 8px rgba(185,248,255,.32),0 0 16px rgba(185,248,255,.16)!important}
+.ng-brand-word .ng-brand-number{color:#a78bfa!important;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)!important}
