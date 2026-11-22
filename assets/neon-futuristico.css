@@ -228,3 +228,28 @@ figure.article-hero-image{width:100%;margin:0;overflow:visible}
   .topline .navlinks a{white-space:nowrap}
 }
 
+/* Brand navbar: lettering ad alto contrasto con glow ciano controllato. */
+.ng-brand-word{
+  color:#ffffff;
+  font-weight:800;
+  letter-spacing:.045em;
+  text-shadow:0 0 12px rgba(56,189,248,.55),0 0 24px rgba(56,189,248,.25);
+}
+.ng-brand-word span{
+  color:#e0f7ff;
+  font-weight:800;
+  text-shadow:0 0 12px rgba(56,189,248,.62),0 0 24px rgba(56,189,248,.3);
+}
+
+/* Orbite NG 2: bordi neon più definiti e glow, senza alterare geometria o layout. */
+.ng-orbit{
+  border-width:1.7px;
+  border-color:rgba(56,189,248,.92);
+  box-shadow:0 0 10px rgba(56,189,248,.5),0 0 24px rgba(56,189,248,.32),inset 0 0 12px rgba(103,232,249,.12);
+}
+.ng-orbit-two{
+  border-width:1.7px;
+  border-color:rgba(167,139,250,.92);
+  box-shadow:0 0 10px rgba(129,140,248,.52),0 0 25px rgba(167,139,250,.34),inset 0 0 12px rgba(167,139,250,.13);
+}
+
