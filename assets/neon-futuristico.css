@@ -267,3 +267,9 @@ figure.article-hero-image{width:100%;margin:0;overflow:visible}
 /* Logo coerente anche negli articoli già pubblicati: GAMING ghiaccio, cifra finale viola. */
 .ng-brand-word>span:not(.ng-brand-number){background:linear-gradient(90deg,#b9f8ff 0%,#b9f8ff 88%,#a78bfa 88%,#a78bfa 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
 .ng-brand-word .ng-brand-number{color:#a78bfa!important;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)!important}
+
+/* Navbar identica su tutte le pagine, incluse le schede articolo già pubblicate. */
+.ng-brand-word>span{font-size:0!important;color:transparent!important}
+.ng-brand-word>span::before{content:"GAMING";font-size:1.15rem;font-weight:800;letter-spacing:inherit;color:#b9f8ff;text-shadow:0 0 8px rgba(185,248,255,.32),0 0 16px rgba(185,248,255,.16)}
+.ng-brand-word>span::after{content:"2";font-size:1.15rem;font-weight:800;letter-spacing:inherit;color:#a78bfa;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)}
+.ng-brand-word .ng-brand-number{display:none!important}
