@@ -263,3 +263,7 @@ figure.article-hero-image{width:100%;margin:0;overflow:visible}
 .ng-brand-word{color:#56f0ff!important;text-shadow:0 0 9px rgba(86,240,255,.42),0 0 18px rgba(86,240,255,.2)!important}
 .ng-brand-word>span{color:#b9f8ff!important;text-shadow:0 0 8px rgba(185,248,255,.32),0 0 16px rgba(185,248,255,.16)!important}
 .ng-brand-word .ng-brand-number{color:#a78bfa!important;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)!important}
+
+/* Logo coerente anche negli articoli già pubblicati: GAMING ghiaccio, cifra finale viola. */
+.ng-brand-word>span:not(.ng-brand-number){background:linear-gradient(90deg,#b9f8ff 0%,#b9f8ff 88%,#a78bfa 88%,#a78bfa 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.ng-brand-word .ng-brand-number{color:#a78bfa!important;text-shadow:0 0 9px rgba(167,139,250,.42),0 0 18px rgba(167,139,250,.2)!important}
