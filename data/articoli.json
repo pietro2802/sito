@@ -3,6 +3,16 @@
   "updatedAt": "2026-11-22",
   "articles": [
     {
+      "id": "driver nvidia 621.14 e 621.24: bug ssd e fix con hotfix 621.35",
+      "title": "Driver NVIDIA 621.14 e 621.24: bug SSD e fix con Hotfix 621.35",
+      "category": "PC",
+      "date": "2026-11-22",
+      "url": "articoli/driver-nvidia-621-14-e-621-24-bug-ssd-e-fix-con-hotfix-621-35.html",
+      "image": "/immagini/articoli/driver-nvidia-621-14-e-621-24-bug-ssd-e-fix-con-hotfix-621-35.webp",
+      "imageAlt": "Driver NVIDIA 621.14 e 621.24: bug SSD e fix con Hotfix 621.35",
+      "description": "I driver NVIDIA 621.14 e 621.24 causano scritture anomale su SSD fino a 30 GB l'ora: scopri come bloccare il bug con l'Hotfix 621.35."
+    },
+    {
       "id": "zelda ocarina of time remake switch 2: come fare il glitch actor jump",
       "title": "Zelda Ocarina of Time Remake Switch 2: come fare il glitch Actor Jump",
       "category": "Nintendo",
