@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-22",
+  "updatedAt": "2026-11-23",
   "articles": [
+    {
+      "id": "classici strategici pc: perché warlords iv, soldiers at war e theocracy contano oggi",
+      "title": "Classici strategici PC: perché Warlords IV, Soldiers at War e Theocracy contano oggi",
+      "category": "PC",
+      "date": "2026-11-23",
+      "url": "articoli/classici-strategici-pc-perche-warlords-iv-soldiers-at-war-e-theocracy-contano-oggi.html",
+      "image": "/immagini/articoli/classici-strategici-pc-perche-warlords-iv-soldiers-at-war-e-theocracy-contano-oggi.webp",
+      "imageAlt": "Classici strategici PC: perché Warlords IV, Soldiers at War e Theocracy contano oggi",
+      "description": "Scopri perché Warlords IV, Soldiers at War e Theocracy meritano una seconda vita su PC: meccaniche uniche, punti di forza e come giocarli oggi senza problemi."
+    },
     {
       "id": "errore ce-108255-1 su gta 6 (ps5): come risolverlo passo dopo passo",
       "title": "Errore CE-108255-1 su GTA 6 (PS5): come risolverlo passo dopo passo",
