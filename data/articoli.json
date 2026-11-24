@@ -3,6 +3,16 @@
   "updatedAt": "2026-11-24",
   "articles": [
     {
+      "id": "ia nei videogiochi: il caso big walk tra strumenti e automazione",
+      "title": "IA nei videogiochi: il caso Big Walk tra strumenti e automazione",
+      "category": "News e approfondimenti",
+      "date": "2026-11-24",
+      "url": "articoli/ia-nei-videogiochi-il-caso-big-walk-tra-strumenti-e-automazione.html",
+      "image": "/immagini/articoli/ia-nei-videogiochi-il-caso-big-walk-tra-strumenti-e-automazione.webp",
+      "imageAlt": "IA nei videogiochi: il caso Big Walk tra strumenti e automazione",
+      "description": "Scopri come l'intelligenza artificiale trasforma lo sviluppo dei videogiochi: dal caso Big Walk di House House al confine tra supporto e automazione."
+    },
+    {
       "id": "gothic 3 classic su ps5 e xbox: crash, salvataggi e patch al lancio",
       "title": "Gothic 3 Classic su PS5 e Xbox: crash, salvataggi e patch al lancio",
       "category": "News e approfondimenti",
