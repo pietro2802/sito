@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-24",
+  "updatedAt": "2026-11-25",
   "articles": [
+    {
+      "id": "ayn thor e stardew valley: come funziona la modalità doppio schermo",
+      "title": "AYN Thor e Stardew Valley: come funziona la modalità doppio schermo",
+      "category": "PC",
+      "date": "2026-11-25",
+      "url": "articoli/ayn-thor-e-stardew-valley-come-funziona-la-modalita-doppio-schermo.html",
+      "image": "/immagini/articoli/ayn-thor-e-stardew-valley-come-funziona-la-modalita-doppio-schermo.webp",
+      "imageAlt": "AYN Thor e Stardew Valley: come funziona la modalità doppio schermo",
+      "description": "Scopri come sfruttare il doppio schermo di AYN Thor per giocare a Stardew Valley: mappa, inventario e gestione della fattoria su pannello da 3,92 pollici."
+    },
     {
       "id": "calciomercato football manager 27: come leggere le richieste dei club",
       "title": "Calciomercato Football Manager 27: come leggere le richieste dei club",
