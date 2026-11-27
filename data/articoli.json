@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-25",
+  "updatedAt": "2026-11-27",
   "articles": [
+    {
+      "id": "delta force e naked snake: perché i crossover anni 2000 funzionano",
+      "title": "Delta Force e Naked Snake: perché i crossover anni 2000 funzionano",
+      "category": "News e approfondimenti",
+      "date": "2026-11-27",
+      "url": "articoli/delta-force-e-naked-snake-perche-i-crossover-anni-2000-funzionano.html",
+      "image": "/immagini/articoli/delta-force-e-naked-snake-perche-i-crossover-anni-2000-funzionano.webp",
+      "imageAlt": "Delta Force e Naked Snake: perché i crossover anni 2000 funzionano",
+      "description": "Scopri perché la collaborazione tra Delta Force e Naked Snake conferma il successo dei crossover anni 2000 negli sparatutto free-to-play moderni."
+    },
     {
       "id": "reshine: perché gli indie rilassanti conquistano la fine dell'anno",
       "title": "Reshine: perché gli indie rilassanti conquistano la fine dell'anno",
