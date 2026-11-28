@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-27",
+  "updatedAt": "2026-11-28",
   "articles": [
+    {
+      "id": "kings of oros e core valley: cosa sono i 2 giochi pc sbloccati a sorpresa",
+      "title": "Kings of Oros e Core Valley: cosa sono i 2 giochi PC sbloccati a sorpresa",
+      "category": "PC",
+      "date": "2026-11-28",
+      "url": "articoli/kings-of-oros-e-core-valley-cosa-sono-i-2-giochi-pc-sbloccati-a-sorpresa.html",
+      "image": "/immagini/articoli/kings-of-oros-e-core-valley-cosa-sono-i-2-giochi-pc-sbloccati-a-sorpresa.webp",
+      "imageAlt": "Kings of Oros e Core Valley: cosa sono i 2 giochi PC sbloccati a sorpresa",
+      "description": "Scopri cosa sono Kings of Oros e Core Valley, i due nuovi titoli PC apparsi a sorpresa negli store digitali: gameplay, caratteristiche e come provarli."
+    },
     {
       "id": "delta force e naked snake: perché i crossover anni 2000 funzionano",
       "title": "Delta Force e Naked Snake: perché i crossover anni 2000 funzionano",
